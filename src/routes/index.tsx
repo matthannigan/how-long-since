@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
+import { ByCategoryView } from '@/components/category/ByCategoryView';
 import { getSettings } from '@/lib/settings';
 
 /**
@@ -18,13 +19,5 @@ export const Route = createFileRoute('/')({
       throw redirect({ to: '/time' });
     }
   },
-  // Placeholder for the By Category view — real rendering lands in Step 5.
-  component: () => (
-    <section aria-labelledby="by-category-heading">
-      <h2 id="by-category-heading" className="font-display text-lg font-semibold text-ink">
-        By Category
-      </h2>
-      <p className="mt-2 text-ink-meta-aa">Tasks grouped by category will appear here.</p>
-    </section>
-  ),
+  component: ByCategoryView,
 });
