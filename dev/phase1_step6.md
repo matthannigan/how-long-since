@@ -30,7 +30,7 @@ them.
 ## Scope / checklist
 
 ### By Time view — `routes/time.tsx`
-- [ ] Group non-archived tasks by `timeCommitment` in fixed order: 15min → 30min → 1hr → 2hrs → 4hrs → 5hrs+; tasks with **no** estimate go in a trailing **"No time set"** group (Req 4.3).
+- [ ] Group non-archived tasks by `timeCommitment` in fixed order: 15min → 30min → 1hr → 2hrs → 4hrs+; tasks with **no** estimate go in a trailing **"No time set"** group (Req 4.3).
 - [ ] **Section markers** (style-guide §3.8): 22px greige circle with `●/●●/●●●…` glyph + section title (DM Sans 700 13px) + count ("15 min · 3", AA-safe `#6E675E`). Section titles per app-pages §4: Quick tasks / Short tasks / Medium tasks / Longer tasks / Big projects / No time set.
 - [ ] Rows use `TaskCard` **`variant="time"`** → tinted **category tag** + muted `● 15 min` in the meta line (category stays visible without a group header, Req 4.4); elapsed time stays prominent (Req 4.5).
 - [ ] Empty state when no tasks and when a section is empty; "No tasks match this time filter." for the Quick Pick no-match case.

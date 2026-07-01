@@ -180,8 +180,7 @@ several, or none on a given day:
 - Short: "30 min"
 - Medium: "1 hr"
 - Long: "2 hrs"
-- Very long: "4 hrs"
-- Extended: "5+ hrs"
+- Very long: "4+ hrs"
 
 ### 3.5 Empty States
 

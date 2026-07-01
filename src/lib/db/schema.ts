@@ -16,6 +16,27 @@ export class HowLongSinceDB extends Dexie {
       settings: 'id',
     });
 
+    // v2: the `timeCommitment` enum dropped `5hrs+` and renamed `4hrs` → `4hrs+`
+    // (one open-ended "Big projects" bucket). Indexes are unchanged; the upgrade
+    // just rewrites any orphaned value on existing rows. `tx.table('tasks')` is
+    // untyped so the retired literals don't fight the narrowed TimeCommitment.
+    this.version(2)
+      .stores({
+        tasks: 'id, categoryId, lastCompletedAt, isArchived',
+        categories: 'id, isDefault',
+        settings: 'id',
+      })
+      .upgrade((tx) =>
+        tx
+          .table('tasks')
+          .toCollection()
+          .modify((task) => {
+            if (task.timeCommitment === '5hrs+' || task.timeCommitment === '4hrs') {
+              task.timeCommitment = '4hrs+';
+            }
+          }),
+      );
+
     // --- Phase 3, not enabled in v1 — see design.md "Turning on sync" ---
     // super('HowLongSinceDB', { addons: [dexieCloud] });
     // this.cloud.configure({ databaseUrl: 'https://xxxxx.dexie.cloud' });

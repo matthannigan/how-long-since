@@ -13,7 +13,7 @@ export const taskSchema = z.object({
       unit: z.enum(['day', 'week', 'month', 'year']),
     })
     .optional(),
-  timeCommitment: z.enum(['15min', '30min', '1hr', '2hrs', '4hrs', '5hrs+']).optional(),
+  timeCommitment: z.enum(['15min', '30min', '1hr', '2hrs', '4hrs+']).optional(),
   isArchived: z.boolean(),
   notes: z.string().max(512),
 });

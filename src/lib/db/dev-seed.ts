@@ -135,7 +135,7 @@ export async function seedSampleTasks(): Promise<void> {
       createdAt,
       lastCompletedAt: daysAgo(50), // very-overdue
       expectedFrequency: weekly,
-      timeCommitment: '5hrs+', // Big projects
+      timeCommitment: '4hrs+', // Big projects
       isArchived: false,
       notes: '',
     },

@@ -59,14 +59,11 @@ describe('groupTasksByTime', () => {
     ]);
   });
 
-  it('merges 4hrs and 5hrs+ into "Big projects", 4hrs first', () => {
-    const groups = groupTasksByTime([
-      task('five', { timeCommitment: '5hrs+' }),
-      task('four', { timeCommitment: '4hrs' }),
-    ]);
+  it('collects 4hrs+ tasks into "Big projects"', () => {
+    const groups = groupTasksByTime([task('big', { timeCommitment: '4hrs+' })]);
     expect(groups).toHaveLength(1);
     expect(groups[0].section.title).toBe('Big projects');
-    expect(groups[0].tasks.map((t) => t.id)).toEqual(['four', 'five']);
+    expect(groups[0].tasks.map((t) => t.id)).toEqual(['big']);
   });
 
   it('drops empty sections and returns [] for no tasks', () => {
@@ -89,10 +86,9 @@ describe('QUICK_PICK_FILTERS', () => {
     ]);
   });
 
-  it('never offers the Big projects (4hrs/5hrs+) buckets — quick wins only', () => {
+  it('never offers the Big projects (4hrs+) bucket — quick wins only', () => {
     const offered = new Set(QUICK_PICK_FILTERS.flatMap((f) => f.buckets));
-    expect(offered.has('4hrs')).toBe(false);
-    expect(offered.has('5hrs+')).toBe(false);
+    expect(offered.has('4hrs+')).toBe(false);
   });
 });
 
@@ -137,8 +133,7 @@ describe('filterForQuickPick', () => {
     const ids = filterForQuickPick(
       [
         task('t2hr', { timeCommitment: '2hrs' }),
-        task('t4hr', { timeCommitment: '4hrs' }),
-        task('t5hr', { timeCommitment: '5hrs+' }),
+        task('t4hr', { timeCommitment: '4hrs+' }),
         task('tnone'), // no estimate
       ],
       '120',

@@ -67,7 +67,7 @@ interface Task {
   createdAt: Date;
   lastCompletedAt: Date | null;
   expectedFrequency?: { value: number; unit: 'day' | 'week' | 'month' | 'year' };
-  timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs' | '5hrs+';
+  timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs+';
   isArchived: boolean;
   notes: string;                   // 512 char max
 }

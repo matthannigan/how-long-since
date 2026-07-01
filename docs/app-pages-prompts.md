@@ -85,7 +85,7 @@ By Category grouping is detailed in §3, By Time in §4.
 
 **Time Commitment Indicators:**
 - Filled-circle system, text always paired:
-  - 15min ● · 30min ●● · 1hr ●●● · 2hrs ●●●● · 4hrs ●●●●● · 5hrs+ ●●●●● +
+  - 15min ● · 30min ●● · 1hr ●●● · 2hrs ●●●● · 4hrs+ ●●●●●
 - Rendered in neutral/greige (not the category color), so the category tag stays the colored element
 - Include a text label for accessibility
 
@@ -187,7 +187,7 @@ section) so the default form stays short.
 
 5. **Time Commitment** (Optional)
    - Radio buttons or segmented control
-   - Options: 15min, 30min, 1hr, 2hrs, 4hrs, 5hrs+
+   - Options: 15min, 30min, 1hr, 2hrs, 4hrs+
    - Visual circle indicators
    - Helper text: "How long does this usually take?"
 

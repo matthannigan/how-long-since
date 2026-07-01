@@ -392,7 +392,7 @@ overdue rows.
 
 ### Time-Commitment Indicators
 Filled-circle system, text always paired:
-- **15min**: ● · **30min**: ●● · **1hr**: ●●● · **2hrs**: ●●●● · **4hrs**: ●●●●● · **5hrs+**: ●●●●● +
+- **15min**: ● · **30min**: ●● · **1hr**: ●●● · **2hrs**: ●●●● · **4hrs+**: ●●●●●
 
 In By Time the circles double as the section markers; in rows the estimate reads
 as `● 15 min`. The circles use a neutral/greige treatment (not the category

@@ -18,7 +18,7 @@ Unlike traditional task managers, this app answers the question "How long has it
 2. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify a description (max 512 characters)
 3. WHEN a user creates a new task THEN the system SHALL allow them to assign the task to a category
 4. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify an expected frequency (value + unit: days/weeks/months/years)
-5. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify a time commitment (15min, 30min, 1hr, 2hrs, 4hrs, 5hrs+)
+5. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify a time commitment (15min, 30min, 1hr, 2hrs, 4hrs+)
 6. WHEN a user creates a new task THEN the system SHALL allow them to add optional notes (max 512 characters)
 7. WHEN a user saves a task THEN the system SHALL validate all required fields and display clear error messages for any issues
 8. WHEN a user wants to edit a task THEN the system SHALL provide the same interface as task creation with pre-populated fields
@@ -64,7 +64,7 @@ Unlike traditional task managers, this app answers the question "How long has it
 #### Acceptance Criteria
 
 1. WHEN a user switches to time commitment view THEN the system SHALL group tasks by their estimated time commitment
-2. WHEN displaying time commitment groups THEN the system SHALL order them from shortest to longest (15min, 30min, 1hr, 2hrs, 4hrs, 5hrs+)
+2. WHEN displaying time commitment groups THEN the system SHALL order them from shortest to longest (15min, 30min, 1hr, 2hrs, 4hrs+)
 3. WHEN a task has no time commitment specified THEN the system SHALL place it in a separate "Time Unknown" group at the bottom
 4. WHEN in time commitment view THEN the system SHALL still display category information for each task
 5. WHEN in time commitment view THEN the system SHALL still display time elapsed since last completion

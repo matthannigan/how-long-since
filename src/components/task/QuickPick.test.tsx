@@ -31,7 +31,7 @@ function task(id: string, name: string, overrides: Partial<Task> = {}): Task {
 const TASKS = [
   task('11111111-1111-4111-8111-111111111111', 'Quick fifteen', { timeCommitment: '15min' }),
   task('22222222-2222-4222-8222-222222222222', 'Half hour job', { timeCommitment: '30min' }),
-  task('33333333-3333-4333-8333-333333333333', 'Big project', { timeCommitment: '5hrs+' }),
+  task('33333333-3333-4333-8333-333333333333', 'Big project', { timeCommitment: '4hrs+' }),
 ];
 
 describe('QuickPick', () => {
@@ -54,7 +54,7 @@ describe('QuickPick', () => {
 
   it('shows the no-match copy when nothing fits the window', async () => {
     const onlyBig = [
-      task('44444444-4444-4444-8444-444444444444', 'Only big', { timeCommitment: '5hrs+' }),
+      task('44444444-4444-4444-8444-444444444444', 'Only big', { timeCommitment: '4hrs+' }),
     ];
     const { findByText } = renderWithRouter(
       <QuickPick tasks={onlyBig} categoryById={categoryById} now={NOW} />,

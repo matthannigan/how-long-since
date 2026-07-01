@@ -14,16 +14,12 @@ import { TaskCompletionButton } from './TaskCompletionButton';
  * are always paired with the text label so meaning never rides on the glyph
  * alone. Shared shape so Step 6's By Time markers can reuse it.
  */
-const TIME_COMMITMENT_META: Record<
-  TimeCommitment,
-  { dots: number; label: string; plus?: boolean }
-> = {
+const TIME_COMMITMENT_META: Record<TimeCommitment, { dots: number; label: string }> = {
   '15min': { dots: 1, label: '15 min' },
   '30min': { dots: 2, label: '30 min' },
   '1hr': { dots: 3, label: '1 hr' },
   '2hrs': { dots: 4, label: '2 hrs' },
-  '4hrs': { dots: 5, label: '4 hrs' },
-  '5hrs+': { dots: 5, label: '5 hrs+', plus: true },
+  '4hrs+': { dots: 5, label: '4+ hrs' },
 };
 
 /** Elapsed-anchor text color per status (AA-safe tokens for the alert tiers). */
@@ -116,10 +112,7 @@ export function TaskCard({
                     variant === 'category' && 'rounded-chip bg-surface-sunk px-2 py-0.5',
                   )}
                 >
-                  <span aria-hidden="true">
-                    {'●'.repeat(time.dots)}
-                    {time.plus ? '+' : ''}
-                  </span>
+                  <span aria-hidden="true">{'●'.repeat(time.dots)}</span>
                   {time.label}
                 </span>
               )}

@@ -3,9 +3,8 @@ import type { OverdueStatus, Task, TimeCommitment } from '@/types';
 
 /**
  * A By Time group (app-pages-prompts §4). The view shows five named sections
- * shortest→longest plus a trailing "No time set" catch-all. `4hrs` and `5hrs+`
- * merge into the "Big projects" section; within it, `4hrs` sorts before `5hrs+`
- * because the `buckets` order is shortest→longest (Req 4.2).
+ * shortest→longest (`4hrs+` is the open-ended "Big projects" top bucket) plus a
+ * trailing "No time set" catch-all (Req 4.2).
  */
 export interface TimeSection {
   id: string;
@@ -22,7 +21,7 @@ export const TIME_SECTIONS: TimeSection[] = [
   { id: 'short', title: 'Short tasks', shortLabel: '30 min', buckets: ['30min'] },
   { id: 'medium', title: 'Medium tasks', shortLabel: '1 hr', buckets: ['1hr'] },
   { id: 'longer', title: 'Longer tasks', shortLabel: '2 hrs', buckets: ['2hrs'] },
-  { id: 'big', title: 'Big projects', shortLabel: '4+ hrs', buckets: ['4hrs', '5hrs+'] },
+  { id: 'big', title: 'Big projects', shortLabel: '4+ hrs', buckets: ['4hrs+'] },
   { id: 'none', title: 'No time set', shortLabel: '', buckets: [] },
 ];
 
@@ -31,7 +30,7 @@ export interface TimeGroup {
   tasks: Task[];
 }
 
-/** Position of a task's bucket within its section (orders 4hrs before 5hrs+). */
+/** Position of a task's bucket within its (currently single-bucket) section. */
 function bucketRank(section: TimeSection, bucket: TimeCommitment | undefined): number {
   if (!bucket) return 0;
   const i = section.buckets.indexOf(bucket);
@@ -70,7 +69,7 @@ export interface QuickPickFilter {
  * The Quick Pick "How much time do you have?" windows. Each maps the chosen
  * window to the time-commitment buckets that fit, cumulatively. Quick Pick is
  * for surfacing quick wins, so it deliberately tops out at `2hrs` — the "Big
- * projects" (4hrs/5hrs+) and "No time set" buckets are never offered here (they
+ * projects" (`4hrs+`) and "No time set" buckets are never offered here (they
  * still appear in the full By Time list below). Documenting the mapping here
  * keeps it testable (step-6 risk note).
  */
