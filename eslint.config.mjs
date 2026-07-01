@@ -42,12 +42,14 @@ export default tseslint.config(
     },
   },
   {
-    // Default exports are required by these tools / conventions.
+    // Default exports are required by these tools / conventions. shadcn/ui
+    // primitives (owned in-repo) co-export components with variant helpers.
     files: [
       '**/*.config.{ts,js,mjs}',
       'vite.config.ts',
       'playwright.config.ts',
       'src/routes/**/*.tsx',
+      'src/components/ui/**/*.tsx',
     ],
     rules: {
       'import/no-default-export': 'off',

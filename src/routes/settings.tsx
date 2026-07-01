@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-// Placeholder — the Settings page is built in Step 8.
+import { SettingsView } from '@/components/settings/SettingsView';
+
 export const Route = createFileRoute('/settings')({
-  component: () => null,
+  component: SettingsView,
 });

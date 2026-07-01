@@ -6,6 +6,27 @@
     <meta name="theme-color" content="#FAF8F4" />
     <meta name="description" content="Track how long it's been since you last did something." />
     <title>How Long Since</title>
+    <!--
+      Pre-paint theme/preference guard. Reads the localStorage mirror written by
+      lib/settings.ts and applies the same data-attributes as PreferencesProvider
+      before first paint, so an explicit light/dark choice never flashes the wrong
+      theme. 'system' (or no stored value) leaves [data-theme] unset so the
+      prefers-color-scheme media query governs.
+    -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('hls-prefs') || '{}');
+          var el = document.documentElement;
+          if (p.theme === 'light' || p.theme === 'dark') el.setAttribute('data-theme', p.theme);
+          if (p.textSize && p.textSize !== 'default') el.setAttribute('data-text-size', p.textSize);
+          if (p.highContrast) el.setAttribute('data-high-contrast', 'true');
+          if (p.reducedMotion) el.setAttribute('data-reduced-motion', 'true');
+        } catch (e) {
+          /* storage unavailable — provider applies prefs after mount */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

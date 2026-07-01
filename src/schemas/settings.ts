@@ -9,3 +9,6 @@ export const appSettingsSchema = z.object({
   highContrast: z.boolean(),
   reducedMotion: z.boolean(),
 });
+
+/** Patch shape for `updateSettings` — every field optional; `id` is never edited. */
+export const updateSettingsSchema = appSettingsSchema.partial();

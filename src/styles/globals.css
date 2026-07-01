@@ -153,4 +153,54 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+
+  /*
+   * Text-size scaling (Step 4). Root font-size drives every rem-based size, so
+   * type — and rem spacing — scale together. AppSettings.textSize maps to
+   * [data-text-size] via PreferencesProvider; default is the 100% browser base.
+   * Size text in rem/Tailwind utilities (not px) so it participates in this.
+   */
+  html[data-text-size='large'] {
+    font-size: 125%;
+  }
+  html[data-text-size='larger'] {
+    font-size: 150%;
+  }
+
+  /*
+   * Reduced motion — honored at the CSS layer via the OS media query AND the
+   * AppSettings override ([data-reduced-motion='true'] set by the provider).
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  [data-reduced-motion='true'] *,
+  [data-reduced-motion='true'] ::before,
+  [data-reduced-motion='true'] ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * High contrast (Step 4, minimal — refined in the Step 9 audit). Collapses the
+ * warm text ramp onto --color-ink and strengthens borders (style-guide §6).
+ * Overriding the tokens here cascades to every `text-ink-*` / `border-*` utility.
+ */
+[data-high-contrast='true'] {
+  --color-ink-secondary: var(--color-ink);
+  --color-ink-tertiary: var(--color-ink);
+  --color-ink-faint: var(--color-ink);
+  --color-ink-meta-aa: var(--color-ink);
+  --color-border-default: #b8b2a8;
+  --color-border-soft: #b8b2a8;
 }
