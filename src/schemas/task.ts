@@ -24,3 +24,6 @@ export const createTaskSchema = taskSchema.omit({
   lastCompletedAt: true,
   isArchived: true,
 });
+
+// Editable fields only, all optional — used to validate `updateTask` patches.
+export const updateTaskSchema = createTaskSchema.partial();

@@ -12,3 +12,6 @@ export const createCategorySchema = categorySchema.omit({
   id: true,
   isDefault: true,
 });
+
+// name/color/icon, all optional — used to validate `updateCategory` patches.
+export const updateCategorySchema = createCategorySchema.partial();
