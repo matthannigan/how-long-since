@@ -68,6 +68,21 @@ describe('TaskCard', () => {
     expect(await findByText(/15 min/)).toBeInTheDocument();
   });
 
+  it('renders a tokenized AA category tag in the time variant', async () => {
+    const kitchen = DEFAULT_CATEGORIES[0];
+    const { findByText } = renderWithRouter(
+      <TaskCard
+        task={makeTask({ timeCommitment: '15min' })}
+        category={kitchen}
+        variant="time"
+        now={NOW}
+      />,
+    );
+    const tag = await findByText('Kitchen');
+    // Tokenized (style-guide §1.4/§1.5), not the old provisional `${color}1a` tint.
+    expect(tag.getAttribute('style')).toContain('var(--color-cat-kitchen-tag-bg)');
+  });
+
   it('has no axe violations', async () => {
     const { container, findByRole } = renderWithRouter(
       <TaskCard task={makeTask({ lastCompletedAt: daysAgo(9), expectedFrequency: WEEKLY })} now={NOW} />,

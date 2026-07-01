@@ -115,6 +115,42 @@ export async function seedSampleTasks(): Promise<void> {
       isArchived: false,
       notes: '',
     },
+    {
+      id: 'a1e1b2c3-0008-4a00-8000-000000000008',
+      name: 'Wash the car',
+      description: '',
+      categoryId: categoryId('Vehicles'),
+      createdAt,
+      lastCompletedAt: daysAgo(4), // none — "4 d"
+      expectedFrequency: weekly,
+      timeCommitment: '2hrs', // Longer tasks
+      isArchived: false,
+      notes: '',
+    },
+    {
+      id: 'a1e1b2c3-0009-4a00-8000-000000000009',
+      name: 'Organize the garage',
+      description: '',
+      categoryId: categoryId('Exterior'),
+      createdAt,
+      lastCompletedAt: daysAgo(50), // very-overdue
+      expectedFrequency: weekly,
+      timeCommitment: '5hrs+', // Big projects
+      isArchived: false,
+      notes: '',
+    },
+    {
+      id: 'a1e1b2c3-0010-4a00-8000-000000000010',
+      name: 'Back up photos',
+      description: '',
+      categoryId: categoryId('Digital/Tech'),
+      createdAt,
+      lastCompletedAt: daysAgo(2), // none — "2 d"
+      expectedFrequency: weekly,
+      // no timeCommitment — lands in the "No time set" group
+      isArchived: false,
+      notes: '',
+    },
   ];
 
   await db.tasks.bulkAdd(samples);

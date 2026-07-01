@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Clock } from 'lucide-react';
 
+import { getCategoryTag } from '@/lib/category-tags';
 import { calculateOverdueStatus } from '@/lib/overdue';
 import { formatElapsedCompact } from '@/lib/time-format';
 import { cn } from '@/lib/utils';
@@ -44,6 +45,8 @@ interface TaskCardProps {
   variant?: 'category' | 'time';
   /** Injectable clock so status/elapsed are deterministic in tests. */
   now?: Date;
+  /** Extra classes on the row root — used by Quick Pick to tighten the row. */
+  className?: string;
 }
 
 /**
@@ -52,7 +55,13 @@ interface TaskCardProps {
  * but the checkbox — links to the detail/edit route. Three overdue tiers each
  * carry a non-color cue plus screen-reader text.
  */
-export function TaskCard({ task, category, variant = 'category', now = new Date() }: TaskCardProps) {
+export function TaskCard({
+  task,
+  category,
+  variant = 'category',
+  now = new Date(),
+  className,
+}: TaskCardProps) {
   const status = calculateOverdueStatus(task, now);
   const elapsed = formatElapsedCompact(task.lastCompletedAt, now);
   const isOverdue = status === 'overdue' || status === 'very-overdue';
@@ -60,6 +69,7 @@ export function TaskCard({ task, category, variant = 'category', now = new Date(
 
   const showPill = status === 'very-overdue';
   const showTag = variant === 'time' && !!category;
+  const tag = showTag ? getCategoryTag(category) : null;
   const hasMeta = showPill || showTag || !!time;
 
   return (
@@ -69,6 +79,7 @@ export function TaskCard({ task, category, variant = 'category', now = new Date(
         isOverdue
           ? 'border-[1.5px] border-overdue-border'
           : 'shadow-[0_2px_10px_-6px_rgba(70,62,55,0.18)]',
+        className,
       )}
     >
       <TaskCompletionButton task={task} />
@@ -89,11 +100,11 @@ export function TaskCard({ task, category, variant = 'category', now = new Date(
                 </span>
               )}
               {showTag && (
-                // Provisional tint for Step 6; refined to the AA tag pairs in
-                // style-guide §1.4 when the By Time view lands.
+                // AA-safe tinted category tag (style-guide §1.4/§1.5), tokenized
+                // via getCategoryTag so dark mode swaps automatically.
                 <span
                   className="rounded-chip px-2 py-0.5 text-[0.625rem] font-semibold"
-                  style={{ backgroundColor: `${category.color}1a`, color: category.color }}
+                  style={tag ? { backgroundColor: tag.bg, color: tag.fg } : undefined}
                 >
                   {category.name}
                 </span>

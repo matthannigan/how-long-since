@@ -77,6 +77,29 @@
   --color-cat-health: #14b8a6;
   --color-cat-pets: #f97316;
   --color-cat-garden: #84cc16;
+
+  /* Category tags (§1.4) — AA-safe tinted bg + text for the By Time row tag.
+     Dark equivalents (§1.5) override these in the dark blocks below. */
+  --color-cat-kitchen-tag-bg: #e4edfb;
+  --color-cat-kitchen-tag-fg: #3b6fd4;
+  --color-cat-bathroom-tag-bg: #ede4fb;
+  --color-cat-bathroom-tag-fg: #7b54d4;
+  --color-cat-bedroom-tag-bg: #fbe0ef;
+  --color-cat-bedroom-tag-fg: #c43b7e;
+  --color-cat-living-tag-bg: #dcf0e6;
+  --color-cat-living-tag-fg: #2e8c63;
+  --color-cat-exterior-tag-bg: #fbedd2;
+  --color-cat-exterior-tag-fg: #9a6c1e;
+  --color-cat-vehicles-tag-bg: #fadbd8;
+  --color-cat-vehicles-tag-fg: #d6453c;
+  --color-cat-digital-tag-bg: #e4e5fb;
+  --color-cat-digital-tag-fg: #4b4dd1;
+  --color-cat-health-tag-bg: #d4f0ec;
+  --color-cat-health-tag-fg: #128377;
+  --color-cat-pets-tag-bg: #fbe6d6;
+  --color-cat-pets-tag-fg: #d97327;
+  --color-cat-garden-tag-bg: #eaf3d6;
+  --color-cat-garden-tag-fg: #6e9a1f;
 }
 
 :root {
@@ -112,6 +135,30 @@
     --color-overdue-aa: #f0876b;
     --color-overdue-tint: rgba(240, 135, 107, 0.16);
     --color-overdue-border: rgba(240, 135, 107, 0.5);
+
+    /* Category tags (§1.5). The 4 hues §1.5 does not enumerate (Bedroom,
+       Exterior, Digital, Health) are derived per its rule: bg rgba(base,.18–.20),
+       text a light tint of the base. */
+    --color-cat-kitchen-tag-bg: rgba(59, 130, 246, 0.18);
+    --color-cat-kitchen-tag-fg: #7fb0ff;
+    --color-cat-bathroom-tag-bg: rgba(139, 92, 246, 0.2);
+    --color-cat-bathroom-tag-fg: #b99bfa;
+    --color-cat-bedroom-tag-bg: rgba(236, 72, 153, 0.18);
+    --color-cat-bedroom-tag-fg: #f17fb0;
+    --color-cat-living-tag-bg: rgba(16, 185, 129, 0.18);
+    --color-cat-living-tag-fg: #5fcfa3;
+    --color-cat-exterior-tag-bg: rgba(245, 158, 11, 0.18);
+    --color-cat-exterior-tag-fg: #e9b564;
+    --color-cat-vehicles-tag-bg: rgba(239, 68, 68, 0.18);
+    --color-cat-vehicles-tag-fg: #f58b84;
+    --color-cat-digital-tag-bg: rgba(99, 102, 241, 0.2);
+    --color-cat-digital-tag-fg: #9e9ff5;
+    --color-cat-health-tag-bg: rgba(20, 184, 166, 0.18);
+    --color-cat-health-tag-fg: #5fd3c4;
+    --color-cat-pets-tag-bg: rgba(249, 115, 22, 0.18);
+    --color-cat-pets-tag-fg: #f5a05a;
+    --color-cat-garden-tag-bg: rgba(132, 204, 22, 0.18);
+    --color-cat-garden-tag-fg: #a8db5c;
   }
 }
 
@@ -143,6 +190,28 @@
   --color-overdue-aa: #f0876b;
   --color-overdue-tint: rgba(240, 135, 107, 0.16);
   --color-overdue-border: rgba(240, 135, 107, 0.5);
+
+  /* Category tags (§1.5) — see the derivation note in the media-query block. */
+  --color-cat-kitchen-tag-bg: rgba(59, 130, 246, 0.18);
+  --color-cat-kitchen-tag-fg: #7fb0ff;
+  --color-cat-bathroom-tag-bg: rgba(139, 92, 246, 0.2);
+  --color-cat-bathroom-tag-fg: #b99bfa;
+  --color-cat-bedroom-tag-bg: rgba(236, 72, 153, 0.18);
+  --color-cat-bedroom-tag-fg: #f17fb0;
+  --color-cat-living-tag-bg: rgba(16, 185, 129, 0.18);
+  --color-cat-living-tag-fg: #5fcfa3;
+  --color-cat-exterior-tag-bg: rgba(245, 158, 11, 0.18);
+  --color-cat-exterior-tag-fg: #e9b564;
+  --color-cat-vehicles-tag-bg: rgba(239, 68, 68, 0.18);
+  --color-cat-vehicles-tag-fg: #f58b84;
+  --color-cat-digital-tag-bg: rgba(99, 102, 241, 0.2);
+  --color-cat-digital-tag-fg: #9e9ff5;
+  --color-cat-health-tag-bg: rgba(20, 184, 166, 0.18);
+  --color-cat-health-tag-fg: #5fd3c4;
+  --color-cat-pets-tag-bg: rgba(249, 115, 22, 0.18);
+  --color-cat-pets-tag-fg: #f5a05a;
+  --color-cat-garden-tag-bg: rgba(132, 204, 22, 0.18);
+  --color-cat-garden-tag-fg: #a8db5c;
 }
 
 @layer base {
@@ -203,4 +272,26 @@
   --color-ink-meta-aa: var(--color-ink);
   --color-border-default: #b8b2a8;
   --color-border-soft: #b8b2a8;
+}
+
+/*
+ * Quick Pick panel chrome (style-guide §3.7). The warm gradient is panel-only
+ * chrome, not a reusable token, so it lives here as a class. In dark mode it
+ * becomes a raised surface. Unlayered, so it wins over Tailwind's layered
+ * `border`/`bg-*` utilities without needing !important.
+ */
+.quick-pick-panel {
+  background: linear-gradient(180deg, #f3f1eb, #faf9f5);
+  border-color: #e7e2d8;
+}
+[data-theme='dark'] .quick-pick-panel,
+.dark .quick-pick-panel {
+  background: var(--color-surface-card);
+  border-color: var(--color-border-default);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not(.light) .quick-pick-panel {
+    background: var(--color-surface-card);
+    border-color: var(--color-border-default);
+  }
 }

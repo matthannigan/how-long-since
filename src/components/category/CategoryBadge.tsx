@@ -14,7 +14,7 @@ export function CategoryBadge({ category, count }: { category: Category; count: 
         style={{ backgroundColor: category.color }}
         aria-hidden="true"
       />
-      <h3 className="font-display text-[0.875rem] font-bold text-ink">{category.name}</h3>
+      <h3 className="font-display text-lg font-bold text-ink">{category.name}</h3>
       <span className="text-xs text-ink-meta-aa">{count}</span>
     </div>
   );
