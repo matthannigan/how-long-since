@@ -73,6 +73,8 @@ The app serves diverse users with different needs:
 - Full accessibility compliance
 
 ### Phase 2: Enhanced Experience
+- Swipe gestures
+- Multiple UI themes
 - Pre-built task templates
 - Desktop-optimized dashboard
 - Onboarding tutorials
