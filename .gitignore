@@ -52,3 +52,6 @@ test-results/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code — share launch.json, keep personal settings local
+.claude/settings.local.json

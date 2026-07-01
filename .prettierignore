@@ -1,0 +1,11 @@
+node_modules
+dist
+dev-dist
+coverage
+playwright-report
+test-results
+pnpm-lock.yaml
+src/routeTree.gen.ts
+
+# Human-authored Markdown (docs/, dev/, AGENTS.md, README.md, …) is hand-formatted.
+*.md
