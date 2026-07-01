@@ -34,8 +34,7 @@ src/
 │   │   ├── CategoryBadge.tsx
 │   │   └── CategoryForm.tsx
 │   └── layout/
-│       ├── AppShell.tsx
-│       └── BottomNav.tsx
+│       └── AppShell.tsx
 ├── lib/                       # Business logic — plain functions, not classes
 │   ├── db/
 │   │   └── schema.ts          # Dexie class, table schema, versioning
