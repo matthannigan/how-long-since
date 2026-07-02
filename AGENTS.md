@@ -67,7 +67,7 @@ interface Task {
   createdAt: Date;
   lastCompletedAt: Date | null;
   expectedFrequency?: { value: number; unit: 'day' | 'week' | 'month' | 'year' };
-  timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs' | '5hrs+';
+  timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs+';
   isArchived: boolean;
   notes: string;                   // 512 char max
 }
@@ -92,7 +92,7 @@ Singleton row, `id` always `'1'`. No `personaPreference` field — persona-mode-
 interface AppSettings {
   id: string;
   lastBackupDate: Date | null;
-  currentView: 'category' | 'time';
+  currentView: 'quick' | 'category' | 'time';   // default 'quick' (Quick Wins)
   theme: 'light' | 'dark' | 'system';
   textSize: 'default' | 'large' | 'larger';
   highContrast: boolean;

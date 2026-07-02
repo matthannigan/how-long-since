@@ -33,13 +33,15 @@ composition and page-specific detail. Quick reference:
 ## Navigation Model
 
 The Soft Daylight mocks establish a **single-screen shell with a top segmented
-toggle** — "By Category" / "By Time" — plus a settings gear at top-right. There
-is **no bottom navigation bar** in these designs (a change from the earlier
+toggle** — three segments in order, **"Quick Wins" / "By Category" / "By Time"**
+— plus a settings gear at top-right. **Quick Wins is the first segment and the
+default view** (route `/`); By Category is `/category` and By Time is `/time`.
+There is **no bottom navigation bar** in these designs (a change from the earlier
 spec).
 
 **Add Task = floating action button (FAB).** A terracotta FAB with a white "+"
 sits fixed in the lower-right corner, Google-Calendar style, and is always
-available while browsing By Category or By Time. Tapping it opens the Add New
+available while browsing any view. Tapping it opens the Add New
 Task modal (§2). It floats above the scrolling list (overlapping content is
 expected, as in Google Calendar) and hides while the modal is open. See
 `docs/style-guide.md` §3.1 for the component spec. Settings opens from the
@@ -47,17 +49,18 @@ top-right gear.
 
 ---
 
-## 1. App Shell & Main Task List (By Category default)
+## 1. App Shell & Main Task List (Quick Wins default)
 
 **Context:** The primary screen where users view and interact with their
-household tasks. It opens in **By Category** by default (grouped by room/area).
-This section defines the shared shell and the row anatomy used by both views;
-By Category grouping is detailed in §3, By Time in §4.
+household tasks. It opens in **Quick Wins** by default (the "what can I knock out
+right now" view; §4). This section defines the shared shell and the row anatomy
+used by all views; By Category grouping is detailed in §3, By Time and Quick Wins
+in §4.
 
 **Layout Requirements:**
 - Mobile-first vertical layout, single column, generous spacing
 - **Header**: app title "How Long Since" (left) + settings gear in a 36px greige circle (right)
-- **View toggle** below the header: segmented "By Category" / "By Time"
+- **View toggle** below the header: three segments "Quick Wins" / "By Category" / "By Time"
 - Scrollable task list; group headers depend on the active view
 - **No bottom navigation bar.** A terracotta **FAB** (lower-right, always present on both views) opens the Add New Task modal (§2); Settings opens from the top-right gear (see Navigation Model above)
 
@@ -85,7 +88,7 @@ By Category grouping is detailed in §3, By Time in §4.
 
 **Time Commitment Indicators:**
 - Filled-circle system, text always paired:
-  - 15min ● · 30min ●● · 1hr ●●● · 2hrs ●●●● · 4hrs ●●●●● · 5hrs+ ●●●●● +
+  - 15min ● · 30min ●● · 1hr ●●● · 2hrs ●●●● · 4hrs+ ●●●●●
 - Rendered in neutral/greige (not the category color), so the category tag stays the colored element
 - Include a text label for accessibility
 
@@ -152,7 +155,7 @@ an existing one). Design source: options 5a (light) / 5b (dark).
 **Field Controls (as designed):**
 - **Task name** — single-line box: `padding 14px 16px; background #FFFFFF; border 1.5px solid #E4E0D8; radius 14px; font 600 16px; color #3A3330; shadow 0 2px 8px -6px rgba(70,62,55,.2)`
 - **Category** — wrapping **color-chip picker**: unselected chip `padding 8px 12px; radius 20px; bg #FFFFFF; border 1.5px solid #E4E0D8; font 600 13px; color #8A8177` with an 11px color dot; selected chip = tinted bg + colored border + colored text (e.g. Bathroom → bg `#F3EBFB`, border `#8B5CF6`, text `#6C3FC7`); trailing "+ New" chip with dashed border `1.5px dashed #D6D1C7`, text `#B0A99E`
-- **Time estimate** — segmented control: track `#EDEAE2` radius 14px padding 4px; options `● 15m  ●● 30m  ●●● 1h  2h+`; selected = white pill (radius 10px, `shadow 0 2px 6px rgba(70,62,55,.12)`, font 700, `#3A3330`); unselected `#9B948B`
+- **Time estimate** — segmented control: track `#EDEAE2` radius 14px padding 4px; options `● 15m  ●● 30m  ●●● 1h  ●●●● 2h  ●●●●● 4+ hrs`; selected = white pill (radius 10px, `shadow 0 2px 6px rgba(70,62,55,.12)`, font 700, `#3A3330`); unselected `#9B948B`
 - **Should happen every** (frequency) — helper line "We'll gently flag it once this much time has passed." (`#B0A99E`); control is a box with a big numeral (Bricolage 24px `#3A3330`) + an inner Days/Weeks/Months segmented picker whose **selected pill is terracotta** (`#D98C63`, white text)
 - **Last done** (maps to `lastCompletedAt`) — three pills: Today / Yesterday / "Pick date ▾"; active pill `bg #F3EBE4; border 1.5px solid #D98C63; text #B4623C`; sub-line confirms the resolved date ("Set to Apr 2, 2026 · 3 months ago")
 
@@ -187,7 +190,7 @@ section) so the default form stays short.
 
 5. **Time Commitment** (Optional)
    - Radio buttons or segmented control
-   - Options: 15min, 30min, 1hr, 2hrs, 4hrs, 5hrs+
+   - Options: 15min, 30min, 1hr, 2hrs, 4hrs+
    - Visual circle indicators
    - Helper text: "How long does this usually take?"
 
@@ -237,7 +240,7 @@ option 3a (light), 4b (dark). This is the default view; the view toggle reads
 **By Category** active.
 
 **Layout Requirements:**
-- Shared shell (§1): header + "By Category / By Time" toggle (By Category active)
+- Shared shell (§1): header + "Quick Wins / By Category / By Time" toggle (By Category active)
 - Category groups in sequence, each a dot+name+count header followed by its rows
 - Rows use the shared task-row design (§1); in this view the meta line shows the greige **time-estimate chip** (no category tag — the group header already carries the category)
 
@@ -267,7 +270,7 @@ option 3a (light), 4b (dark). This is the default view; the view toggle reads
 **Sample Layout:**
 ```
 How Long Since                                    ⚙
-[  By Category  |      By Time      ]
+[  Quick Wins  |  By Category  |  By Time  ]
 
 ● Kitchen  3
 ○ Descale coffee maker      [● 15 min]           1 wk
@@ -307,7 +310,7 @@ tasks that fit their available time. Design source: option 2a (light), 4a
 
 **Layout Requirements:**
 - Shared shell (§1): header + toggle (By Time active)
-- A prominent **Quick pick** panel at the top, then time-commitment sections in order
+- Time-commitment sections in order (the Quick Pick panel now lives in its own **Quick Wins** view — see §4a)
 - Rows use the shared task-row design (§1); in this view the meta line shows the category **tinted tag** + muted time-estimate text (so the category is visible without a group header)
 
 **Visual Design Specifications:**
@@ -323,12 +326,6 @@ tasks that fit their available time. Design source: option 2a (light), 4a
 5. **Big projects** — 4+ hrs ●●●●●
 6. **No time set** (tasks without an estimate)
 
-**Quick Pick Panel:**
-- Container: `background linear-gradient(180deg,#F3F1EB,#FAF9F5); border 1px solid #E7E2D8; radius 20px; padding 16px 18px`, margin `4px 16px 10px`
-- Header: ☀ sun glyph + "Quick pick" (`#C0794C`, DM Sans 700 12px) + subline "You've got 20 minutes — here's what fits:" (`#6E675E`)
-- Contains 2–5 matching tasks as standard rows at a tighter radius (15px) and lighter shadow (`0 2px 8px -4px rgba(70,62,55,.16)`)
-- Dark (4a): panel gradient `#2B2620 → #232019`, border `#37322C`, label `#E8875A`
-
 **Task Row in this view:**
 - Same row as §1, with the category **tinted tag** in the meta line (not a greige time chip)
 - Keep the elapsed time prominent (Bricolage 600 15px, status-colored)
@@ -337,13 +334,7 @@ tasks that fit their available time. Design source: option 2a (light), 4a
 **Sample Layout:**
 ```
 How Long Since                                    ⚙
-[      By Category      |  By Time  ]
-
-┌ ☀ Quick pick ──────────────────────────────────┐
-│ You've got 20 minutes — here's what fits:       │
-│ ○ Descale coffee maker  [Kitchen] ● 15 min  1 wk│
-│ ○ Apply flea treatment  [Pets] ● 15 min   ! 5 wk│
-└─────────────────────────────────────────────────┘
+[  Quick Wins  |  By Category  |  By Time  ]
 
 ● Quick tasks   15 min · 3
 ○ Check tire pressure    [Vehicles] ● 15 min       2 wk
@@ -370,6 +361,45 @@ How Long Since                                    ⚙
 - "I have X minutes" slider/input
 - "Show overdue first"
 - "Recently completed" toggle
+
+---
+
+## 4a. Quick Wins View (default)
+
+**Context:** The default, first view — "I've got some time; what can I knock
+out?". The user states how much time they have and the app surfaces the fitting
+non-archived tasks, most-urgent first, as ordinary task rows (so complete + undo
+work exactly as elsewhere). Route `/`; the view toggle reads **Quick Wins**
+active. Was formerly the Quick Pick panel fronting §4 By Time.
+
+**Layout Requirements:**
+- Shared shell (§1): header + toggle (Quick Wins active)
+- A **Quick Wins** panel (the prompt + time radios), then the matching tasks in their own group below it — no per-time-section grouping (that's By Time)
+- Task rows use the shared task-row design (§1) with the category **tinted tag** (as in By Time), at the **same full size** as rows in By Category / By Time
+
+**Panel & content:**
+- Container (holds **only** the prompt + radios): `background linear-gradient(180deg,#F3F1EB,#FAF9F5); border 1px solid #E7E2D8; radius 20px; padding 16px 18px` (sits within the shell's page padding — no extra side margin)
+- **No panel title** — the panel leads directly with the prompt **"How much time do you have?"**, **styled as a section heading** (Bricolage `font-display` ~18px 700 `#3A3330`, matching the §3/§4 group headers), which is also the radio group's accessible name. (The former ☀ "Quick pick" header was dropped when the tab became "Quick Wins".)
+- Time-window radios (below the heading, at a comfortable size — ≈20px control, ~16px labels): **15 min / 30 min / 1 hour / 2 hours** (cumulative buckets; never offers Big projects `4hrs+` or untimed tasks — quick wins only), default **15 min**
+- **Below the panel**, lists **up to 8** matching tasks as **standard full-size rows** (identical to By Category / By Time — no tighter radius), most-overdue first (tie-break longest-elapsed); no "show more" in Phase 1
+- Empty match copy (below the panel): "No tasks match this time filter."
+- Dark: panel gradient `#2B2620 → #232019`, border `#37322C`
+
+**Sample Layout:**
+```
+How Long Since                                    ⚙
+[  Quick Wins  |  By Category  |  By Time  ]
+
+┌─────────────────────────────────────────────────┐
+│ How much time do you have?                      │
+│ ● 15 min  ○ 30 min  ○ 1 hour  ○ 2 hours         │
+└─────────────────────────────────────────────────┘
+
+○ Clean shower grout   [Bathroom] ● 15 min    ! 6 wk
+○ Descale coffee maker [Kitchen]  ● 15 min      1 wk
+○ Restock toiletries   [Bathroom] ● 15 min     Yest.
+```
+([Category] = tinted category tag · a terracotta "+" FAB floats fixed in the lower-right)
 
 ---
 
@@ -414,7 +444,8 @@ How Long Since                                    ⚙
 
 **2. Default View**
 - Radio buttons for:
-  - By Category (default)
+  - Quick Wins (default)
+  - By Category
   - By Time
 - Helper text: "Choose your preferred starting view"
 
@@ -458,7 +489,8 @@ APPEARANCE
 ♿ Accessibility           High Contrast    [ ○ ]
 
 DEFAULT VIEW
-📋 Starting View           By Category      ( ● )
+📋 Starting View           Quick Wins       ( ● )
+                          By Category      (   )
                           By Time          (   )
 
 DATA MANAGEMENT

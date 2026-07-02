@@ -130,6 +130,7 @@ several, or none on a given day:
 ### 3.2 Navigation and Views
 
 **Views:**
+- Quick Wins view (default): "Quick Wins" — leads with the prompt "How much time do you have?"
 - Category view: "By Category"
 - Time view: "By Time Needed"
 - Toggle: "Switch view"
@@ -180,8 +181,7 @@ several, or none on a given day:
 - Short: "30 min"
 - Medium: "1 hr"
 - Long: "2 hrs"
-- Very long: "4 hrs"
-- Extended: "5+ hrs"
+- Very long: "4+ hrs"
 
 ### 3.5 Empty States
 

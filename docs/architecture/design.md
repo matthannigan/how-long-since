@@ -75,7 +75,7 @@ interface Task {
   createdAt: Date;
   lastCompletedAt: Date | null;
   expectedFrequency?: { value: number; unit: 'day' | 'week' | 'month' | 'year' };
-  timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs' | '5hrs+';
+  timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs+';
   isArchived: boolean;
   notes: string;                   // 512 char max
 }
@@ -91,7 +91,7 @@ interface Category {
 interface AppSettings {
   id: string;                      // singleton row, always '1'
   lastBackupDate: Date | null;
-  currentView: 'category' | 'time';
+  currentView: 'quick' | 'category' | 'time';  // default 'quick' (Quick Wins)
   theme: 'light' | 'dark' | 'system';
   textSize?: 'default' | 'large' | 'larger';
   highContrast?: boolean;
@@ -250,7 +250,7 @@ export const taskSchema = z.object({
     value: z.number().positive(),
     unit: z.enum(['day', 'week', 'month', 'year']),
   }).optional(),
-  timeCommitment: z.enum(['15min', '30min', '1hr', '2hrs', '4hrs', '5hrs+']).optional(),
+  timeCommitment: z.enum(['15min', '30min', '1hr', '2hrs', '4hrs+']).optional(),
   isArchived: z.boolean(),
   notes: z.string().max(512),
 });
@@ -347,30 +347,34 @@ stack-agnostic and unaffected by the architecture. Implementation is via
 Tailwind v4's CSS-first theme tokens:
 
 ```css
-/* styles/globals.css */
+/* styles/globals.css — illustrative subset; the file carries the full token set */
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #2563eb;
-  --color-overdue: #dc2626;
-  --color-success: #10b981;
-  --color-text: #1f2937;
-  --color-text-muted: #6b7280;
+  /* Soft Daylight — warm white & greige; see docs/style-guide.md §1 */
+  --color-surface-page: #faf8f4;   /* warm-white page background */
+  --color-surface-card: #ffffff;   /* cards / rows */
+  --color-ink: #3a3330;            /* primary text (warm near-black) */
+  --color-ink-meta-aa: #6e675e;    /* AA-safe small meta text (§1.6) */
 
-  --color-category-kitchen: #3b82f6;
-  --color-category-bathroom: #8b5cf6;
-  --color-category-bedroom: #ec4899;
-  --color-category-living: #10b981;
-  --color-category-exterior: #f59e0b;
-  --color-category-vehicles: #ef4444;
-  --color-category-digital-tech: #6366f1;
-  --color-category-health: #14b8a6;
-  --color-category-pets: #f97316;
-  --color-category-garden-plants: #84cc16;
+  --color-accent: #d98c63;         /* terracotta — primary actions */
+  --color-accent-sage: #5b9e86;    /* success */
+  --color-due-soon: #c08a2e;       /* due-soon status (+ AA-safe text #8a5e15) */
+  --color-overdue: #c6533c;        /* overdue status (+ AA-safe text #b2452f) */
 
-  --color-warning: #f59e0b;
+  /* 10 default category base hues */
+  --color-cat-kitchen: #3b82f6;
+  --color-cat-bathroom: #8b5cf6;
+  --color-cat-bedroom: #ec4899;
+  --color-cat-living: #10b981;
+  --color-cat-exterior: #f59e0b;
+  --color-cat-vehicles: #ef4444;
+  --color-cat-digital: #6366f1;
+  --color-cat-health: #14b8a6;
+  --color-cat-pets: #f97316;
+  --color-cat-garden: #84cc16;
 
-  --radius-card: 0.5rem;
+  --radius-card: 16px;
 }
 ```
 
@@ -402,7 +406,7 @@ export default defineConfig({
       manifest: {
         name: 'How Long Since',
         short_name: 'HowLongSince',
-        theme_color: '#2563eb',
+        theme_color: '#faf8f4',
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },

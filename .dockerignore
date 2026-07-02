@@ -1,0 +1,36 @@
+# Dependencies (reinstalled in the build stage)
+node_modules
+**/node_modules
+
+# Build output (rebuilt in-container; never ship the host's dist)
+dist
+dev-dist
+
+# VCS / tooling / editor
+.git
+.gitignore
+.claude
+.tanstack
+.vscode
+.idea
+
+# Not needed to build: planning docs, product docs, e2e specs, reports
+dev
+docs
+e2e
+coverage
+playwright-report
+test-results
+
+# Docs and environment
+*.md
+.env
+.env.*
+
+# App-exported backups (downloaded by the user, never source)
+how-long-since-backup-*.json
+how-long-since-tasks-*.csv
+
+# OS cruft
+.DS_Store
+Thumbs.db

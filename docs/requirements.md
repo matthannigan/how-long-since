@@ -18,7 +18,7 @@ Unlike traditional task managers, this app answers the question "How long has it
 2. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify a description (max 512 characters)
 3. WHEN a user creates a new task THEN the system SHALL allow them to assign the task to a category
 4. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify an expected frequency (value + unit: days/weeks/months/years)
-5. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify a time commitment (15min, 30min, 1hr, 2hrs, 4hrs, 5hrs+)
+5. WHEN a user creates a new task THEN the system SHALL allow them to optionally specify a time commitment (15min, 30min, 1hr, 2hrs, 4hrs+)
 6. WHEN a user creates a new task THEN the system SHALL allow them to add optional notes (max 512 characters)
 7. WHEN a user saves a task THEN the system SHALL validate all required fields and display clear error messages for any issues
 8. WHEN a user wants to edit a task THEN the system SHALL provide the same interface as task creation with pre-populated fields
@@ -64,13 +64,14 @@ Unlike traditional task managers, this app answers the question "How long has it
 #### Acceptance Criteria
 
 1. WHEN a user switches to time commitment view THEN the system SHALL group tasks by their estimated time commitment
-2. WHEN displaying time commitment groups THEN the system SHALL order them from shortest to longest (15min, 30min, 1hr, 2hrs, 4hrs, 5hrs+)
+2. WHEN displaying time commitment groups THEN the system SHALL order them from shortest to longest (15min, 30min, 1hr, 2hrs, 4hrs+)
 3. WHEN a task has no time commitment specified THEN the system SHALL place it in a separate "Time Unknown" group at the bottom
 4. WHEN in time commitment view THEN the system SHALL still display category information for each task
 5. WHEN in time commitment view THEN the system SHALL still display time elapsed since last completion
-6. WHEN a user switches between views THEN the system SHALL remember their preference for future sessions
+6. WHEN a user switches between views THEN the system SHALL remember their preference for future sessions (across the three views: Quick Wins, By Category, By Time; Quick Wins is the default)
 7. WHEN switching views THEN the system SHALL maintain focus position when possible for accessibility
-8. WHEN in either view THEN the system SHALL provide clear visual indication of which view is currently active
+8. WHEN in any view THEN the system SHALL provide clear visual indication of which view is currently active
+9. WHEN in the Quick Wins view THEN the system SHALL let the user state how much time they have (15 min / 30 min / 1 hour / 2 hours) and surface up to 8 fitting non-archived tasks, most-overdue first
 
 ### Requirement 5: Quick Task Completion Interface
 
