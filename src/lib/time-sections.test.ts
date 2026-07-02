@@ -67,16 +67,21 @@ describe('groupTasksByTime', () => {
   });
 
   it('drops empty sections and returns [] for no tasks', () => {
-    expect(groupTasksByTime([task('a', { timeCommitment: '15min' })]).map((g) => g.section.id)).toEqual([
-      'quick',
-    ]);
+    expect(
+      groupTasksByTime([task('a', { timeCommitment: '15min' })]).map((g) => g.section.id),
+    ).toEqual(['quick']);
     expect(groupTasksByTime([])).toEqual([]);
   });
 });
 
 describe('QUICK_PICK_FILTERS', () => {
   it('offers the available-time windows with cumulative buckets', () => {
-    expect(QUICK_PICK_FILTERS.map((f) => f.label)).toEqual(['15 min', '30 min', '1 hour', '2 hours']);
+    expect(QUICK_PICK_FILTERS.map((f) => f.label)).toEqual([
+      '15 min',
+      '30 min',
+      '1 hour',
+      '2 hours',
+    ]);
     expect(QUICK_PICK_FILTERS.find((f) => f.id === '30')?.buckets).toEqual(['15min', '30min']);
     expect(QUICK_PICK_FILTERS.find((f) => f.id === '120')?.buckets).toEqual([
       '15min',
@@ -112,9 +117,21 @@ describe('filterForQuickPick', () => {
   it('sorts most-overdue first', () => {
     const ids = filterForQuickPick(
       [
-        task('fresh', { timeCommitment: '15min', lastCompletedAt: daysAgo(1), expectedFrequency: WEEKLY }),
-        task('veryOverdue', { timeCommitment: '15min', lastCompletedAt: daysAgo(40), expectedFrequency: WEEKLY }),
-        task('overdue', { timeCommitment: '15min', lastCompletedAt: daysAgo(9), expectedFrequency: WEEKLY }),
+        task('fresh', {
+          timeCommitment: '15min',
+          lastCompletedAt: daysAgo(1),
+          expectedFrequency: WEEKLY,
+        }),
+        task('veryOverdue', {
+          timeCommitment: '15min',
+          lastCompletedAt: daysAgo(40),
+          expectedFrequency: WEEKLY,
+        }),
+        task('overdue', {
+          timeCommitment: '15min',
+          lastCompletedAt: daysAgo(9),
+          expectedFrequency: WEEKLY,
+        }),
       ],
       '15',
       NOW,

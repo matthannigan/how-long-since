@@ -85,6 +85,12 @@ up/restore their data.
   silent off-by-a-day or NaN date here is the likeliest data-integrity bug in the
   whole app. JSON (via dexie-export-import) preserves `Date` natively and is the
   safer full backup; CSV is the interchange/inspection format.
+- **Dexie is now at `version(2)`** with a `.upgrade()` migration (the
+  `timeCommitment` enum consolidation `5hrs+`/`4hrs` → `4hrs+`, added post-Step-6).
+  JSON restore must go **through Dexie** so the upgrade path runs — importing an
+  older v1-shaped export should have its stale enum values rewritten, not rejected.
+  Cover a v1→v2 import (stale `timeCommitment`) in the round-trip/validation tests,
+  not just v2→v2.
 - **Import safety** — confirm before overwriting; never partially apply a JSON
   restore without a clear success/failure result.
 - **Clear-all must re-seed** or the app boots into a broken no-categories state.

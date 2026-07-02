@@ -1,8 +1,9 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { axe } from 'vitest-axe';
 
 import { db, DEFAULT_SETTINGS } from '@/lib/db/schema';
+import { renderWithRouter } from '@/test/router';
 
 import { SettingsView } from './SettingsView';
 
@@ -14,7 +15,8 @@ describe('SettingsView', () => {
   });
 
   it('renders the Appearance controls reflecting current settings', async () => {
-    const { findByRole } = render(
+    // Wrapped in a router because the Manage Categories link uses TanStack Link.
+    const { findByRole } = renderWithRouter(
       <main>
         <SettingsView />
       </main>,
@@ -25,7 +27,7 @@ describe('SettingsView', () => {
   });
 
   it('persists a theme change to the settings singleton', async () => {
-    const { findByRole } = render(
+    const { findByRole } = renderWithRouter(
       <main>
         <SettingsView />
       </main>,
@@ -37,7 +39,7 @@ describe('SettingsView', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container, findByRole } = render(
+    const { container, findByRole } = renderWithRouter(
       <main>
         <SettingsView />
       </main>,

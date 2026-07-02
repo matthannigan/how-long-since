@@ -18,12 +18,25 @@ export const taskSchema = z.object({
   notes: z.string().max(512),
 });
 
-export const createTaskSchema = taskSchema.omit({
-  id: true,
-  createdAt: true,
-  lastCompletedAt: true,
-  isArchived: true,
-});
+// Create input: the lib fills the system-owned id / createdAt / isArchived.
+// `lastCompletedAt` is normally system-owned (markTaskComplete), but the Add
+// form's "Last done" control can backfill it, so it's accepted here — optional,
+// defaulting to null (never completed).
+export const createTaskSchema = taskSchema
+  .omit({ id: true, createdAt: true, lastCompletedAt: true, isArchived: true })
+  .extend({ lastCompletedAt: z.date().nullable().default(null) });
 
-// Editable fields only, all optional — used to validate `updateTask` patches.
-export const updateTaskSchema = createTaskSchema.partial();
+// Editable fields for `updateTask` patches — every field optional, and (unlike
+// createTaskSchema) NO defaults, so an omitted field is left untouched rather
+// than clobbered with a default value.
+export const updateTaskSchema = taskSchema
+  .pick({
+    name: true,
+    description: true,
+    categoryId: true,
+    expectedFrequency: true,
+    timeCommitment: true,
+    lastCompletedAt: true,
+    notes: true,
+  })
+  .partial();

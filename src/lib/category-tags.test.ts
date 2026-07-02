@@ -21,9 +21,12 @@ describe('getCategoryTag', () => {
     );
   });
 
-  it('falls back to a self-tint for an unknown custom hue', () => {
+  it('derives an AA-leaning, theme-adaptive color-mix pair for a custom hue', () => {
     const custom: Category = { id: 'x', name: 'Custom', color: '#123456', isDefault: false };
-    expect(getCategoryTag(custom)).toEqual({ bg: '#1234561a', fg: '#123456' });
+    expect(getCategoryTag(custom)).toEqual({
+      bg: 'color-mix(in srgb, #123456 18%, var(--color-surface-card))',
+      fg: 'color-mix(in srgb, #123456 55%, var(--color-ink))',
+    });
   });
 
   it('falls back to neutral tokens when a category has no color', () => {

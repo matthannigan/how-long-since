@@ -74,6 +74,7 @@ The app serves diverse users with different needs:
 
 ### Phase 2: Enhanced Experience
 - Swipe gestures
+- Reorder categories with touch drag-and-drop sorting
 - Multiple UI themes
 - Pre-built task templates
 - Desktop-optimized dashboard

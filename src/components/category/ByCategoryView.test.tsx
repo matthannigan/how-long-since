@@ -49,6 +49,15 @@ describe('ByCategoryView', () => {
     expect(queryByRole('heading', { name: 'Garden/Plants' })).toBeNull();
   });
 
+  it('links to the category management surface', async () => {
+    await db.tasks.add(
+      makeTask({ id: '55555555-5555-4555-8555-555555555555', name: 'A task' }),
+    );
+    const { findByRole } = renderWithRouter(<ByCategoryView />);
+    const link = await findByRole('link', { name: /manage categories/i });
+    expect(link).toHaveAttribute('href', expect.stringContaining('/categories'));
+  });
+
   it('shows the empty state when there are no tasks', async () => {
     const { findByText } = renderWithRouter(<ByCategoryView />);
     expect(await findByText('No tasks yet. Tap + to add your first task.')).toBeInTheDocument();

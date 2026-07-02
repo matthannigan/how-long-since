@@ -31,8 +31,16 @@ describe('ByTimeView', () => {
 
   it('groups tasks into time sections shortest→longest with "No time set" last', async () => {
     await db.tasks.bulkAdd([
-      makeTask({ id: '11111111-1111-4111-8111-111111111111', name: 'Hour task', timeCommitment: '1hr' }),
-      makeTask({ id: '22222222-2222-4222-8222-222222222222', name: 'Quick task', timeCommitment: '15min' }),
+      makeTask({
+        id: '11111111-1111-4111-8111-111111111111',
+        name: 'Hour task',
+        timeCommitment: '1hr',
+      }),
+      makeTask({
+        id: '22222222-2222-4222-8222-222222222222',
+        name: 'Quick task',
+        timeCommitment: '15min',
+      }),
       makeTask({ id: '33333333-3333-4333-8333-333333333333', name: 'Untimed task' }),
     ]);
 
@@ -50,7 +58,9 @@ describe('ByTimeView', () => {
   });
 
   it('places a task with no estimate under "No time set"', async () => {
-    await db.tasks.add(makeTask({ id: '44444444-4444-4444-8444-444444444444', name: 'Untimed task' }));
+    await db.tasks.add(
+      makeTask({ id: '44444444-4444-4444-8444-444444444444', name: 'Untimed task' }),
+    );
     const { findByText } = renderWithRouter(<ByTimeView />);
     expect(await findByText('No time set')).toBeInTheDocument();
     expect(await findByText('Untimed task')).toBeInTheDocument();
@@ -63,7 +73,11 @@ describe('ByTimeView', () => {
 
   it('has no axe violations', async () => {
     await db.tasks.add(
-      makeTask({ id: '55555555-5555-4555-8555-555555555555', name: 'A task', timeCommitment: '1hr' }),
+      makeTask({
+        id: '55555555-5555-4555-8555-555555555555',
+        name: 'A task',
+        timeCommitment: '1hr',
+      }),
     );
     const { container, findByText } = renderWithRouter(<ByTimeView />);
     await findByText('A task');

@@ -38,7 +38,7 @@ Settings. After this step the app is a complete single-user utility.
 - [ ] `components/task/TaskForm.tsx` with **react-hook-form + Zod** (`createTaskSchema`), one component for add and edit:
   - [ ] **Task name** (required) — text input, 128-char limit, **character counter**, placeholder "What needs to be done?", error "Please add a task name".
   - [ ] **Category** (required) — wrapping **color-chip picker** (not a dropdown), each chip a color dot + name; selected chip tinted + colored border; trailing dashed **"+ New"** chip (opens the 7b create flow); default to the last-used category.
-  - [ ] **Time estimate** (optional) — segmented control `● 15m · ●● 30m · ●●● 1h · 2h+ …` mapping to the `timeCommitment` enum; selected = white pill.
+  - [ ] **Time estimate** (optional) — segmented control `● 15m · ●● 30m · ●●● 1h · ●●●● 2h · ●●●●● 4+ hrs` mapping to the `timeCommitment` enum; selected = white pill.
   - [ ] **Expected frequency** (optional) — big numeral (Bricolage 24) + segmented unit picker **Days / Weeks / Months** (plus **Years**, which the data model allows), selected unit pill terracotta; helper "We'll gently flag it once this much time has passed."
   - [ ] **Last done** (optional → `lastCompletedAt`) — pills Today / Yesterday / "Pick date ▾"; active pill styled; sub-line confirms resolved date ("Set to Apr 2, 2026 · 3 months ago").
   - [ ] **Description** + **Notes** (optional, 512 each, counters) — collapsed under an expandable "Add details" section so the default form stays short.

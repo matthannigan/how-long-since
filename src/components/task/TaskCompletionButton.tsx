@@ -93,9 +93,7 @@ export function TaskCompletionButton({ task }: { task: Task }) {
       <span
         className={cn(
           'grid size-[30px] place-items-center rounded-full border-2 transition-colors',
-          confirming
-            ? 'border-accent bg-accent text-white'
-            : 'border-border-soft bg-surface-input',
+          confirming ? 'border-accent bg-accent text-white' : 'border-border-soft bg-surface-input',
         )}
       >
         {confirming && <Check className="size-4" strokeWidth={3} aria-hidden="true" />}

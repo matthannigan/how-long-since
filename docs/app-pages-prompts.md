@@ -152,7 +152,7 @@ an existing one). Design source: options 5a (light) / 5b (dark).
 **Field Controls (as designed):**
 - **Task name** — single-line box: `padding 14px 16px; background #FFFFFF; border 1.5px solid #E4E0D8; radius 14px; font 600 16px; color #3A3330; shadow 0 2px 8px -6px rgba(70,62,55,.2)`
 - **Category** — wrapping **color-chip picker**: unselected chip `padding 8px 12px; radius 20px; bg #FFFFFF; border 1.5px solid #E4E0D8; font 600 13px; color #8A8177` with an 11px color dot; selected chip = tinted bg + colored border + colored text (e.g. Bathroom → bg `#F3EBFB`, border `#8B5CF6`, text `#6C3FC7`); trailing "+ New" chip with dashed border `1.5px dashed #D6D1C7`, text `#B0A99E`
-- **Time estimate** — segmented control: track `#EDEAE2` radius 14px padding 4px; options `● 15m  ●● 30m  ●●● 1h  2h+`; selected = white pill (radius 10px, `shadow 0 2px 6px rgba(70,62,55,.12)`, font 700, `#3A3330`); unselected `#9B948B`
+- **Time estimate** — segmented control: track `#EDEAE2` radius 14px padding 4px; options `● 15m  ●● 30m  ●●● 1h  ●●●● 2h  ●●●●● 4+ hrs`; selected = white pill (radius 10px, `shadow 0 2px 6px rgba(70,62,55,.12)`, font 700, `#3A3330`); unselected `#9B948B`
 - **Should happen every** (frequency) — helper line "We'll gently flag it once this much time has passed." (`#B0A99E`); control is a box with a big numeral (Bricolage 24px `#3A3330`) + an inner Days/Weeks/Months segmented picker whose **selected pill is terracotta** (`#D98C63`, white text)
 - **Last done** (maps to `lastCompletedAt`) — three pills: Today / Yesterday / "Pick date ▾"; active pill `bg #F3EBE4; border 1.5px solid #D98C63; text #B4623C`; sub-line confirms the resolved date ("Set to Apr 2, 2026 · 3 months ago")
 
@@ -325,7 +325,7 @@ tasks that fit their available time. Design source: option 2a (light), 4a
 
 **Quick Pick Panel:**
 - Container: `background linear-gradient(180deg,#F3F1EB,#FAF9F5); border 1px solid #E7E2D8; radius 20px; padding 16px 18px`, margin `4px 16px 10px`
-- Header: ☀ sun glyph + "Quick pick" (`#C0794C`, DM Sans 700 12px) + subline "You've got 20 minutes — here's what fits:" (`#6E675E`)
+- Header: ☀ sun glyph + "Quick pick" (`#C0794C`, DM Sans 700 12px) + subline "How much time do you have?" (`#6E675E`)
 - Contains 2–5 matching tasks as standard rows at a tighter radius (15px) and lighter shadow (`0 2px 8px -4px rgba(70,62,55,.16)`)
 - Dark (4a): panel gradient `#2B2620 → #232019`, border `#37322C`, label `#E8875A`
 
@@ -340,7 +340,7 @@ How Long Since                                    ⚙
 [      By Category      |  By Time  ]
 
 ┌ ☀ Quick pick ──────────────────────────────────┐
-│ You've got 20 minutes — here's what fits:       │
+│ How much time do you have?                      │
 │ ○ Descale coffee maker  [Kitchen] ● 15 min  1 wk│
 │ ○ Apply flea treatment  [Pets] ● 15 min   ! 5 wk│
 └─────────────────────────────────────────────────┘

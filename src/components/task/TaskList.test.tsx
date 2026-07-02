@@ -33,7 +33,11 @@ describe('TaskList', () => {
     await db.tasks.bulkAdd([
       makeTask({ id: '11111111-1111-4111-8111-111111111111', name: 'Active one' }),
       makeTask({ id: '22222222-2222-4222-8222-222222222222', name: 'Active two' }),
-      makeTask({ id: '33333333-3333-4333-8333-333333333333', name: 'Archived one', isArchived: true }),
+      makeTask({
+        id: '33333333-3333-4333-8333-333333333333',
+        name: 'Archived one',
+        isArchived: true,
+      }),
     ]);
 
     const { findByText, queryByText } = renderWithRouter(<TaskList />);
@@ -48,7 +52,9 @@ describe('TaskList', () => {
   });
 
   it('shows the category-scoped empty state when a category has no tasks', async () => {
-    await db.tasks.add(makeTask({ id: '44444444-4444-4444-8444-444444444444', name: 'Kitchen task' }));
+    await db.tasks.add(
+      makeTask({ id: '44444444-4444-4444-8444-444444444444', name: 'Kitchen task' }),
+    );
     const { findByText } = renderWithRouter(<TaskList categoryId={BATHROOM} />);
     expect(await findByText('No tasks in this category. Add one?')).toBeInTheDocument();
   });

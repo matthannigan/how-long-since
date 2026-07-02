@@ -1,4 +1,6 @@
+import { Link } from '@tanstack/react-router';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { ChevronRight } from 'lucide-react';
 
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -89,6 +91,22 @@ export function SettingsView() {
       </section>
 
       <section
+        aria-labelledby="categories-heading"
+        className="space-y-2 border-t border-border-default pt-6"
+      >
+        <h2 id="categories-heading" className="font-display text-lg font-semibold text-ink">
+          Categories
+        </h2>
+        <Link
+          to="/categories"
+          className="flex min-h-11 items-center justify-between gap-4 rounded-input px-1 text-ink outline-none hover:text-accent-deep focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <span className="text-[0.9375rem] font-medium">Manage Categories</span>
+          <ChevronRight className="size-4 text-ink-secondary" aria-hidden="true" />
+        </Link>
+      </section>
+
+      <section
         aria-labelledby="more-settings-heading"
         className="space-y-2 border-t border-border-default pt-6"
       >
@@ -96,8 +114,7 @@ export function SettingsView() {
           More settings
         </h2>
         <p className="text-sm text-ink-meta-aa">
-          Default view, data export and import, category management, and app info are coming in a
-          later step.
+          Default view, data export and import, and app info are coming in a later step.
         </p>
       </section>
     </div>

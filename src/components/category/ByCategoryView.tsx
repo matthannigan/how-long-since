@@ -1,14 +1,14 @@
+import { Link } from '@tanstack/react-router';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { Tags } from 'lucide-react';
 
 import { TaskCard } from '@/components/task/TaskCard';
 import { TaskListSkeleton } from '@/components/task/TaskListSkeleton';
-import { db, DEFAULT_CATEGORIES } from '@/lib/db/schema';
+import { sortCategoriesForDisplay } from '@/lib/category-order';
+import { db } from '@/lib/db/schema';
 import type { Task } from '@/types';
 
 import { CategoryBadge } from './CategoryBadge';
-
-/** DEFAULT_CATEGORIES order, for sorting default groups before user-created ones. */
-const DEFAULT_ORDER = new Map(DEFAULT_CATEGORIES.map((c, i) => [c.id, i]));
 
 /**
  * The default view (app-pages-prompts §3): non-archived tasks grouped under a
@@ -46,15 +46,7 @@ export function ByCategoryView() {
     else tasksByCategory.set(task.categoryId, [task]);
   }
 
-  const groups = [...categories]
-    .sort((a, b) => {
-      const ai = DEFAULT_ORDER.get(a.id);
-      const bi = DEFAULT_ORDER.get(b.id);
-      if (ai !== undefined && bi !== undefined) return ai - bi;
-      if (ai !== undefined) return -1; // default categories first
-      if (bi !== undefined) return 1;
-      return a.name.localeCompare(b.name); // then user categories, alphabetically
-    })
+  const groups = sortCategoriesForDisplay(categories)
     .map((category) => ({ category, groupTasks: tasksByCategory.get(category.id) ?? [] }))
     .filter((group) => group.groupTasks.length > 0);
 
@@ -73,6 +65,16 @@ export function ByCategoryView() {
           </div>
         </div>
       ))}
+
+      <div className="mt-6 flex justify-center">
+        <Link
+          to="/categories"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 text-sm font-medium text-ink-meta-aa outline-none hover:text-accent-deep focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          <Tags className="size-4" aria-hidden="true" />
+          Manage Categories
+        </Link>
+      </div>
     </section>
   );
 }

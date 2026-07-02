@@ -7,10 +7,9 @@ import { db } from './db/schema';
 export async function createTask(input: unknown): Promise<Task> {
   const data = createTaskSchema.parse(input); // throws ZodError on invalid input
   const task: Task = {
-    ...data,
+    ...data, // includes lastCompletedAt (null unless backfilled via "Last done")
     id: crypto.randomUUID(),
     createdAt: new Date(),
-    lastCompletedAt: null,
     isArchived: false,
   };
   await db.tasks.add(task);

@@ -37,7 +37,10 @@ describe('TaskCard', () => {
 
   it('renders the due-soon tier with a clock cue + SR text', async () => {
     const { findByText, getByText } = renderWithRouter(
-      <TaskCard task={makeTask({ lastCompletedAt: daysAgo(6), expectedFrequency: WEEKLY })} now={NOW} />,
+      <TaskCard
+        task={makeTask({ lastCompletedAt: daysAgo(6), expectedFrequency: WEEKLY })}
+        now={NOW}
+      />,
     );
     expect(await findByText('6 d')).toBeInTheDocument();
     expect(getByText('Due soon')).toBeInTheDocument();
@@ -45,7 +48,10 @@ describe('TaskCard', () => {
 
   it('renders the overdue tier with a "!" badge + SR text', async () => {
     const { findByText, getByText } = renderWithRouter(
-      <TaskCard task={makeTask({ lastCompletedAt: daysAgo(9), expectedFrequency: WEEKLY })} now={NOW} />,
+      <TaskCard
+        task={makeTask({ lastCompletedAt: daysAgo(9), expectedFrequency: WEEKLY })}
+        now={NOW}
+      />,
     );
     expect(await findByText('1 wk')).toBeInTheDocument();
     expect(getByText('Overdue')).toBeInTheDocument();
@@ -54,7 +60,10 @@ describe('TaskCard', () => {
 
   it('renders the very-overdue tier with a "Very overdue" pill', async () => {
     const { findByText, getByText } = renderWithRouter(
-      <TaskCard task={makeTask({ lastCompletedAt: daysAgo(40), expectedFrequency: WEEKLY })} now={NOW} />,
+      <TaskCard
+        task={makeTask({ lastCompletedAt: daysAgo(40), expectedFrequency: WEEKLY })}
+        now={NOW}
+      />,
     );
     expect(await findByText('1 mo')).toBeInTheDocument();
     expect(getByText('Very overdue')).toBeInTheDocument();
@@ -85,7 +94,10 @@ describe('TaskCard', () => {
 
   it('has no axe violations', async () => {
     const { container, findByRole } = renderWithRouter(
-      <TaskCard task={makeTask({ lastCompletedAt: daysAgo(9), expectedFrequency: WEEKLY })} now={NOW} />,
+      <TaskCard
+        task={makeTask({ lastCompletedAt: daysAgo(9), expectedFrequency: WEEKLY })}
+        now={NOW}
+      />,
     );
     await findByRole('link');
     expect(await axe(container)).toHaveNoViolations();

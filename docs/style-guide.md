@@ -310,7 +310,7 @@ The row is the core component, shared by By Time and By Category.
 - Selected: white pill (`radius 8–10px; shadow 0 2px 6px rgba(70,62,55,.12);
   font 700; color --ink`), **except** the frequency unit whose selected pill is
   terracotta (`--accent`, white text)
-- Time-estimate options show filled circles + label: `● 15m  ●● 30m  ●●● 1h  2h+`
+- Time-estimate options show filled circles + label: `● 15m  ●● 30m  ●●● 1h  ●●●● 2h  ●●●●● 4+ hrs`
 
 ### 3.6 Form Elements
 - **Text input** (task name): `padding: 14px 16px; background: --surface-card;
@@ -334,15 +334,16 @@ The row is the core component, shared by By Time and By Category.
 - Container: `background: linear-gradient(180deg,#F3F1EB,#FAF9F5); border: 1px
   solid #E7E2D8; radius: 20px; padding: 16px 18px`
 - Header: ☀ sun glyph + "Quick pick" (`--accent-deep`, DM Sans 700 12px) + a
-  subline ("You've got 20 minutes — here's what fits:")
+  subline ("How much time do you have?")
 - Rows inside are the standard task row at a slightly tighter radius (15px) and
   a lighter shadow (`0 2px 8px -4px rgba(70,62,55,.16)`)
 
-### 3.8 Section Markers (By Time group headers)
-- 22px circle, `--surface-sunk` fill, glyph in `--accent-deep`: `●` / `●●` /
-  `●●●` matching 15m / 30m / 1h
-- Followed by the group title (DM Sans 700 13px `--ink`) and a meta count ("15
-  min · 3", `--ink-meta-aa`)
+### 3.8 Section Headers (By Time group headers)
+- Group title (`font-display` ~18px 700 `--ink`) followed by a meta count ("15
+  min · 3", `--ink-meta-aa`) — sized above the task rows for a clear hierarchy
+- **No per-section dot marker**: the time glyph already rides on every task row,
+  and the 4–5-dot versions overflowed the circle, so the marker was dropped (the
+  By Category header keeps its solid category color dot; only By Time's was removed)
 
 ## 4. Iconography
 

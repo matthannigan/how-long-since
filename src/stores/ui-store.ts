@@ -21,6 +21,14 @@ interface UIState {
   undoSnackbar: { taskId: string; previous: Date | null } | null;
   showUndo: (taskId: string, previous: Date | null) => void;
   dismissUndo: () => void;
+
+  /**
+   * The category chosen on the last task save, so the Add form can pre-select
+   * it (Step 7). Session-only on purpose — a convenience default, not a
+   * persisted preference, so it stays out of the Dexie settings singleton.
+   */
+  lastUsedCategoryId: string | null;
+  setLastUsedCategory: (id: string) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -31,4 +39,7 @@ export const useUIStore = create<UIState>((set) => ({
   undoSnackbar: null,
   showUndo: (taskId, previous) => set({ undoSnackbar: { taskId, previous } }),
   dismissUndo: () => set({ undoSnackbar: null }),
+
+  lastUsedCategoryId: null,
+  setLastUsedCategory: (id) => set({ lastUsedCategoryId: id }),
 }));

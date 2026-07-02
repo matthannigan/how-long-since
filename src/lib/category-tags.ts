@@ -21,13 +21,20 @@ const TAG_BY_HUE: Record<string, { bg: string; fg: string }> = {
 
 /**
  * Tinted category-tag colors for the By Time row (`TaskCard` `time` variant).
- * Known default hues map to tokenized AA pairs; an unknown custom hue (user
- * categories arrive in Step 7) falls back to a light self-tint, and a category
- * with no color falls back to neutral tokens — so nothing breaks pre-Step-7.
+ * Known default hues map to tokenized AA pairs; a **custom** user hue (Step 7)
+ * is derived with `color-mix` — bg mixes the hue into the card surface, fg mixes
+ * it toward the ink color — so it stays legible AND adapts to light/dark
+ * automatically (the surface/ink tokens flip per theme). A category with no
+ * color falls back to neutral tokens.
  */
 export function getCategoryTag(category: Category): { bg: string; fg: string } {
   const hue = category.color?.toLowerCase();
   if (hue && TAG_BY_HUE[hue]) return TAG_BY_HUE[hue];
-  if (category.color) return { bg: `${category.color}1a`, fg: category.color };
+  if (category.color) {
+    return {
+      bg: `color-mix(in srgb, ${category.color} 18%, var(--color-surface-card))`,
+      fg: `color-mix(in srgb, ${category.color} 55%, var(--color-ink))`,
+    };
+  }
   return { bg: 'var(--color-surface-sunk)', fg: 'var(--color-ink-meta-aa)' };
 }

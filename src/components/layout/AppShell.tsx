@@ -2,6 +2,8 @@ import { Link } from '@tanstack/react-router';
 import { Settings } from 'lucide-react';
 import type { ReactNode } from 'react';
 
+import { AddTaskDialog } from '@/components/task/AddTaskDialog';
+
 import { AddTaskFab } from './AddTaskFab';
 import { ViewToggle } from './ViewToggle';
 
@@ -38,6 +40,7 @@ export function AppShell({ children }: AppShellProps) {
       <main className="mx-auto max-w-2xl px-4 pt-4 pb-24">
         {children}
         <AddTaskFab />
+        <AddTaskDialog />
       </main>
     </div>
   );
