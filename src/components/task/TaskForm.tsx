@@ -230,7 +230,7 @@ export function TaskForm({
           />
           <div className="mt-1 flex items-center justify-between">
             {errors.name ? (
-              <p id={`${nameId}-error`} className="text-xs text-overdue-aa">
+              <p id={`${nameId}-error`} role="alert" className="text-xs text-overdue-aa">
                 {errors.name.message}
               </p>
             ) : (
@@ -297,7 +297,11 @@ export function TaskForm({
             + New
           </button>
         </div>
-        {errors.categoryId && <p className={ERROR}>{errors.categoryId.message}</p>}
+        {errors.categoryId && (
+          <p className={ERROR} role="alert">
+            {errors.categoryId.message}
+          </p>
+        )}
 
         {showNewCategory && (
           <div className="mt-3 rounded-input border border-border-default bg-surface-sunk/40 p-3">
@@ -394,7 +398,9 @@ export function TaskForm({
           />
         </div>
         {errors.freqValue ? (
-          <p className={ERROR}>{errors.freqValue.message}</p>
+          <p className={ERROR} role="alert">
+            {errors.freqValue.message}
+          </p>
         ) : (
           <p className="mt-1.5 text-xs text-ink-meta-aa">
             We&rsquo;ll gently flag it once this much time has passed.
@@ -439,7 +445,11 @@ export function TaskForm({
             />
           </div>
         )}
-        {errors.lastDoneDate && <p className={ERROR}>{errors.lastDoneDate.message}</p>}
+        {errors.lastDoneDate && (
+          <p className={ERROR} role="alert">
+            {errors.lastDoneDate.message}
+          </p>
+        )}
         {lastDonePreview && (
           <div className="mt-1.5 flex items-center gap-3">
             <p className="text-xs text-ink-meta-aa">{lastDonePreview}</p>
@@ -486,7 +496,9 @@ export function TaskForm({
               />
               <div className="mt-1 flex justify-between">
                 {errors.description ? (
-                  <p className="text-xs text-overdue-aa">{errors.description.message}</p>
+                  <p role="alert" className="text-xs text-overdue-aa">
+                    {errors.description.message}
+                  </p>
                 ) : (
                   <span />
                 )}
@@ -510,7 +522,9 @@ export function TaskForm({
               />
               <div className="mt-1 flex justify-between">
                 {errors.notes ? (
-                  <p className="text-xs text-overdue-aa">{errors.notes.message}</p>
+                  <p role="alert" className="text-xs text-overdue-aa">
+                    {errors.notes.message}
+                  </p>
                 ) : (
                   <span />
                 )}

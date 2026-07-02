@@ -9,14 +9,18 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:4173',
     trace: 'on-first-retry',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  // E2E runs against the production preview build, not the dev server: the
+  // service worker is only registered in a real build (devOptions.enabled: false),
+  // the offline spec needs it, and the DEV-only sample seed does NOT run — so each
+  // test starts from a clean, deterministic DB (10 categories + settings, no tasks).
   webServer: {
-    command: 'pnpm dev',
-    url: 'http://localhost:5173',
+    command: 'pnpm build && pnpm preview --port 4173 --strictPort',
+    url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
   },
 });

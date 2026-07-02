@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useEffect, useRef } from 'react';
 
+import { useFocusOnMount } from '@/hooks/use-focus-on-mount';
 import { db } from '@/lib/db/schema';
 
 import { QuickPick } from './QuickPick';
@@ -17,11 +17,7 @@ import { TaskListSkeleton } from './TaskListSkeleton';
 export function QuickWinsView() {
   const tasks = useLiveQuery(() => db.tasks.toArray(), []);
   const categories = useLiveQuery(() => db.categories.toArray(), []);
-  const regionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    regionRef.current?.focus();
-  }, []);
+  const regionRef = useFocusOnMount<HTMLElement>();
 
   if (tasks === undefined || categories === undefined) return <TaskListSkeleton />;
 

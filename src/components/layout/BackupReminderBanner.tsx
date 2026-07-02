@@ -38,23 +38,27 @@ export function BackupReminderBanner() {
       <div
         role="region"
         aria-label="Backup reminder"
-        className="flex items-center gap-2 rounded-card border border-border-default bg-surface-card p-3 shadow-[0_2px_8px_-6px_rgba(70,62,55,0.3)]"
+        className="flex flex-wrap items-center gap-2 rounded-card border border-border-default bg-surface-card p-3 shadow-[0_2px_8px_-6px_rgba(70,62,55,0.3)]"
       >
         <DatabaseBackup className="size-5 shrink-0 text-accent-deep" aria-hidden="true" />
-        <p className="min-w-0 flex-1 text-sm text-ink">
+        {/* No min-w-0: keep the text from collapsing to zero next to the button at
+            large text sizes; flex-wrap lets the actions drop below instead (Req 6.8). */}
+        <p className="flex-1 basis-40 text-sm text-ink">
           It&rsquo;s been a while since your last backup.
         </p>
-        <Button type="button" onClick={() => void handleExport()}>
-          Export Data
-        </Button>
-        <button
-          type="button"
-          onClick={dismissBanner}
-          aria-label="Dismiss"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full text-ink-secondary outline-none hover:bg-surface-sunk hover:text-ink focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          <X className="size-4" aria-hidden="true" />
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button type="button" onClick={() => void handleExport()}>
+            Export Data
+          </Button>
+          <button
+            type="button"
+            onClick={dismissBanner}
+            aria-label="Dismiss"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full text-ink-secondary outline-none hover:bg-surface-sunk hover:text-ink focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            <X className="size-4" aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </div>
   );

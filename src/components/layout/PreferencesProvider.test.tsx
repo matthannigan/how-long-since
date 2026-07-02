@@ -1,5 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { axe } from 'vitest-axe';
 
 import { db, DEFAULT_SETTINGS } from '@/lib/db/schema';
 
@@ -46,5 +47,18 @@ describe('PreferencesProvider', () => {
       expect(document.documentElement.getAttribute('data-reduced-motion')).toBe('true');
     });
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
+  it('adds no axe violations around its children', async () => {
+    await db.settings.add({ ...DEFAULT_SETTINGS });
+    const { container } = render(
+      <PreferencesProvider>
+        <main>
+          <h1>Content</h1>
+          <button type="button">Do thing</button>
+        </main>
+      </PreferencesProvider>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
   });
 });

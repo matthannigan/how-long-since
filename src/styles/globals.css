@@ -261,17 +261,26 @@
 }
 
 /*
- * High contrast (Step 4, minimal — refined in the Step 9 audit). Collapses the
- * warm text ramp onto --color-ink and strengthens borders (style-guide §6).
- * Overriding the tokens here cascades to every `text-ink-*` / `border-*` utility.
+ * High contrast (expanded in the Step 9 audit). Collapses the warm text ramp
+ * onto --color-ink, strengthens borders to ~3:1 against both light and dark
+ * surfaces (WCAG 1.4.11 non-text contrast), and lays a strong ink focus outline
+ * over the terracotta ring so focus is unmistakable (style-guide §6). Overriding
+ * the tokens here cascades to every `text-ink-*` / `border-*` utility. The
+ * attribute is orthogonal to theme, so the border value is a mid-tone that
+ * clears 3:1 on the warm-white page and the charcoal dark surface alike.
  */
 [data-high-contrast='true'] {
   --color-ink-secondary: var(--color-ink);
   --color-ink-tertiary: var(--color-ink);
   --color-ink-faint: var(--color-ink);
   --color-ink-meta-aa: var(--color-ink);
-  --color-border-default: #b8b2a8;
-  --color-border-soft: #b8b2a8;
+  --color-border-default: #8a8478;
+  --color-border-soft: #8a8478;
+}
+
+[data-high-contrast='true'] :focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
 }
 
 /*

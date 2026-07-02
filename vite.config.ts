@@ -15,13 +15,23 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      // Minimal manifest for the dev dry-run. Icons + offline verification are Step 9.
+      // Icon set (192/512 + maskable, apple-touch, favicon) is generated from
+      // public/favicon.svg via pwa-assets.config.ts; the plugin auto-injects the
+      // manifest `icons` entry and the html <link> tags. injectThemeColor is off
+      // because index.html already declares the theme-color meta.
+      pwaAssets: { config: true, injectThemeColor: false },
       // theme_color is the Soft Daylight page surface (design.md's #2563eb is stale).
       manifest: {
         name: 'How Long Since',
         short_name: 'HowLongSince',
+        description: "Track how long it's been since you last did something.",
         theme_color: '#FAF8F4',
         background_color: '#FAF8F4',
+      },
+      // Default globPatterns miss woff2, so the self-hosted fonts wouldn't be
+      // precached and the first offline paint would lose the type system.
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,woff2,png,svg,ico,webmanifest}'],
       },
       devOptions: { enabled: false },
     }),

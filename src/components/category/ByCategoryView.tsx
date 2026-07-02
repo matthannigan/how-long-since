@@ -4,6 +4,7 @@ import { Tags } from 'lucide-react';
 
 import { TaskCard } from '@/components/task/TaskCard';
 import { TaskListSkeleton } from '@/components/task/TaskListSkeleton';
+import { useFocusOnMount } from '@/hooks/use-focus-on-mount';
 import { sortCategoriesForDisplay } from '@/lib/category-order';
 import { db } from '@/lib/db/schema';
 import type { Task } from '@/types';
@@ -21,6 +22,7 @@ import { CategoryBadge } from './CategoryBadge';
 export function ByCategoryView() {
   const tasks = useLiveQuery(() => db.tasks.toArray(), []);
   const categories = useLiveQuery(() => db.categories.toArray(), []);
+  const regionRef = useFocusOnMount<HTMLElement>();
 
   if (tasks === undefined || categories === undefined) return <TaskListSkeleton />;
 
@@ -28,7 +30,12 @@ export function ByCategoryView() {
 
   if (active.length === 0) {
     return (
-      <section aria-labelledby="by-category-heading">
+      <section
+        ref={regionRef}
+        tabIndex={-1}
+        aria-labelledby="by-category-heading"
+        className="outline-none"
+      >
         <h2 id="by-category-heading" className="sr-only">
           By Category
         </h2>
@@ -51,7 +58,12 @@ export function ByCategoryView() {
     .filter((group) => group.groupTasks.length > 0);
 
   return (
-    <section aria-labelledby="by-category-heading">
+    <section
+      ref={regionRef}
+      tabIndex={-1}
+      aria-labelledby="by-category-heading"
+      className="outline-none"
+    >
       <h2 id="by-category-heading" className="sr-only">
         By Category
       </h2>

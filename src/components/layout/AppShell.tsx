@@ -22,9 +22,36 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-dvh bg-surface-page text-ink">
       <header className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
-        <h1 className="font-display text-[1.375rem] leading-none font-semibold text-ink">
-          How Long Since
-        </h1>
+        <div className="flex items-center gap-2">
+          {/* Clock/arc mark (same source as the PWA icon), decorative — the h1
+              already names the app. Sized in rem so it scales with text-size;
+              tokenized strokes adapt to dark mode + high-contrast. */}
+          <svg viewBox="0 0 192 192" aria-hidden="true" className="size-6 shrink-0">
+            <circle
+              cx="96"
+              cy="96"
+              r="58"
+              className="fill-none stroke-[var(--color-border-default)]"
+              strokeWidth="12"
+            />
+            <path
+              d="M96 96 L96 52"
+              className="stroke-[var(--color-ink)]"
+              strokeWidth="10"
+              strokeLinecap="round"
+            />
+            <path
+              d="M96 96 L130 108"
+              className="stroke-[var(--color-accent-deep)]"
+              strokeWidth="10"
+              strokeLinecap="round"
+            />
+            <circle cx="96" cy="96" r="9" className="fill-[var(--color-accent)]" />
+          </svg>
+          <h1 className="font-display text-[1.375rem] leading-none font-semibold text-ink">
+            How Long Since
+          </h1>
+        </div>
         <Link
           to="/settings"
           aria-label="Settings"

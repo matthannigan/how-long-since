@@ -127,7 +127,7 @@ export function CategoryForm({
           {...register('name')}
         />
         {errors.name && (
-          <p id={nameErrorId} className="text-xs text-overdue-aa">
+          <p id={nameErrorId} role="alert" className="text-xs text-overdue-aa">
             {errors.name.message}
           </p>
         )}

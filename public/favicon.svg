@@ -1,0 +1,9 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How Long Since">
+  <!-- Full-bleed square so generated maskable/any icons have no transparent corners;
+       the platform applies its own rounding. Soft Daylight surface + clock/arc mark. -->
+  <rect width="192" height="192" fill="#FAF8F4" />
+  <circle cx="96" cy="96" r="58" fill="none" stroke="#E4E0D8" stroke-width="12" />
+  <path d="M96 96 L96 52" fill="none" stroke="#3A3330" stroke-width="10" stroke-linecap="round" />
+  <path d="M96 96 L130 108" fill="none" stroke="#C0794C" stroke-width="10" stroke-linecap="round" />
+  <circle cx="96" cy="96" r="9" fill="#D98C63" />
+</svg>

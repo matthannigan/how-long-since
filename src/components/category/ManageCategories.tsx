@@ -90,14 +90,18 @@ export function ManageCategories() {
             <li key={category.id} className="flex items-center gap-3 px-4 py-3">
               <span
                 className="flex size-7 shrink-0 items-center justify-center rounded-full"
-                style={{ backgroundColor: `${category.color ?? '#9B948B'}1a` }}
+                style={{
+                  backgroundColor: category.color
+                    ? `${category.color}1a`
+                    : 'color-mix(in srgb, var(--color-ink-secondary) 10%, transparent)',
+                }}
               >
                 {category.icon ? (
                   <CategoryIcon name={category.icon} className="size-4" />
                 ) : (
                   <span
                     className="size-[11px] rounded-full"
-                    style={{ backgroundColor: category.color ?? '#9B948B' }}
+                    style={{ backgroundColor: category.color ?? 'var(--color-ink-secondary)' }}
                     aria-hidden="true"
                   />
                 )}
