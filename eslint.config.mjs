@@ -56,5 +56,13 @@ export default tseslint.config(
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // The production static server is plain Node ESM (not part of tsc); declare
+    // the Node globals it uses so `no-undef` from js.recommended stays happy.
+    files: ['server/**/*.mjs'],
+    languageOptions: {
+      globals: { process: 'readonly', console: 'readonly', URL: 'readonly' },
+    },
+  },
   prettier,
 );

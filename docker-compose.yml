@@ -1,0 +1,14 @@
+services:
+  how-long-since:
+    build: .
+    ports:
+      # PORT remaps the HOST port; the container always listens on 3000.
+      - '${PORT:-3000}:3000'
+    environment:
+      - TZ=${TZ:-UTC}
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:3000/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped

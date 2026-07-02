@@ -16,7 +16,7 @@ A household and personal task management application that tracks *when* tasks we
 
 ## Project Status
 
-Pre-implementation. This is a docs-only, back-burner personal project — there's no code, no package.json, nothing built yet. The architecture is decided (see below); implementation hasn't started.
+Phase 1 (MVP) is implemented: a Vite + React 19 + TypeScript PWA with local IndexedDB storage (Dexie), task and category CRUD, "Just Done" completion with undo, the three views (Quick Wins / By Category / By Time), Settings with JSON/CSV import-export, WCAG 2.1 AA accessibility, and an installable, offline-capable service worker. It also ships a containerized production deployment — see [Deployment](#deployment). Phases 2–3 (see the [Roadmap](#roadmap)) are still to come; the architecture is described below.
 
 ## Planning Documentation
 
@@ -85,6 +85,48 @@ The app serves diverse users with different needs:
 - User accounts/authentication
 - Cloud synchronization
 - Shared households
+
+## Deployment
+
+The app is a **stateless static PWA** — all user data lives in the browser's IndexedDB, and the container holds no server-side state. It's served by a tiny zero-dependency Node static server (`server/index.mjs`) that adds a `/health` endpoint, PWA-aware cache headers, and SPA-fallback routing so client routes deep-link correctly.
+
+### Docker
+
+```bash
+docker build -t how-long-since .
+docker run -p 3000:3000 how-long-since
+```
+
+Or with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+Then open http://localhost:3000. To publish on a different host port:
+
+```bash
+PORT=8080 docker compose up      # http://localhost:8080
+```
+
+The image is a multi-stage build on `node:22-alpine`: the first stage builds the PWA with pnpm; the runtime stage copies only `dist/` and the server, runs as a dedicated **non-root** `app` user, has **no runtime dependencies** and no mounted volume, and exposes a `HEALTHCHECK` that polls `/health`.
+
+### Environment variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `3000` | Host port to publish (Docker Compose). The container always listens on `3000` internally. |
+| `TZ` | `UTC` | Container timezone — a [tz database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. `America/New_York`. |
+
+### Security
+
+The app has **no built-in authentication** — this is deliberate. Access control is your responsibility at the network layer. **Restrict access before exposing it to any untrusted network.** Recommended approaches:
+
+- **Cloudflare Tunnel / Gateway** — zero-trust, identity-based access
+- **Reverse proxy with auth** — nginx / Caddy / Traefik with OAuth2 Proxy, HTTP Basic Auth, or mutual TLS
+- **VPN / firewall** — restrict access to a trusted network segment
+
+The container runs **non-root** and stores **no data** — all state is the user's own browser IndexedDB, and backups are the app's in-app JSON/CSV export (there is nothing server-side to back up).
 
 ## License
 
