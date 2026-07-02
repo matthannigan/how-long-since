@@ -8,6 +8,11 @@ import { Switch } from '@/components/ui/switch';
 import { getSettings, updateSettings } from '@/lib/settings';
 import type { AppSettings } from '@/types';
 
+import { AboutSection } from './AboutSection';
+import { DataManagementSection } from './DataManagementSection';
+import { DefaultViewSection } from './DefaultViewSection';
+import { NotificationsSection } from './NotificationsSection';
+
 const THEME_OPTIONS: ReadonlyArray<[AppSettings['theme'], string]> = [
   ['light', 'Light'],
   ['dark', 'Dark'],
@@ -23,10 +28,11 @@ const TEXT_SIZE_OPTIONS: ReadonlyArray<[AppSettings['textSize'], string]> = [
 const LEGEND = 'text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-ink-secondary';
 
 /**
- * Settings — Step 4 wires the Appearance controls (theme, text size, high
- * contrast, reduced motion) that the theme/a11y provider consumes, so live
- * theme switching works. Default view, data management, categories, and about
- * are built in Step 8. Lives outside routes/ so the route file can code-split.
+ * Settings page. Section order: Appearance → Default View → Categories →
+ * Notifications → Data Management → About & Help (Categories is surfaced right
+ * after the view preference for quick access). Appearance and the Categories link
+ * read/write settings directly; the sub-sections that need it get the single
+ * `useLiveQuery` result. Lives outside routes/ so the route file can code-split.
  */
 export function SettingsView() {
   const settings = useLiveQuery(() => getSettings());
@@ -39,56 +45,60 @@ export function SettingsView() {
           Appearance
         </h2>
 
-        <fieldset className="space-y-1">
-          <legend className={LEGEND}>Theme</legend>
-          <RadioGroup
-            className="gap-0"
-            value={settings.theme}
-            onValueChange={(v) => void updateSettings({ theme: v as AppSettings['theme'] })}
-          >
-            {THEME_OPTIONS.map(([value, label]) => (
-              <div key={value} className="flex min-h-11 items-center gap-3">
-                <RadioGroupItem id={`theme-${value}`} value={value} />
-                <Label htmlFor={`theme-${value}`}>{label}</Label>
-              </div>
-            ))}
-          </RadioGroup>
-        </fieldset>
+        <div className="grid grid-cols-2 gap-4">
+          <fieldset className="space-y-1">
+            <legend className={LEGEND}>Theme</legend>
+            <RadioGroup
+              className="gap-0"
+              value={settings.theme}
+              onValueChange={(v) => void updateSettings({ theme: v as AppSettings['theme'] })}
+            >
+              {THEME_OPTIONS.map(([value, label]) => (
+                <div key={value} className="flex min-h-11 items-center gap-3">
+                  <RadioGroupItem id={`theme-${value}`} value={value} />
+                  <Label htmlFor={`theme-${value}`}>{label}</Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </fieldset>
 
-        <fieldset className="space-y-1">
-          <legend className={LEGEND}>Text size</legend>
-          <RadioGroup
-            className="gap-0"
-            value={settings.textSize}
-            onValueChange={(v) => void updateSettings({ textSize: v as AppSettings['textSize'] })}
-          >
-            {TEXT_SIZE_OPTIONS.map(([value, label]) => (
-              <div key={value} className="flex min-h-11 items-center gap-3">
-                <RadioGroupItem id={`text-size-${value}`} value={value} />
-                <Label htmlFor={`text-size-${value}`}>{label}</Label>
-              </div>
-            ))}
-          </RadioGroup>
-        </fieldset>
+          <fieldset className="space-y-1">
+            <legend className={LEGEND}>Text size</legend>
+            <RadioGroup
+              className="gap-0"
+              value={settings.textSize}
+              onValueChange={(v) => void updateSettings({ textSize: v as AppSettings['textSize'] })}
+            >
+              {TEXT_SIZE_OPTIONS.map(([value, label]) => (
+                <div key={value} className="flex min-h-11 items-center gap-3">
+                  <RadioGroupItem id={`text-size-${value}`} value={value} />
+                  <Label htmlFor={`text-size-${value}`}>{label}</Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </fieldset>
+        </div>
 
-        <div className="flex min-h-11 items-center justify-between gap-4">
-          <Label htmlFor="high-contrast">High contrast</Label>
+        <div className="flex min-h-11 items-center gap-3">
           <Switch
             id="high-contrast"
             checked={settings.highContrast}
             onCheckedChange={(checked) => void updateSettings({ highContrast: checked })}
           />
+          <Label htmlFor="high-contrast">High contrast</Label>
         </div>
 
-        <div className="flex min-h-11 items-center justify-between gap-4">
-          <Label htmlFor="reduced-motion">Reduced motion</Label>
+        <div className="flex min-h-11 items-center gap-3">
           <Switch
             id="reduced-motion"
             checked={settings.reducedMotion}
             onCheckedChange={(checked) => void updateSettings({ reducedMotion: checked })}
           />
+          <Label htmlFor="reduced-motion">Reduced motion</Label>
         </div>
       </section>
+
+      <DefaultViewSection settings={settings} />
 
       <section
         aria-labelledby="categories-heading"
@@ -106,17 +116,11 @@ export function SettingsView() {
         </Link>
       </section>
 
-      <section
-        aria-labelledby="more-settings-heading"
-        className="space-y-2 border-t border-border-default pt-6"
-      >
-        <h2 id="more-settings-heading" className="font-display text-lg font-semibold text-ink">
-          More settings
-        </h2>
-        <p className="text-sm text-ink-meta-aa">
-          Default view, data export and import, and app info are coming in a later step.
-        </p>
-      </section>
+      <NotificationsSection />
+
+      <DataManagementSection settings={settings} />
+
+      <AboutSection />
     </div>
   );
 }

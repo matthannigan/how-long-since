@@ -53,6 +53,10 @@ test-results/
 .DS_Store
 Thumbs.db
 
+# Exported backups / task CSVs (downloaded by the app, never source)
+how-long-since-backup-*.json
+how-long-since-tasks-*.csv
+
 # Claude Code — share launch.json, keep personal settings local
 .claude/settings.local.json
 .claude/memory

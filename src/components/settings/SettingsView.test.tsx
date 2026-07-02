@@ -26,6 +26,18 @@ describe('SettingsView', () => {
     expect(await findByRole('switch', { name: 'High contrast' })).not.toBeChecked();
   });
 
+  it('renders the Step 8 settings sections', async () => {
+    const { findByRole } = renderWithRouter(
+      <main>
+        <SettingsView />
+      </main>,
+    );
+    expect(await findByRole('heading', { name: 'Default View' })).toBeInTheDocument();
+    expect(await findByRole('heading', { name: 'Notifications' })).toBeInTheDocument();
+    expect(await findByRole('heading', { name: 'Data Management' })).toBeInTheDocument();
+    expect(await findByRole('heading', { name: 'About & Help' })).toBeInTheDocument();
+  });
+
   it('persists a theme change to the settings singleton', async () => {
     const { findByRole } = renderWithRouter(
       <main>

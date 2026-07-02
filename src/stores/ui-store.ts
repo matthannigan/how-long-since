@@ -29,6 +29,14 @@ interface UIState {
    */
   lastUsedCategoryId: string | null;
   setLastUsedCategory: (id: string) => void;
+
+  /**
+   * Whether the backup-reminder banner has been dismissed this session (Step 8).
+   * Session-only: it resets on the next launch so the reminder returns until the
+   * user actually takes a JSON backup (which clears it via `lastBackupDate`).
+   */
+  backupBannerDismissed: boolean;
+  dismissBackupBanner: () => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -42,4 +50,7 @@ export const useUIStore = create<UIState>((set) => ({
 
   lastUsedCategoryId: null,
   setLastUsedCategory: (id) => set({ lastUsedCategoryId: id }),
+
+  backupBannerDismissed: false,
+  dismissBackupBanner: () => set({ backupBannerDismissed: true }),
 }));
