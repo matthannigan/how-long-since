@@ -16,6 +16,8 @@ import { useCallback } from 'react';
  */
 export function useFocusOnMount<T extends HTMLElement>() {
   return useCallback((node: T | null) => {
-    node?.focus();
+    // preventScroll: moving focus to the region must not scroll it into view —
+    // otherwise switching views yanks the page down past the header + tab bar.
+    node?.focus({ preventScroll: true });
   }, []);
 }

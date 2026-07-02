@@ -26,7 +26,7 @@ export function AppShell({ children }: AppShellProps) {
           {/* Clock/arc mark (same source as the PWA icon), decorative — the h1
               already names the app. Sized in rem so it scales with text-size;
               tokenized strokes adapt to dark mode + high-contrast. */}
-          <svg viewBox="0 0 192 192" aria-hidden="true" className="size-6 shrink-0">
+          <svg viewBox="0 0 192 192" aria-hidden="true" className="size-9 shrink-0">
             <circle
               cx="96"
               cy="96"
