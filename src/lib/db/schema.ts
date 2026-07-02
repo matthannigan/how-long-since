@@ -127,7 +127,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
 export const DEFAULT_SETTINGS: AppSettings = {
   id: '1',
   lastBackupDate: null,
-  currentView: 'category',
+  currentView: 'quick',
   theme: 'system',
   textSize: 'default',
   highContrast: false,

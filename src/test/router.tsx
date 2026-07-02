@@ -19,8 +19,8 @@ export function renderWithRouter(
   { initialPath = '/' }: { initialPath?: string } = {},
 ) {
   const rootRoute = createRootRoute({ component: () => <>{ui}</> });
-  const children = ['/', '/time', '/settings', '/categories', '/tasks/$taskId'].map((path) =>
-    createRoute({ getParentRoute: () => rootRoute, path, component: () => null }),
+  const children = ['/', '/category', '/time', '/settings', '/categories', '/tasks/$taskId'].map(
+    (path) => createRoute({ getParentRoute: () => rootRoute, path, component: () => null }),
   );
   const router = createRouter({
     routeTree: rootRoute.addChildren(children),

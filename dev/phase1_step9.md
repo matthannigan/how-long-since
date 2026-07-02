@@ -31,7 +31,7 @@ every prior UI step; here we validate holistically and fix what surfaces.
 
 ### Accessibility (holistic audit + fixes)
 - [ ] Full **keyboard walkthrough**: create → complete → undo → edit → archive/delete → switch views → settings → import/export. Logical tab order, visible focus, no traps except the intended modal.
-- [ ] **Focus management on view switch** (Req 4.7) — verify/finish the intent wired in step 6; focus lands somewhere sensible, not lost to `<body>`.
+- [ ] **Focus management on view switch** (Req 4.7) — verify/finish the intent wired in the views (`QuickWinsView`/`ByTimeView` focus their region on mount); check all **three** switches (Quick Wins ↔ By Category ↔ By Time); focus lands somewhere sensible, not lost to `<body>`.
 - [ ] **`aria-live`** announcements confirmed for: completion, undo, save/delete, import/export results, validation errors, backup reminder.
 - [ ] **200% text zoom / resize** (Req 6.8) — no horizontal scrolling, no clipped controls, in both views and the modal.
 - [ ] **Reduced motion** end-to-end (Req 6.9) — OS setting and the `AppSettings` toggle both suppress animation.
@@ -54,7 +54,8 @@ every prior UI step; here we validate holistically and fix what surfaces.
 - [ ] **create → complete → undo → archive** happy path.
 - [ ] **import/export round-trip** (JSON and CSV) — export, clear, re-import, assert data identical (pairs with step 8).
 - [ ] **offline** — load, go offline, add/complete a task, reload → data persists.
-- [ ] **view switch + remember-view** across reloads.
+- [ ] **view switch + remember-view** across reloads — cover all **three** views (Quick Wins / By Category / By Time); a reload restores the last-selected view, and a fresh install lands on **Quick Wins** (the default).
+- [ ] **Quick Wins** spec — pick a time window (radio), assert the fitting tasks appear **capped at 8**, and complete + undo a task from the view.
 - [ ] A basic **install/manifest** check.
 
 ## Try it (manual)

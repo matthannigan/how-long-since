@@ -68,9 +68,10 @@ Unlike traditional task managers, this app answers the question "How long has it
 3. WHEN a task has no time commitment specified THEN the system SHALL place it in a separate "Time Unknown" group at the bottom
 4. WHEN in time commitment view THEN the system SHALL still display category information for each task
 5. WHEN in time commitment view THEN the system SHALL still display time elapsed since last completion
-6. WHEN a user switches between views THEN the system SHALL remember their preference for future sessions
+6. WHEN a user switches between views THEN the system SHALL remember their preference for future sessions (across the three views: Quick Wins, By Category, By Time; Quick Wins is the default)
 7. WHEN switching views THEN the system SHALL maintain focus position when possible for accessibility
-8. WHEN in either view THEN the system SHALL provide clear visual indication of which view is currently active
+8. WHEN in any view THEN the system SHALL provide clear visual indication of which view is currently active
+9. WHEN in the Quick Wins view THEN the system SHALL let the user state how much time they have (15 min / 30 min / 1 hour / 2 hours) and surface up to 8 fitting non-archived tasks, most-overdue first
 
 ### Requirement 5: Quick Task Completion Interface
 

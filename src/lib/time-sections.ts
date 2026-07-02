@@ -80,8 +80,8 @@ export const QUICK_PICK_FILTERS: QuickPickFilter[] = [
   { id: '120', label: '2 hours', buckets: ['15min', '30min', '1hr', '2hrs'] },
 ];
 
-/** How many matches the Quick Pick panel surfaces (app-pages §4: "2–5"). */
-export const QUICK_PICK_LIMIT = 5;
+/** How many matches the Quick Wins view surfaces (app-pages §4: "up to 8"). */
+export const QUICK_PICK_LIMIT = 8;
 
 const STATUS_RANK: Record<OverdueStatus, number> = {
   'very-overdue': 0,
@@ -99,7 +99,7 @@ function elapsedMs(task: Task, now: Date): number {
  * Non-archived tasks whose time commitment fits the chosen filter, most-urgent
  * first (very-overdue → none, tie-break by longest elapsed), capped at
  * `QUICK_PICK_LIMIT`. Phase 1 has no "show more" — extra matches are simply not
- * shown (the cap is intentional, see the step-6 scope).
+ * shown (the cap is intentional; it backs the standalone Quick Wins view).
  */
 export function filterForQuickPick(tasks: Task[], filterId: string, now = new Date()): Task[] {
   const filter = QUICK_PICK_FILTERS.find((f) => f.id === filterId);

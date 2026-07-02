@@ -50,9 +50,7 @@ describe('ByCategoryView', () => {
   });
 
   it('links to the category management surface', async () => {
-    await db.tasks.add(
-      makeTask({ id: '55555555-5555-4555-8555-555555555555', name: 'A task' }),
-    );
+    await db.tasks.add(makeTask({ id: '55555555-5555-4555-8555-555555555555', name: 'A task' }));
     const { findByRole } = renderWithRouter(<ByCategoryView />);
     const link = await findByRole('link', { name: /manage categories/i });
     expect(link).toHaveAttribute('href', expect.stringContaining('/categories'));

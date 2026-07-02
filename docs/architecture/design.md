@@ -91,7 +91,7 @@ interface Category {
 interface AppSettings {
   id: string;                      // singleton row, always '1'
   lastBackupDate: Date | null;
-  currentView: 'category' | 'time';
+  currentView: 'quick' | 'category' | 'time';  // default 'quick' (Quick Wins)
   theme: 'light' | 'dark' | 'system';
   textSize?: 'default' | 'large' | 'larger';
   highContrast?: boolean;

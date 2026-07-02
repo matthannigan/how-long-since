@@ -92,7 +92,7 @@ Singleton row, `id` always `'1'`. No `personaPreference` field — persona-mode-
 interface AppSettings {
   id: string;
   lastBackupDate: Date | null;
-  currentView: 'category' | 'time';
+  currentView: 'quick' | 'category' | 'time';   // default 'quick' (Quick Wins)
   theme: 'light' | 'dark' | 'system';
   textSize: 'default' | 'large' | 'larger';
   highContrast: boolean;

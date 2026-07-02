@@ -151,6 +151,30 @@ export async function seedSampleTasks(): Promise<void> {
       isArchived: false,
       notes: '',
     },
+    {
+      id: 'a1e1b2c3-0011-4a00-8000-000000000011',
+      name: 'Wipe kitchen counters',
+      description: '',
+      categoryId: categoryId('Kitchen'),
+      createdAt,
+      lastCompletedAt: daysAgo(8), // overdue
+      expectedFrequency: weekly,
+      timeCommitment: '15min',
+      isArchived: false,
+      notes: '',
+    },
+    {
+      id: 'a1e1b2c3-0012-4a00-8000-000000000012',
+      name: 'Change bed sheets',
+      description: '',
+      categoryId: categoryId('Bedroom'),
+      createdAt,
+      lastCompletedAt: daysAgo(6), // due-soon
+      expectedFrequency: weekly,
+      timeCommitment: '30min',
+      isArchived: false,
+      notes: '',
+    },
   ];
 
   await db.tasks.bulkAdd(samples);

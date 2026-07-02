@@ -10,13 +10,13 @@ describe('seedSampleTasks', () => {
 
   it('seeds sample tasks into an empty table', async () => {
     await seedSampleTasks();
-    expect(await db.tasks.count()).toBe(10);
+    expect(await db.tasks.count()).toBe(12);
   });
 
   it('is idempotent — a second call adds nothing', async () => {
     await seedSampleTasks();
     await seedSampleTasks();
-    expect(await db.tasks.count()).toBe(10);
+    expect(await db.tasks.count()).toBe(12);
   });
 
   it('no-ops when the table already has tasks', async () => {

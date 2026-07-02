@@ -130,6 +130,7 @@ several, or none on a given day:
 ### 3.2 Navigation and Views
 
 **Views:**
+- Quick Wins view (default): "Quick Wins" — leads with the prompt "How much time do you have?"
 - Category view: "By Category"
 - Time view: "By Time Needed"
 - Toggle: "Switch view"

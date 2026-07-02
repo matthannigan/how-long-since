@@ -139,6 +139,10 @@ describe('filterForQuickPick', () => {
     expect(ids).toEqual(['veryOverdue', 'overdue', 'fresh']);
   });
 
+  it('surfaces up to 8 matches (Quick Wins cap)', () => {
+    expect(QUICK_PICK_LIMIT).toBe(8);
+  });
+
   it('caps the list at QUICK_PICK_LIMIT', () => {
     const many = Array.from({ length: QUICK_PICK_LIMIT + 3 }, (_, i) =>
       task(`t${i}`, { timeCommitment: '15min' }),

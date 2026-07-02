@@ -54,7 +54,7 @@ meaningful.
 | Token | Hex | Use |
 |-------|-----|-----|
 | `--accent` | `#D98C63` | Primary button fill, active frequency/date pill |
-| `--accent-deep` | `#C0794C` | Section markers, "Quick pick" label |
+| `--accent-deep` | `#C0794C` | Section markers, time-glyph dots |
 | `--accent-sage` | `#5B9E86` | Secondary/success accent (sparingly) |
 
 ### 1.3 Status Colors (Light)
@@ -129,7 +129,7 @@ that go luminous instead of dark. See §6 for how it's wired.
 | `--ink-tertiary` (dark) | `#8F887E` | Meta text |
 | `--ink-faint` (dark) | `#6F685F` | Disabled / helper |
 | `--accent` (dark) | `#D98C63` | Primary button (unchanged) |
-| `--accent-deep` (dark) | `#E8875A` | Markers, "Quick pick" label |
+| `--accent-deep` (dark) | `#E8875A` | Markers, time-glyph dots |
 | `--overdue` (dark) | `#F0876B` | Overdue text/badge |
 | `--due-soon` (dark) | `#E0A94E` | "Due soon" text |
 | overdue tint (dark) | `rgba(240,135,107,.16)` | Badge / pill fill |
@@ -295,11 +295,14 @@ The row is the core component, shared by By Time and By Category.
 - Circular, not square — this is a deliberate change from the earlier square checkbox.
 
 ### 3.4 View Toggle (segmented control)
-- Track: `--surface-track` fill, radius 22px, padding 4px, two equal segments
+- Track: `--surface-track` fill, radius 22px, padding 4px, three equal segments
 - Active segment: white pill, radius 18px, `box-shadow: 0 2px 6px
   rgba(70,62,55,.1)`, text `--ink`
 - Inactive segment: text `--ink-secondary`
-- Labels: "By Category" / "By Time" (DM Sans 600 13px)
+- Labels: "Quick Wins" / "By Category" / "By Time" (DM Sans 600 13px, in that
+  order; Quick Wins is the default). Three segments are tighter than two — use a
+  modest horizontal padding (≈12px) so "By Category" fits without wrapping at
+  ~360px.
 - This top toggle is the app's primary view switch (there is no bottom nav bar
   in the Soft Daylight mocks — see the navigation note in
   `docs/app-pages-prompts.md`).
@@ -330,13 +333,19 @@ The row is the core component, shared by By Time and By Category.
   #B4623C`; a sub-line confirms the resolved date ("Set to Apr 2, 2026 · 3
   months ago")
 
-### 3.7 Quick Pick Panel (By Time)
+### 3.7 Quick Wins Panel (Quick Wins view)
+- The gradient panel holds **only** the prompt + the time radios; the matching
+  tasks render **below it** as standard task rows (§3.6-size, identical to By
+  Category / By Time), up to 8 shown — they are **not** inside the panel.
 - Container: `background: linear-gradient(180deg,#F3F1EB,#FAF9F5); border: 1px
   solid #E7E2D8; radius: 20px; padding: 16px 18px`
-- Header: ☀ sun glyph + "Quick pick" (`--accent-deep`, DM Sans 700 12px) + a
-  subline ("How much time do you have?")
-- Rows inside are the standard task row at a slightly tighter radius (15px) and
-  a lighter shadow (`0 2px 8px -4px rgba(70,62,55,.16)`)
+- **No panel title**: the panel leads with the prompt "How much time do you
+  have?" **styled as a section heading** (`font-display` ~18px 700 `--ink`,
+  matching §3.8), which doubles as the radio group's accessible name. (The former
+  ☀ "Quick pick" header was dropped when the panel became the standalone Quick
+  Wins view.)
+- Time radios sit below the heading at a comfortable size (≈20px control, ~16px
+  labels) so the targets and text balance the heading
 
 ### 3.8 Section Headers (By Time group headers)
 - Group title (`font-display` ~18px 700 `--ink`) followed by a meta count ("15
@@ -356,7 +365,6 @@ The row is the core component, shared by By Time and By Category.
 
 ### Key Glyphs Used in the Mocks
 - **Settings**: gear, inside a 36px `--surface-sunk` circle, top-right of the header
-- **Quick pick**: sun (☀)
 - **Due soon**: small clock (🕐) beside the elapsed time
 - **Overdue**: "!" in a 17px filled circle (`--overdue-tint` fill, `--overdue` glyph)
 - **Frequency / date picker**: down chevron (▾)

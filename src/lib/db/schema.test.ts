@@ -47,7 +47,7 @@ describe('seedDatabase', () => {
 
     const settings = await db.settings.get('1');
     expect(settings).toBeDefined();
-    expect(settings?.currentView).toBe('category');
+    expect(settings?.currentView).toBe('quick');
     expect(settings?.theme).toBe('system');
     expect(settings?.lastBackupDate).toBeNull();
   });

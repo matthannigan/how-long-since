@@ -42,7 +42,7 @@ the browser's IndexedDB, there is no server-side state. So this deployment:
 - [ ] Minimal **Express** static server (mirrors galley's Node/Express choice):
   - [ ] Serve `dist/` static assets.
   - [ ] **Cache headers**: hashed assets (`/assets/*`) `Cache-Control: public, max-age=31536000, immutable`; **`index.html`, `sw.js`, `manifest.webmanifest`** → `no-cache` (so PWA updates land — never pin the service worker).
-  - [ ] **SPA fallback**: unknown non-file routes → send `dist/index.html` (so `/time`, `/settings`, `/tasks/:id` deep-link correctly). Do **not** fallback for real asset 404s.
+  - [ ] **SPA fallback**: unknown non-file routes → send `dist/index.html` (so `/` (Quick Wins), `/category`, `/time`, `/settings`, `/tasks/:id` deep-link correctly). Do **not** fallback for real asset 404s.
   - [ ] **`GET /health`** → 200 (for the compose healthcheck).
   - [ ] Listen on `PORT` (default 3000).
   - [ ] *(Alternative noted: `nginx:alpine` with `try_files $uri /index.html;` + a `/health` location + the same cache rules — leaner, but diverges from galley's Node base.)*

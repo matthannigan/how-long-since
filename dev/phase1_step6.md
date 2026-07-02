@@ -2,6 +2,14 @@
 
 > Read [`phase1.md`](phase1.md) first for shared conventions and the DoD.
 
+> **Update (2026-07-01, post-Step-7):** the Quick Pick panel was **promoted out
+> of By Time into its own standalone "Quick Wins" view** — the default, first
+> tab (route `/`; By Category moved to `/category`). `AppSettings.currentView`
+> gained `'quick'` (default), and the result cap rose **5 → 8**. The By Time view
+> no longer embeds Quick Pick; everything below about the panel now describes
+> `QuickWinsView` + `QuickPick`. See the decisions register in `phase1.md` and
+> the Quick Wins notes in steps 8–10.
+
 ## Objective
 
 Add the second primary view: tasks grouped by time commitment (shortest →

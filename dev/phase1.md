@@ -35,8 +35,8 @@ parallel). Don't start a step until its prerequisites are green.
 ## Phase 1 scope
 
 Create / Edit / Archive / Delete tasks · "Just Done" completion with a 5-second
-undo · 3-tier overdue status · **By Category** + **By Time** views (+ a Quick Pick
-panel) · human-readable elapsed time · category management (create / edit /
+undo · 3-tier overdue status · **Quick Wins** (default), **By Category**, and
+**By Time** views · human-readable elapsed time · category management (create / edit /
 delete-with-reassignment) · Settings (theme, text size, high-contrast, reduced
 motion, default view) · CSV + JSON import/export · 2-week backup reminder · full
 WCAG 2.1 AA accessibility · installable PWA that works offline · **containerized
@@ -66,7 +66,7 @@ Stated here so it isn't silently re-added:
 | 3 | [Business logic](phase1_step3.md) | `lib/` tasks·categories·overdue·time-format, unit-tested | 2 |
 | 4 | [App shell + shared infra](phase1_step4.md) | Shell, routing, theme/a11y providers, undo store, toast host, error boundary, skeletons, seed-on-boot | 1,2,3 |
 | 5 | [Row + completion + By Category](phase1_step5.md) | Render + complete tasks; default view works | 3,4 |
-| 6 | [By Time + Quick Pick](phase1_step6.md) | Second view: time-commitment sections + recommendations | 5 |
+| 6 | [By Time](phase1_step6.md) | Second view: time-commitment sections (Quick Pick was later promoted to the standalone Quick Wins view — see the decisions register) | 5 |
 | 7 | [Task form + category mgmt](phase1_step7.md) | Full task CRUD + category CRUD | 4,5 |
 | 8 | [Settings + import/export](phase1_step8.md) | Settings page, JSON/CSV round-trip, backup banner, clear-all | 4,7 |
 | 9 | [A11y / PWA / perf / E2E](phase1_step9.md) | Holistic audit, installable PWA, Playwright E2E, perf budgets | all prior |
@@ -202,8 +202,9 @@ gap-closure* pass, not where these first appear.
 | CSV dates | Strings only in CSV; canonical format + parse/format round-trip + timezone policy decided and documented in step 8 (**RISK**) | step 8 |
 | Seeding | 10 default categories + `AppSettings` singleton (`id:'1'`); **idempotent**, called once at bootstrap | steps 2, 4 |
 | Gestures | Swipe / long-press **deferred to Phase 2**; checkbox/button is the Phase 1 completion path (deviates from Req 5.3 — noted intentionally) | user decision |
-| Navigation | Single-screen shell + top segmented toggle; terracotta FAB for Add Task; settings gear top-right. **No bottom nav.** `BottomNav.tsx` in `structure.md` is retired — do not scaffold it | `app-pages-prompts.md` Navigation Model |
-| Default view | By Category; light theme default | `app-pages-prompts.md` |
+| Navigation | Single-screen shell + top segmented toggle, **three segments in order: Quick Wins / By Category / By Time**; terracotta FAB for Add Task; settings gear top-right. **No bottom nav.** `BottomNav.tsx` in `structure.md` is retired — do not scaffold it | `app-pages-prompts.md` Navigation Model |
+| Default view | **Quick Wins** (`/`); light theme default | `app-pages-prompts.md` |
+| Quick Wins view | Quick Pick was **promoted from a By Time panel to a co-equal, default top-level view** named "Quick Wins" (route `/`); `currentView` gains `'quick'` (now `'quick' \| 'category' \| 'time'`, default `'quick'`); result cap raised **5 → 8**; in-view header dropped in favor of the "How much time do you have?" prompt. By Category moved to `/category` | user decision, 2026-07-01 |
 | Dev workflow | Native pnpm (`dev`/`preview`/Vitest/Playwright); no Docker in the dev loop | user decision |
 | Production | Docker image serving static `dist/`, mirroring `galley` conventions (node:22-alpine, non-root, `/health`, compose PORT/TZ/restart, Cloudflare-Tunnel-style auth). Stateless — no volume | user decision |
 
@@ -222,14 +223,15 @@ src/
 ├── main.tsx                    # entry: mounts router + providers; calls seed-on-boot
 ├── routes/
 │   ├── __root.tsx              # nav shell + providers
-│   ├── index.tsx               # By Category (default)
+│   ├── index.tsx               # Quick Wins (default; first-load redirect to remembered view)
+│   ├── category.tsx            # By Category
 │   ├── time.tsx                # By Time
 │   ├── tasks.$taskId.tsx       # Add/Edit task (new vs existing id)
 │   └── settings.tsx
 ├── components/
 │   ├── ui/                     # shadcn primitives (owned, generated via CLI)
-│   ├── task/                   # TaskCard, TaskForm, TaskList, TaskCompletionButton
-│   ├── category/               # CategoryBadge, CategoryForm
+│   ├── task/                   # TaskCard, TaskForm, TaskList, QuickWinsView, QuickPick, ByTimeView
+│   ├── category/               # CategoryBadge, CategoryForm, ByCategoryView
 │   └── layout/                 # AppShell (NO BottomNav)
 ├── lib/
 │   ├── db/schema.ts            # Dexie class, table schema, versioning, seed fn
@@ -257,7 +259,7 @@ least one owning step. No orphans.
 |-----------------------|----------------|
 | Create / Edit / Archive / Delete tasks | 2 (schema), 3 (logic), 7 (form + actions) |
 | "Just Done" completion logic | 3 (lib + overdue/undo), 5 (UI + undo window) |
-| Category and Time views | 5 (By Category), 6 (By Time) |
+| Category and Time views | 5 (By Category), 6 (By Time), 6 (Quick Wins — promoted from the By Time Quick Pick panel to its own default view) |
 | Local data storage (IndexedDB) | 2 |
 | CSV Import/Export | 8 (+ JSON) |
 | Full accessibility compliance | 4·5·6·7·8 (per-step), 9 (audit) |
@@ -267,7 +269,7 @@ least one owning step. No orphans.
 | Req 1 — Task Management | 2, 3, 7 |
 | Req 2 — Completion Tracking (elapsed, undo, 3-tier overdue) | 3, 5 |
 | Req 3 — Category Organization | 2 (seed), 3 (logic + guard), 5 (grouping), 7 (mgmt) |
-| Req 4 — Time-Based Views (+ remember preference 4.6) | 4 (remember view), 6 |
+| Req 4 — Time-Based Views (+ remember preference 4.6 across the three views) | 4 (remember view), 6 |
 | Req 5 — Quick Completion Interface | 5 (checkbox/keyboard); 5.3–5.4 gestures → Phase 2 |
 | Req 6 — Accessibility | 4·5·6·7·8 (per-step), 9 (holistic audit) |
 | Req 7 — Data Persistence & Backup | 2 (IndexedDB), 8 (export/import, backup reminder, quota) |

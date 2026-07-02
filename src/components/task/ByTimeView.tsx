@@ -4,18 +4,17 @@ import { useEffect, useRef } from 'react';
 import { db } from '@/lib/db/schema';
 import { groupTasksByTime } from '@/lib/time-sections';
 
-import { QuickPick } from './QuickPick';
 import { TaskCard } from './TaskCard';
 import { TaskListSkeleton } from './TaskListSkeleton';
 import { TimeSectionHeader } from './TimeSectionHeader';
 
 /**
- * The By Time view: a Quick Pick panel over tasks grouped by time commitment
- * (shortest→longest, then "No time set"). Mirrors ByCategoryView — one reactive
- * read of tasks + categories, non-archived filtered in memory (the isArchived
- * boolean-index trap), empty sections dropped. Rows use `TaskCard variant="time"`
- * so the category tag + elapsed stay visible without a per-category header
- * (Req 4.4–4.5).
+ * The By Time view: tasks grouped by time commitment (shortest→longest, then
+ * "No time set"). Mirrors ByCategoryView — one reactive read of tasks +
+ * categories, non-archived filtered in memory (the isArchived boolean-index
+ * trap), empty sections dropped. Rows use `TaskCard variant="time"` so the
+ * category tag + elapsed stay visible without a per-category header (Req 4.4–4.5).
+ * (Quick Pick was promoted to its own Quick Wins view — see QuickWinsView.)
  */
 export function ByTimeView() {
   const tasks = useLiveQuery(() => db.tasks.toArray(), []);
@@ -51,7 +50,6 @@ export function ByTimeView() {
         </p>
       ) : (
         <>
-          <QuickPick tasks={active} categoryById={categoryById} />
           {groups.map(({ section, tasks: groupTasks }) => (
             <div key={section.id}>
               <TimeSectionHeader section={section} count={groupTasks.length} />

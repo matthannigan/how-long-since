@@ -32,7 +32,7 @@ up/restore their data.
 
 ### Settings page — `routes/settings.tsx`
 - [ ] **Appearance**: theme (Light / Dark / System), text size (Default / Large / Larger), accessibility toggles (High contrast, Reduced motion). All write to the `AppSettings` singleton (wired in step 4); reflect immediately.
-- [ ] **Default view**: radio By Category / By Time (Req 4.6) → `AppSettings.currentView`; helper "Choose your preferred starting view".
+- [ ] **Default view**: radio **Quick Wins (default) / By Category / By Time** (Req 4.6) → `AppSettings.currentView` (`'quick' | 'category' | 'time'`); helper "Choose your preferred starting view".
 - [ ] **Notifications** — render as a **disabled / "Coming soon"** section (Phase 2; app-pages §5.3 marks it future). Do not implement toggles that do nothing silently.
 - [ ] **Data management**: last-backup date display; Export (JSON full + CSV); Import; **Clear all data** (danger zone).
 - [ ] **Categories**: "Manage Categories" link → the step-7 surface.
@@ -47,7 +47,7 @@ up/restore their data.
 - [ ] **Backup reminder** — on load, if `now - lastBackupDate ≥ 14 days` (or never), show an in-app **banner** (not a push notification) prompting export; dismissible. (Req 7.7.)
 - [ ] **Clear all data** — confirm dialog with explicit irreversibility copy; wipes all tables then re-runs `seedDatabase()` so defaults return.
 - [ ] **Quota / write-failure handling** (Req 7.8–7.9) — catch Dexie quota errors on import/save and surface "Storage space is low. Consider removing old tasks."
-- [ ] Tests: JSON round-trip (export→import→identical), CSV round-trip incl. **date fields**, invalid-CSV-row reporting, backup-reminder threshold, clear-all re-seeds.
+- [ ] Tests: JSON round-trip (export→import→identical), CSV round-trip incl. **date fields**, invalid-CSV-row reporting, backup-reminder threshold, clear-all re-seeds, and **`AppSettings.currentView` round-trips all three values including `'quick'`** (the widened enum must not be rejected on import).
 
 ## Try it (manual)
 
