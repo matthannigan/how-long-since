@@ -1,5 +1,5 @@
-import { calculateOverdueStatus } from '@/lib/overdue';
-import type { OverdueStatus, Task, TimeCommitment } from '@/types';
+import { calculateOverdueStatus, OVERDUE_STATUS_RANK } from '@/lib/overdue';
+import type { Task, TimeCommitment } from '@/types';
 
 /**
  * A By Time group (app-pages-prompts §4). The view shows five named sections
@@ -83,13 +83,6 @@ export const QUICK_PICK_FILTERS: QuickPickFilter[] = [
 /** How many matches the Quick Wins view surfaces (app-pages §4: "up to 8"). */
 export const QUICK_PICK_LIMIT = 8;
 
-const STATUS_RANK: Record<OverdueStatus, number> = {
-  'very-overdue': 0,
-  overdue: 1,
-  'due-soon': 2,
-  none: 3,
-};
-
 /** Milliseconds since last completion; never-completed sorts as 0 (least urgent). */
 function elapsedMs(task: Task, now: Date): number {
   return task.lastCompletedAt ? now.getTime() - task.lastCompletedAt.getTime() : 0;
@@ -109,7 +102,8 @@ export function filterForQuickPick(tasks: Task[], filterId: string, now = new Da
     .filter((t) => !t.isArchived && t.timeCommitment && filter.buckets.includes(t.timeCommitment))
     .sort((a, b) => {
       const byStatus =
-        STATUS_RANK[calculateOverdueStatus(a, now)] - STATUS_RANK[calculateOverdueStatus(b, now)];
+        OVERDUE_STATUS_RANK[calculateOverdueStatus(a, now)] -
+        OVERDUE_STATUS_RANK[calculateOverdueStatus(b, now)];
       return byStatus !== 0 ? byStatus : elapsedMs(b, now) - elapsedMs(a, now);
     })
     .slice(0, QUICK_PICK_LIMIT);

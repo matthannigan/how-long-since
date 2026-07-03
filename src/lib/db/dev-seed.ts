@@ -175,6 +175,51 @@ export async function seedSampleTasks(): Promise<void> {
       isArchived: false,
       notes: '',
     },
+    // A 3-task series (Phase 1.1) spanning status tiers, all in the same
+    // 30-min bucket so the By Time / By Category collapsed group row is
+    // visible in dev. Fixed shared seriesId keeps the seed idempotent.
+    {
+      id: 'a1e1b2c3-0013-4a00-8000-000000000013',
+      name: 'Vacuum bedroom',
+      description: '',
+      categoryId: categoryId('Bedroom'),
+      createdAt,
+      lastCompletedAt: daysAgo(2), // none
+      expectedFrequency: weekly,
+      timeCommitment: '30min',
+      isArchived: false,
+      notes: '',
+      instanceLabel: 'Main bedroom',
+      seriesId: 'b2f2c3d4-0001-4b00-8000-000000000001',
+    },
+    {
+      id: 'a1e1b2c3-0014-4a00-8000-000000000014',
+      name: 'Vacuum bedroom',
+      description: '',
+      categoryId: categoryId('Bedroom'),
+      createdAt,
+      lastCompletedAt: daysAgo(8), // overdue
+      expectedFrequency: weekly,
+      timeCommitment: '30min',
+      isArchived: false,
+      notes: '',
+      instanceLabel: 'Guest room',
+      seriesId: 'b2f2c3d4-0001-4b00-8000-000000000001',
+    },
+    {
+      id: 'a1e1b2c3-0015-4a00-8000-000000000015',
+      name: 'Vacuum bedroom',
+      description: '',
+      categoryId: categoryId('Bedroom'),
+      createdAt,
+      lastCompletedAt: daysAgo(12), // very-overdue
+      expectedFrequency: weekly,
+      timeCommitment: '30min',
+      isArchived: false,
+      notes: '',
+      instanceLabel: "Kids' room",
+      seriesId: 'b2f2c3d4-0001-4b00-8000-000000000001',
+    },
   ];
 
   await db.tasks.bulkAdd(samples);

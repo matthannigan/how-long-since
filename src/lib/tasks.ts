@@ -16,6 +16,41 @@ export async function createTask(input: unknown): Promise<Task> {
   return task;
 }
 
+/**
+ * Create one task per instance label from a single base input, all sharing a
+ * freshly generated `seriesId` (Phase 1.1 fan-out — "five bedrooms to vacuum").
+ * Labels are trimmed, empties dropped, and duplicates removed
+ * case-insensitively; the insert is atomic. Callers with zero labels should
+ * use `createTask` — an empty list after cleanup throws.
+ */
+export async function createTaskSeries(baseInput: unknown, labels: string[]): Promise<Task[]> {
+  const data = createTaskSchema.parse(baseInput);
+
+  const seen = new Set<string>();
+  const cleaned = labels
+    .map((label) => label.trim())
+    .filter((label) => {
+      if (!label || seen.has(label.toLowerCase())) return false;
+      seen.add(label.toLowerCase());
+      return true;
+    });
+  if (cleaned.length === 0) throw new Error('createTaskSeries requires at least one label');
+
+  const seriesId = crypto.randomUUID();
+  const createdAt = new Date();
+  const tasks: Task[] = cleaned.map((instanceLabel) => ({
+    ...data,
+    id: crypto.randomUUID(),
+    createdAt,
+    isArchived: false,
+    instanceLabel,
+    seriesId,
+  }));
+
+  await db.transaction('rw', db.tasks, () => db.tasks.bulkAdd(tasks));
+  return tasks;
+}
+
 /** Patch the editable fields of a task (name, category, frequency, notes, …). */
 export async function updateTask(id: string, patch: unknown): Promise<void> {
   const data = updateTaskSchema.parse(patch);

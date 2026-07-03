@@ -25,6 +25,10 @@ const CSV_COLUMNS = [
   'timeCommitment',
   'isArchived',
   'notes',
+  // Phase 1.1 columns appended last so positional consumers of older exports
+  // keep working.
+  'instanceLabel',
+  'seriesId',
 ] as const;
 
 type CsvColumn = (typeof CSV_COLUMNS)[number];
@@ -49,6 +53,8 @@ export function tasksToCsv(tasks: Task[], categories: Category[]): string {
     timeCommitment: t.timeCommitment ?? '',
     isArchived: t.isArchived ? 'true' : 'false',
     notes: t.notes,
+    instanceLabel: t.instanceLabel ?? '',
+    seriesId: t.seriesId ?? '',
   }));
   return Papa.unparse({
     fields: [...CSV_COLUMNS],

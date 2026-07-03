@@ -16,6 +16,11 @@ export const taskSchema = z.object({
   timeCommitment: z.enum(['15min', '30min', '1hr', '2hrs', '4hrs+']).optional(),
   isArchived: z.boolean(),
   notes: z.string().max(512),
+  // Instances & series (Phase 1.1): a short "where — or who?" label, and the
+  // UUID shared by tasks spawned together so views can group siblings. Both
+  // optional — a task without a seriesId is never grouped.
+  instanceLabel: z.string().trim().min(1).max(40).optional(),
+  seriesId: z.uuid().optional(),
 });
 
 // Create input: the lib fills the system-owned id / createdAt / isArchived.
@@ -38,5 +43,6 @@ export const updateTaskSchema = taskSchema
     timeCommitment: true,
     lastCompletedAt: true,
     notes: true,
+    instanceLabel: true, // seriesId is system-owned (like id) — not editable
   })
   .partial();
