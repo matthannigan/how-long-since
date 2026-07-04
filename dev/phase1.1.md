@@ -1,10 +1,10 @@
 # Phase 1.1 (Instances & Series) — Implementation Plan & Handoff Index
 
-> **Status:** Approved 2026-07-03, pre-implementation. Branch:
-> `phase1.1-instances-series`. Phase 1 (MVP) is merged to `main`; this phase
-> builds directly on it. Read [`phase1.md`](phase1.md) for the shared
-> conventions, cross-cutting standards, and the global Definition of Done —
-> **all of it still applies**. This file holds only what is new in 1.1.
+> **Status: implemented** (2026-07-03, all four steps green on
+> `phase1.1-instances-series`). Approved and built the same day. Read
+> [`phase1.md`](phase1.md) for the shared conventions, cross-cutting
+> standards, and the global Definition of Done — **all of it still applies**.
+> This file holds only what is new in 1.1.
 
 ## Why this phase exists
 
@@ -79,6 +79,9 @@ as N independent cards); Step 3 adds the collapse; Step 4 proves it.
 | Edit semantics | Per-task only; `instanceLabel` editable as a plain text field. **No fan-out in edit mode** | User decision; "apply to all in series" deferred |
 | `instanceLabel` limit | Trimmed, 1–40 chars when present | It's a chip; keeps the TaskCard meta line sane at 375px |
 | New microcopy | Specified in these step docs (tone rules of `content-strategy-guide.md` apply); the guide itself gets an append-only 1.1 addendum in Step 4 | The guide predates this feature; step docs are the interim source of truth |
+| Chip input commits on blur too *(learned in Step 2)* | A pending typed label becomes a chip when the input loses focus, not only on Enter/comma | Without it, "type one label → tap Save" silently created an unlabeled single task |
+| Completion name includes the label *(learned in Step 3)* | `TaskCompletionButton` aria-label and toast read "{name} — {label}" when a label exists | Same-named siblings were indistinguishable to screen readers ("Mark Vacuum bedroom complete" ×3) and in toasts |
+| Zod v4 explicit-`undefined` *(verified in Step 1)* | `updateTask(id, { instanceLabel: undefined })` deletes the stored property — Zod keeps the key, Dexie removes it | The label-clear risk was retired by unit test; no fallback path needed |
 
 ## Explicitly NOT in Phase 1.1
 

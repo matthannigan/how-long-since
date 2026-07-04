@@ -70,8 +70,16 @@ interface Task {
   timeCommitment?: '15min' | '30min' | '1hr' | '2hrs' | '4hrs+';
   isArchived: boolean;
   notes: string;                   // 512 char max
+  instanceLabel?: string;          // Phase 1.1 — "where or who" (40 char max, trimmed)
+  seriesId?: string;               // Phase 1.1 — shared by tasks fanned out together; system-owned
 }
 ```
+
+Instances & series (Phase 1.1, July 2026): tasks stay independent rows;
+siblings sharing a `seriesId` collapse into an expandable group row in
+By Time and By Category (never in Quick Wins, where siblings rank
+independently). No Dexie index on these fields — grouping runs in memory.
+See `dev/phase1.1.md` for the decisions register.
 
 ### Category
 ```typescript
