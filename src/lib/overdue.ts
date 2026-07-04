@@ -3,6 +3,17 @@ import type { FrequencyUnit, OverdueStatus, Task } from '@/types';
 export type { OverdueStatus } from '@/types';
 
 /**
+ * Shared urgency ordering, most urgent first (0 = worst). Used by Quick Pick
+ * ranking and by series worst-of-siblings summaries.
+ */
+export const OVERDUE_STATUS_RANK: Record<OverdueStatus, number> = {
+  'very-overdue': 0,
+  overdue: 1,
+  'due-soon': 2,
+  none: 3,
+};
+
+/**
  * Fixed millisecond length of each frequency unit. Month/year are intentional
  * approximations (30d / 365d) for threshold math — not calendar arithmetic.
  */

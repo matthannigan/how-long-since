@@ -85,16 +85,32 @@ export async function waitForCurrentView(page: Page, value: string): Promise<voi
  * Drive the Add-Task flow through the UI: FAB → dialog → fill name (+ optional
  * time estimate) → Save. The category defaults to the first/last-used one, so a
  * name is enough to make the form valid. Pass `time: null` to skip the estimate.
+ * Pass `category` to pick a specific one, and `labels` to fan out a series via
+ * "Track in multiple places" (Phase 1.1) — one task is created per label.
  */
 export async function addTask(
   page: Page,
-  { name, time = '15 min' }: { name: string; time?: string | null },
+  {
+    name,
+    time = '15 min',
+    category,
+    labels,
+  }: { name: string; time?: string | null; category?: string; labels?: string[] },
 ): Promise<void> {
   await page.getByRole('button', { name: 'Add task' }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await dialog.getByPlaceholder('What needs to be done?').fill(name);
+  if (category) await dialog.getByRole('radio', { name: category, exact: true }).click();
   if (time) await dialog.getByRole('radio', { name: time, exact: true }).click();
+  if (labels?.length) {
+    await dialog.getByRole('button', { name: 'Track in multiple places' }).click();
+    const input = dialog.getByLabel('Where — or who?');
+    for (const label of labels) {
+      await input.fill(label);
+      await input.press('Enter');
+    }
+  }
   await dialog.getByRole('button', { name: 'Save task' }).click();
   await expect(dialog).toBeHidden();
 }

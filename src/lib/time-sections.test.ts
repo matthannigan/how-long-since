@@ -166,4 +166,41 @@ describe('filterForQuickPick', () => {
   it('returns [] for an unknown filter id', () => {
     expect(filterForQuickPick([task('a', { timeCommitment: '15min' })], 'nope', NOW)).toEqual([]);
   });
+
+  it('ranks series siblings independently — most overdue first, no grouping (Phase 1.1)', () => {
+    const seriesId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const siblings = [
+      task('fresh', {
+        timeCommitment: '30min',
+        seriesId,
+        instanceLabel: 'Main',
+        lastCompletedAt: daysAgo(2),
+        expectedFrequency: WEEKLY,
+      }),
+      task('worst', {
+        timeCommitment: '30min',
+        seriesId,
+        instanceLabel: 'Guest',
+        lastCompletedAt: daysAgo(12),
+        expectedFrequency: WEEKLY,
+      }),
+    ];
+    const picked = filterForQuickPick(siblings, '30', NOW);
+    // Both appear as individual tasks; the very-overdue sibling leads.
+    expect(picked.map((t) => t.id)).toEqual(['worst', 'fresh']);
+  });
+
+  it('9 siblings still respect the cap of 8 (Phase 1.1 regression)', () => {
+    const seriesId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+    const nine = Array.from({ length: 9 }, (_, i) =>
+      task(`sib-${i}`, {
+        timeCommitment: '15min',
+        seriesId,
+        instanceLabel: `Room ${i}`,
+        lastCompletedAt: daysAgo(8 + i),
+        expectedFrequency: WEEKLY,
+      }),
+    );
+    expect(filterForQuickPick(nine, '15', NOW)).toHaveLength(QUICK_PICK_LIMIT);
+  });
 });

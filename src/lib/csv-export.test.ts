@@ -31,7 +31,7 @@ describe('lib/csv-export', () => {
     const rows = csv.trim().split(/\r?\n/);
 
     expect(rows[0]).toBe(
-      'id,name,description,categoryId,categoryName,createdAt,lastCompletedAt,frequencyValue,frequencyUnit,timeCommitment,isArchived,notes',
+      'id,name,description,categoryId,categoryName,createdAt,lastCompletedAt,frequencyValue,frequencyUnit,timeCommitment,isArchived,notes,instanceLabel,seriesId',
     );
     expect(rows).toHaveLength(2);
     expect(csv).toContain(sampleTask.createdAt.toISOString());
@@ -42,5 +42,24 @@ describe('lib/csv-export', () => {
   it('always emits a header even with no tasks', () => {
     const csv = tasksToCsv([], []);
     expect(csv.trim().split(/\r?\n/)).toHaveLength(1);
+  });
+
+  it('emits instanceLabel and seriesId in the trailing columns, blank when absent', () => {
+    const seriesId = '55555555-5555-4555-8555-555555555555';
+    const csv = tasksToCsv(
+      [
+        sampleTask,
+        {
+          ...sampleTask,
+          id: '33333333-3333-4333-8333-333333333333',
+          instanceLabel: 'Guest room',
+          seriesId,
+        },
+      ],
+      [sampleCategory],
+    );
+    const rows = csv.trim().split(/\r?\n/);
+    expect(rows[1].endsWith(',,')).toBe(true); // pre-1.1 task: both blank
+    expect(rows[2].endsWith(`,Guest room,${seriesId}`)).toBe(true);
   });
 });

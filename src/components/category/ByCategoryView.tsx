@@ -4,9 +4,11 @@ import { Tags } from 'lucide-react';
 
 import { TaskCard } from '@/components/task/TaskCard';
 import { TaskListSkeleton } from '@/components/task/TaskListSkeleton';
+import { TaskSeriesGroup } from '@/components/task/TaskSeriesGroup';
 import { useFocusOnMount } from '@/hooks/use-focus-on-mount';
 import { sortCategoriesForDisplay } from '@/lib/category-order';
 import { db } from '@/lib/db/schema';
+import { groupSeriesForDisplay } from '@/lib/series';
 import type { Task } from '@/types';
 
 import { CategoryBadge } from './CategoryBadge';
@@ -69,11 +71,26 @@ export function ByCategoryView() {
       </h2>
       {groups.map(({ category, groupTasks }) => (
         <div key={category.id}>
+          {/* Header count keeps task semantics; the series row carries "n places". */}
           <CategoryBadge category={category} count={groupTasks.length} />
           <div className="space-y-3">
-            {groupTasks.map((task) => (
-              <TaskCard key={task.id} task={task} category={category} variant="category" />
-            ))}
+            {groupSeriesForDisplay(groupTasks).map((item) =>
+              item.kind === 'task' ? (
+                <TaskCard
+                  key={item.task.id}
+                  task={item.task}
+                  category={category}
+                  variant="category"
+                />
+              ) : (
+                <TaskSeriesGroup
+                  key={item.group.seriesId}
+                  group={item.group}
+                  category={category}
+                  variant="category"
+                />
+              ),
+            )}
           </div>
         </div>
       ))}

@@ -4,23 +4,11 @@ import { Clock } from 'lucide-react';
 import { getCategoryTag } from '@/lib/category-tags';
 import { calculateOverdueStatus } from '@/lib/overdue';
 import { formatElapsedCompact } from '@/lib/time-format';
+import { TIME_COMMITMENT_META } from '@/lib/time-sections';
 import { cn } from '@/lib/utils';
-import type { Category, OverdueStatus, Task, TimeCommitment } from '@/types';
+import type { Category, OverdueStatus, Task } from '@/types';
 
 import { TaskCompletionButton } from './TaskCompletionButton';
-
-/**
- * Time-commitment → filled-circle count + label (style-guide §5). The circles
- * are always paired with the text label so meaning never rides on the glyph
- * alone. Shared shape so Step 6's By Time markers can reuse it.
- */
-const TIME_COMMITMENT_META: Record<TimeCommitment, { dots: number; label: string }> = {
-  '15min': { dots: 1, label: '15 min' },
-  '30min': { dots: 2, label: '30 min' },
-  '1hr': { dots: 3, label: '1 hr' },
-  '2hrs': { dots: 4, label: '2 hrs' },
-  '4hrs+': { dots: 5, label: '4+ hrs' },
-};
 
 /** Elapsed-anchor text color per status (AA-safe tokens for the alert tiers). */
 const ELAPSED_COLOR: Record<OverdueStatus, string> = {
@@ -66,7 +54,7 @@ export function TaskCard({
   const showPill = status === 'very-overdue';
   const showTag = variant === 'time' && !!category;
   const tag = showTag ? getCategoryTag(category) : null;
-  const hasMeta = showPill || showTag || !!time;
+  const hasMeta = showPill || showTag || !!time || !!task.instanceLabel;
 
   return (
     <div
@@ -93,6 +81,13 @@ export function TaskCard({
               {showPill && (
                 <span className="rounded-chip bg-overdue-tint px-2 py-0.5 text-[0.5625rem] font-bold tracking-[0.03em] text-overdue uppercase">
                   Very overdue
+                </span>
+              )}
+              {task.instanceLabel && (
+                // Neutral "where — or who?" chip (Phase 1.1); greige fill +
+                // AA-safe meta text, no status meaning so no extra cue needed.
+                <span className="rounded-chip bg-surface-sunk px-2 py-0.5 text-[0.625rem] font-semibold text-ink-meta-aa">
+                  {task.instanceLabel}
                 </span>
               )}
               {showTag && (

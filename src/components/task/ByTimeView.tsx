@@ -2,10 +2,12 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 import { useFocusOnMount } from '@/hooks/use-focus-on-mount';
 import { db } from '@/lib/db/schema';
+import { groupSeriesForDisplay } from '@/lib/series';
 import { groupTasksByTime } from '@/lib/time-sections';
 
 import { TaskCard } from './TaskCard';
 import { TaskListSkeleton } from './TaskListSkeleton';
+import { TaskSeriesGroup } from './TaskSeriesGroup';
 import { TimeSectionHeader } from './TimeSectionHeader';
 
 /**
@@ -46,16 +48,26 @@ export function ByTimeView() {
         <>
           {groups.map(({ section, tasks: groupTasks }) => (
             <div key={section.id}>
+              {/* Header count keeps task semantics; the series row carries "n places". */}
               <TimeSectionHeader section={section} count={groupTasks.length} />
               <div className="space-y-3">
-                {groupTasks.map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    category={categoryById.get(task.categoryId)}
-                    variant="time"
-                  />
-                ))}
+                {groupSeriesForDisplay(groupTasks).map((item) =>
+                  item.kind === 'task' ? (
+                    <TaskCard
+                      key={item.task.id}
+                      task={item.task}
+                      category={categoryById.get(item.task.categoryId)}
+                      variant="time"
+                    />
+                  ) : (
+                    <TaskSeriesGroup
+                      key={item.group.seriesId}
+                      group={item.group}
+                      category={categoryById.get(item.group.tasks[0].categoryId)}
+                      variant="time"
+                    />
+                  ),
+                )}
               </div>
             </div>
           ))}

@@ -92,6 +92,30 @@ describe('TaskCard', () => {
     expect(tag.getAttribute('style')).toContain('var(--color-cat-kitchen-tag-bg)');
   });
 
+  it('renders the instance-label chip when present', async () => {
+    const { findByText } = renderWithRouter(
+      <TaskCard task={makeTask({ instanceLabel: 'Guest room' })} now={NOW} />,
+    );
+    expect(await findByText('Guest room')).toBeInTheDocument();
+  });
+
+  it('omits the instance-label chip when absent', async () => {
+    const { findByRole, queryByText } = renderWithRouter(<TaskCard task={makeTask()} now={NOW} />);
+    await findByRole('link');
+    expect(queryByText('Guest room')).not.toBeInTheDocument();
+  });
+
+  it('has no axe violations with an instance label', async () => {
+    const { container, findByRole } = renderWithRouter(
+      <TaskCard
+        task={makeTask({ instanceLabel: 'Guest room', timeCommitment: '30min' })}
+        now={NOW}
+      />,
+    );
+    await findByRole('link');
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
   it('has no axe violations', async () => {
     const { container, findByRole } = renderWithRouter(
       <TaskCard

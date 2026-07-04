@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useId, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -6,12 +7,15 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { CategoryForm } from '@/components/category/CategoryForm';
+import { InstanceLabelsField } from '@/components/task/InstanceLabelsField';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioPill, RadioPills } from '@/components/ui/radio-pills';
 import { Textarea } from '@/components/ui/textarea';
-import { createTask, updateTask } from '@/lib/tasks';
+import { db } from '@/lib/db/schema';
+import { suggestLabels } from '@/lib/series';
+import { createTask, createTaskSeries, updateTask } from '@/lib/tasks';
 import { formatElapsed } from '@/lib/time-format';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/ui-store';
@@ -48,6 +52,8 @@ const taskFormSchema = z
     lastDoneDate: z.string(),
     description: z.string().max(512, 'Description is too long. Max 512 characters.'),
     notes: z.string().max(512, 'Notes are too long. Max 512 characters.'),
+    // Edit mode only — create mode collects labels as chips outside RHF.
+    instanceLabel: z.string().trim().max(40, 'Keep this label under 40 characters.'),
   })
   .refine(
     (v) =>
@@ -136,6 +142,7 @@ export function TaskForm({
       lastDoneDate: originalDateStr,
       description: task?.description ?? '',
       notes: task?.notes ?? '',
+      instanceLabel: task?.instanceLabel ?? '',
     },
   });
 
@@ -144,6 +151,10 @@ export function TaskForm({
   const [showDetails, setShowDetails] = useState(
     mode === 'edit' && !!(task?.description || task?.notes),
   );
+  // "Track in multiple places" (create mode): chips live outside RHF — they
+  // never affect form validity, and one task is created per chip on save.
+  const [showPlaces, setShowPlaces] = useState(false);
+  const [placeLabels, setPlaceLabels] = useState<string[]>([]);
 
   const nameValue = watch('name');
   const descriptionValue = watch('description');
@@ -151,6 +162,13 @@ export function TaskForm({
   const timeValue = watch('timeCommitment');
   const lastDone = watch('lastDone');
   const lastDoneDate = watch('lastDoneDate');
+  const categoryIdValue = watch('categoryId');
+
+  // Label suggestions recycle instance labels already used in the selected
+  // category (the "tiny recommendation engine") — they follow category changes.
+  const allTasks = useLiveQuery(() => db.tasks.toArray(), []);
+  const placeSuggestions =
+    mode === 'create' ? suggestLabels(allTasks ?? [], categoryIdValue, placeLabels) : [];
 
   /** The date the current last-done selection resolves to (null = never done). */
   function resolveLastCompleted(values: TaskFormValues): Date | null {
@@ -183,11 +201,20 @@ export function TaskForm({
     };
     try {
       if (mode === 'create') {
-        await createTask(input);
+        if (placeLabels.length > 0) {
+          const created = await createTaskSeries(input, placeLabels);
+          toast.success(created.length > 1 ? `${created.length} tasks added` : 'Task added');
+        } else {
+          await createTask(input);
+          toast.success('Task added');
+        }
         setLastUsedCategory(values.categoryId);
-        toast.success('Task added');
       } else if (task) {
-        await updateTask(task.id, input);
+        // The key is always present so an emptied label clears the stored one.
+        await updateTask(task.id, {
+          ...input,
+          instanceLabel: values.instanceLabel === '' ? undefined : values.instanceLabel,
+        });
         toast.success('Task updated');
       }
       onDone();
@@ -318,6 +345,55 @@ export function TaskForm({
           </div>
         )}
       </fieldset>
+
+      {/* Instances: fan-out chips (create) / plain label field (edit) */}
+      {mode === 'create' ? (
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowPlaces((v) => !v)}
+            aria-expanded={showPlaces}
+            className="flex min-h-9 items-center gap-1 text-sm font-medium text-ink-meta-aa hover:text-ink"
+          >
+            {showPlaces ? (
+              <ChevronUp className="size-4" aria-hidden="true" />
+            ) : (
+              <ChevronDown className="size-4" aria-hidden="true" />
+            )}
+            Track in multiple places
+            {placeLabels.length > 0 && !showPlaces && ` (${placeLabels.length})`}
+          </button>
+          {showPlaces && (
+            <div className="mt-3">
+              <InstanceLabelsField
+                labels={placeLabels}
+                onChange={setPlaceLabels}
+                suggestions={placeSuggestions}
+                inputId={`${nameId}-places`}
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>
+          <Label htmlFor={`${nameId}-place`} className={LEGEND}>
+            Where — or who?
+          </Label>
+          <Input
+            id={`${nameId}-place`}
+            maxLength={40}
+            placeholder="e.g. Guest room, Luna"
+            className="mt-1.5"
+            aria-invalid={!!errors.instanceLabel}
+            {...register('instanceLabel')}
+          />
+          {errors.instanceLabel && (
+            <p className={ERROR} role="alert">
+              {errors.instanceLabel.message}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Time estimate */}
       <fieldset>

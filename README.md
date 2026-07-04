@@ -16,7 +16,7 @@ A household and personal task management application that tracks *when* tasks we
 
 ## Project Status
 
-Phase 1 (MVP) is implemented: a Vite + React 19 + TypeScript PWA with local IndexedDB storage (Dexie), task and category CRUD, "Just Done" completion with undo, the three views (Quick Wins / By Category / By Time), Settings with JSON/CSV import-export, WCAG 2.1 AA accessibility, and an installable, offline-capable service worker. It also ships a containerized production deployment — see [Deployment](#deployment). Phases 2–3 (see the [Roadmap](#roadmap)) are still to come; the architecture is described below.
+Phase 1 (MVP) is implemented: a Vite + React 19 + TypeScript PWA with local IndexedDB storage (Dexie), task and category CRUD, "Just Done" completion with undo, the three views (Quick Wins / By Category / By Time), Settings with JSON/CSV import-export, WCAG 2.1 AA accessibility, and an installable, offline-capable service worker. It also ships a containerized production deployment — see [Deployment](#deployment). Phase 1.1 (Instances & Series) adds multi-location tracking: one "Add task" can fan out into a task per place or pet (five bedrooms, two dogs), with per-category label suggestions and collapsible series rows in the By Category and By Time views. Phases 2–3 (see the [Roadmap](#roadmap)) are still to come; the architecture is described below.
 
 ## Planning Documentation
 

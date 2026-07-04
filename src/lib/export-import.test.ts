@@ -86,6 +86,70 @@ describe('lib/export-import', () => {
     });
   });
 
+  describe('instances & series (Phase 1.1)', () => {
+    it('round-trips instanceLabel and seriesId', async () => {
+      const seriesId = '55555555-5555-4555-8555-555555555555';
+      await db.categories.add(sampleCategory);
+      await db.tasks.bulkAdd([
+        {
+          ...sampleTask,
+          id: '66666666-6666-4666-8666-666666666666',
+          instanceLabel: 'Main bedroom',
+          seriesId,
+        },
+        {
+          ...sampleTask,
+          id: '77777777-7777-4777-8777-777777777777',
+          instanceLabel: 'Guest room',
+          seriesId,
+        },
+      ]);
+      await db.settings.add(DEFAULT_SETTINGS);
+
+      const json = serializeBackup(await buildBackup());
+      await clearAll();
+      await importJson(json);
+
+      const tasks = await db.tasks.toArray();
+      expect(new Set(tasks.map((t) => t.seriesId))).toEqual(new Set([seriesId]));
+      expect(tasks.map((t) => t.instanceLabel).sort()).toEqual(['Guest room', 'Main bedroom']);
+    });
+
+    it('imports a pre-1.1 backup (no instanceLabel/seriesId anywhere) cleanly', async () => {
+      // Literal fixture matching the Phase 1 export shape — do not "modernize".
+      const pre11 = JSON.stringify({
+        app: 'how-long-since',
+        schemaVersion: 2,
+        exportedAt: '2026-07-02T00:00:00.000Z',
+        data: {
+          tasks: [
+            {
+              id: '22222222-2222-4222-8222-222222222222',
+              name: 'Clean oven',
+              description: 'A deep clean',
+              categoryId: sampleCategory.id,
+              createdAt: '2026-06-01T10:00:00.000Z',
+              lastCompletedAt: '2026-06-15T14:30:00.000Z',
+              expectedFrequency: { value: 3, unit: 'month' },
+              timeCommitment: '1hr',
+              isArchived: false,
+              notes: 'note',
+            },
+          ],
+          categories: [sampleCategory],
+          settings: { ...DEFAULT_SETTINGS, lastBackupDate: null },
+        },
+      });
+
+      await importJson(pre11);
+
+      const tasks = await db.tasks.toArray();
+      expect(tasks).toHaveLength(1);
+      expect(tasks[0].instanceLabel).toBeUndefined();
+      expect(tasks[0].seriesId).toBeUndefined();
+    });
+  });
+
   describe('v1 → v2 import', () => {
     it('normalizes retired timeCommitment values on import', async () => {
       const envelope = {

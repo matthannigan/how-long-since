@@ -71,6 +71,73 @@ describe('ByTimeView', () => {
     expect(await findByText('No tasks yet. Tap + to add your first task.')).toBeInTheDocument();
   });
 
+  it('collapses ≥2 siblings in a section into one series row; split siblings stay plain', async () => {
+    const SERIES_A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const SERIES_B = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+    await db.tasks.bulkAdd([
+      // 3-series, all in the 30-min section → one group row.
+      makeTask({
+        id: '11111111-1111-4111-8111-111111111111',
+        name: 'Vacuum bedroom',
+        timeCommitment: '30min',
+        instanceLabel: 'Main bedroom',
+        seriesId: SERIES_A,
+      }),
+      makeTask({
+        id: '22222222-2222-4222-8222-222222222222',
+        name: 'Vacuum bedroom',
+        timeCommitment: '30min',
+        instanceLabel: 'Guest room',
+        seriesId: SERIES_A,
+      }),
+      makeTask({
+        id: '33333333-3333-4333-8333-333333333333',
+        name: 'Vacuum bedroom',
+        timeCommitment: '30min',
+        instanceLabel: "Kids' room",
+        seriesId: SERIES_A,
+      }),
+      // 2-series split across sections → each renders as a plain card.
+      makeTask({
+        id: '44444444-4444-4444-8444-444444444444',
+        name: 'Wipe sink',
+        timeCommitment: '15min',
+        instanceLabel: 'Upstairs',
+        seriesId: SERIES_B,
+      }),
+      makeTask({
+        id: '55555555-5555-4555-8555-555555555555',
+        name: 'Wipe sink',
+        timeCommitment: '30min',
+        instanceLabel: 'Downstairs',
+        seriesId: SERIES_B,
+      }),
+      // Plain single in the same section.
+      makeTask({
+        id: '66666666-6666-4666-8666-666666666666',
+        name: 'Solo task',
+        timeCommitment: '30min',
+      }),
+    ]);
+
+    const { findByRole, getByText, getAllByRole } = renderWithRouter(<ByTimeView />);
+
+    const groupButton = await findByRole('button', { expanded: false });
+    expect(groupButton).toHaveTextContent('Vacuum bedroom');
+    expect(getByText('3 places')).toBeInTheDocument();
+
+    // Section header count keeps task semantics: 30 min · 5 tasks.
+    expect(getByText('30 min · 5')).toBeInTheDocument();
+
+    // Split siblings and the solo task render as plain linked cards.
+    const links = getAllByRole('link').map((l) => l.textContent ?? '');
+    expect(links.some((t) => t.includes('Upstairs'))).toBe(true);
+    expect(links.some((t) => t.includes('Downstairs'))).toBe(true);
+    expect(links.some((t) => t.includes('Solo task'))).toBe(true);
+    // The grouped siblings are not rendered as cards while collapsed.
+    expect(links.some((t) => t.includes('Main bedroom'))).toBe(false);
+  });
+
   it('has no axe violations', async () => {
     await db.tasks.add(
       makeTask({

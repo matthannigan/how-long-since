@@ -517,3 +517,41 @@ While initial release may be English-only, prepare content for future localizati
 ---
 
 This Content Strategy Guide provides the foundation for creating consistent, helpful, and user-focused content throughout the "How Long Since" application. By following these guidelines, we'll create an experience that feels cohesive, supportive, and aligned with our users' needs.
+
+## 11. Phase 1.1 Addendum — Instances & Series microcopy
+
+Added 2026-07-03 with the instances & series feature (see `dev/phase1.1.md`).
+All strings follow the §2 tone rules; they are listed here so the guide stays
+the single source of user-visible copy.
+
+### Add/Edit Task form
+
+| Context | Copy |
+|---|---|
+| Fan-out disclosure button (create mode) | "Track in multiple places" |
+| Instance label field label (both modes) | "Where — or who?" |
+| Field helper text | "Add each place or pet — one task is created for each." |
+| Chip input placeholder | "e.g. Guest room, Luna" |
+| Suggestion row accessible label | "Suggestions" |
+| Chip remove button accessible label | "Remove {label}" |
+| Label too long (edit mode validation) | "Keep this label under 40 characters." |
+| Batch success toast (n > 1) | "{n} tasks added" (single task keeps "Task added") |
+
+### Series group row (By Category / By Time)
+
+| Context | Copy |
+|---|---|
+| Places count chip | "{n} places" |
+| Overdue summary (only when x > 0; counts overdue + very overdue) | "{x} of {n} overdue" |
+| Screen-reader worst-of status | "Due soon" / "Overdue" / "Very overdue" (matches task rows) |
+| Expanded container accessible label | "{series name} instances" |
+
+### Completion of a labeled task
+
+| Context | Copy |
+|---|---|
+| Completion toast | "Nice work! Updated {name} — {label}" |
+| Completion button accessible label | "Mark {name} — {label} complete" |
+
+No guilt language in the overdue summary — "2 of 5 overdue" states a fact and
+the expanded rows carry the same supportive tone as everywhere else.
