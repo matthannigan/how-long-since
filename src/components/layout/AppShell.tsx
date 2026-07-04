@@ -27,26 +27,35 @@ export function AppShell({ children }: AppShellProps) {
               already names the app. Sized in rem so it scales with text-size;
               tokenized strokes adapt to dark mode + high-contrast. */}
           <svg viewBox="0 0 192 192" aria-hidden="true" className="size-9 shrink-0">
-            <circle
-              cx="96"
-              cy="96"
-              r="58"
+            <path
+              d="M1 76 A84 84 0 1 1 118.5 189"
               className="fill-none stroke-[var(--color-border-default)]"
-              strokeWidth="12"
+              strokeWidth="13"
             />
             <path
-              d="M96 96 L96 52"
-              className="stroke-[var(--color-ink)]"
-              strokeWidth="10"
+              d="M74 118 L74 55 A63 63 0 0 1 112.8 167.6 Z"
+              className="fill-[var(--color-overdue-tint)]"
+            />
+            <path
+              d="M74 118 L74 60"
+              className="fill-none stroke-[var(--color-ink)]"
+              strokeWidth="11"
               strokeLinecap="round"
             />
             <path
-              d="M96 96 L130 108"
-              className="stroke-[var(--color-accent-deep)]"
-              strokeWidth="10"
+              d="M74 118 L110 164"
+              className="fill-none stroke-[var(--color-accent-deep)]"
+              strokeWidth="11"
               strokeLinecap="round"
             />
-            <circle cx="96" cy="96" r="9" className="fill-[var(--color-accent)]" />
+            <path
+              d="M96 95 C96 86 102 81 108 81 C114.5 81 119 85.5 119 92 C119 97.5 115 100.5 111 103.5 C108 105.7 106.7 108.5 106.7 112"
+              className="fill-none stroke-[var(--color-ink)]"
+              strokeWidth="9"
+              strokeLinecap="round"
+            />
+            <circle cx="106.5" cy="124.5" r="5.5" className="fill-[var(--color-ink)]" />
+            <circle cx="74" cy="118" r="10" className="fill-[var(--color-accent)]" />
           </svg>
           <h1 className="font-display text-[1.375rem] leading-none font-semibold text-ink">
             How Long Since

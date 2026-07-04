@@ -66,7 +66,7 @@ export function TaskCard({
   const showPill = status === 'very-overdue';
   const showTag = variant === 'time' && !!category;
   const tag = showTag ? getCategoryTag(category) : null;
-  const hasMeta = showPill || showTag || !!time;
+  const hasMeta = showPill || showTag || !!time || !!task.instanceLabel;
 
   return (
     <div
@@ -93,6 +93,13 @@ export function TaskCard({
               {showPill && (
                 <span className="rounded-chip bg-overdue-tint px-2 py-0.5 text-[0.5625rem] font-bold tracking-[0.03em] text-overdue uppercase">
                   Very overdue
+                </span>
+              )}
+              {task.instanceLabel && (
+                // Neutral "where — or who?" chip (Phase 1.1); greige fill +
+                // AA-safe meta text, no status meaning so no extra cue needed.
+                <span className="rounded-chip bg-surface-sunk px-2 py-0.5 text-[0.625rem] font-semibold text-ink-meta-aa">
+                  {task.instanceLabel}
                 </span>
               )}
               {showTag && (

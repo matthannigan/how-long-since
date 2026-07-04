@@ -1,9 +1,14 @@
 <svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How Long Since">
   <!-- Full-bleed square so generated maskable/any icons have no transparent corners;
-       the platform applies its own rounding. Soft Daylight surface + clock/arc mark. -->
+       the platform applies its own rounding. Soft Daylight surface; off-center clock,
+       elapsed-time wedge between the two hands holding the "?", and an outer arc of
+       time echoing the sweep off-frame. Mirrored (tokenized) in AppShell.tsx. -->
   <rect width="192" height="192" fill="#FAF8F4" />
-  <circle cx="96" cy="96" r="58" fill="none" stroke="#E4E0D8" stroke-width="12" />
-  <path d="M96 96 L96 52" fill="none" stroke="#3A3330" stroke-width="10" stroke-linecap="round" />
-  <path d="M96 96 L130 108" fill="none" stroke="#C0794C" stroke-width="10" stroke-linecap="round" />
-  <circle cx="96" cy="96" r="9" fill="#D98C63" />
+  <path d="M1 76 A84 84 0 1 1 118.5 189" fill="none" stroke="#E4E0D8" stroke-width="13" />
+  <path d="M74 118 L74 55 A63 63 0 0 1 112.8 167.6 Z" fill="#F6E0D9" />
+  <path d="M74 118 L74 60" fill="none" stroke="#3A3330" stroke-width="11" stroke-linecap="round" />
+  <path d="M74 118 L110 164" fill="none" stroke="#C0794C" stroke-width="11" stroke-linecap="round" />
+  <path d="M96 95 C96 86 102 81 108 81 C114.5 81 119 85.5 119 92 C119 97.5 115 100.5 111 103.5 C108 105.7 106.7 108.5 106.7 112" fill="none" stroke="#3A3330" stroke-width="9" stroke-linecap="round" />
+  <circle cx="106.5" cy="124.5" r="5.5" fill="#3A3330" />
+  <circle cx="74" cy="118" r="10" fill="#D98C63" />
 </svg>
