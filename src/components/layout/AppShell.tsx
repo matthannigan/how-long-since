@@ -28,34 +28,34 @@ export function AppShell({ children }: AppShellProps) {
               tokenized strokes adapt to dark mode + high-contrast. */}
           <svg viewBox="0 0 192 192" aria-hidden="true" className="size-9 shrink-0">
             <path
-              d="M1 76 A84 84 0 1 1 118.5 189"
+              d="M-40.06 68.01 A103.59 103.59 0 1 1 104.84 207.36"
               className="fill-none stroke-[var(--color-border-default)]"
-              strokeWidth="13"
+              strokeWidth="14.27"
             />
             <path
-              d="M74 118 L74 55 A63 63 0 0 1 112.8 167.6 Z"
+              d="M49.96 119.81 L49.96 42.12 A77.69 77.69 0 0 1 97.81 180.97 Z"
               className="fill-[var(--color-overdue-tint)]"
             />
             <path
-              d="M74 118 L74 60"
+              d="M49.96 119.81 L49.96 48.28"
               className="fill-none stroke-[var(--color-ink)]"
-              strokeWidth="11"
+              strokeWidth="12.07"
               strokeLinecap="round"
             />
             <path
-              d="M74 118 L110 164"
+              d="M49.96 119.81 L94.35 176.53"
               className="fill-none stroke-[var(--color-accent-deep)]"
-              strokeWidth="11"
+              strokeWidth="12.07"
               strokeLinecap="round"
             />
             <path
-              d="M96 95 C96 86 102 81 108 81 C114.5 81 119 85.5 119 92 C119 97.5 115 100.5 111 103.5 C108 105.7 106.7 108.5 106.7 112"
+              d="M81.2 94.55 C81.2 84.26 88.06 78.56 94.92 78.56 C102.35 78.56 107.5 83.7 107.5 91.12 C107.5 97.4 102.93 100.84 98.35 104.26 C94.92 106.78 93.44 109.99 93.44 113.99"
               className="fill-none stroke-[var(--color-ink)]"
-              strokeWidth="9"
+              strokeWidth="9.16"
               strokeLinecap="round"
             />
-            <circle cx="106.5" cy="124.5" r="5.5" className="fill-[var(--color-ink)]" />
-            <circle cx="74" cy="118" r="10" className="fill-[var(--color-accent)]" />
+            <circle cx="93.21" cy="128.27" r="6.29" className="fill-[var(--color-ink)]" />
+            <circle cx="49.96" cy="119.81" r="12.33" className="fill-[var(--color-accent)]" />
           </svg>
           <h1 className="font-display text-[1.375rem] leading-none font-semibold text-ink">
             How Long Since

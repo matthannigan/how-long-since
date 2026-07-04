@@ -18,7 +18,9 @@ export default defineConfig({
     },
     maskable: {
       sizes: [512],
-      padding: 0.1,
+      // 0.15 keeps the enlarged mark (hand tip reaches ~90% of the art's
+      // half-width) inside the 80% circle-crop safe zone.
+      padding: 0.15,
       resizeOptions: { background: '#FAF8F4' },
     },
     apple: {
