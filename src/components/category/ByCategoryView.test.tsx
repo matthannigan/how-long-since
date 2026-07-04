@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { axe } from 'vitest-axe';
 
@@ -72,6 +73,40 @@ describe('ByCategoryView', () => {
     );
     const { findByText } = renderWithRouter(<ByCategoryView />);
     expect(await findByText('Overdue')).toBeInTheDocument();
+  });
+
+  it('collapses siblings under their category into an expandable series row', async () => {
+    const SERIES = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    await db.tasks.bulkAdd([
+      makeTask({
+        id: '11111111-1111-4111-8111-111111111111',
+        name: 'Wipe sink',
+        categoryId: BATHROOM,
+        instanceLabel: 'Upstairs',
+        seriesId: SERIES,
+      }),
+      makeTask({
+        id: '22222222-2222-4222-8222-222222222222',
+        name: 'Wipe sink',
+        categoryId: BATHROOM,
+        instanceLabel: 'Downstairs',
+        seriesId: SERIES,
+      }),
+      makeTask({ id: '33333333-3333-4333-8333-333333333333', name: 'Clean oven' }),
+    ]);
+
+    const { findByRole, getByText, getAllByRole } = renderWithRouter(<ByCategoryView />);
+
+    const groupButton = await findByRole('button', { expanded: false });
+    expect(groupButton).toHaveTextContent('Wipe sink');
+    expect(getByText('2 places')).toBeInTheDocument();
+    // Category header count keeps task semantics (2 tasks in Bathroom).
+    expect(getByText('2')).toBeInTheDocument();
+
+    fireEvent.click(groupButton);
+    const links = getAllByRole('link').map((l) => l.textContent ?? '');
+    expect(links.some((t) => t.includes('Downstairs'))).toBe(true);
+    expect(links.some((t) => t.includes('Upstairs'))).toBe(true);
   });
 
   it('has no axe violations', async () => {

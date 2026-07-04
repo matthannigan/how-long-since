@@ -41,6 +41,10 @@ export function TaskCompletionButton({ task }: { task: Task }) {
     [],
   );
 
+  // Include the instance label so sibling tasks in a series ("Vacuum bedroom —
+  // Guest room") are distinguishable in the toast and to assistive tech.
+  const displayName = task.instanceLabel ? `${task.name} — ${task.instanceLabel}` : task.name;
+
   async function handleComplete() {
     try {
       const prior = await markTaskComplete(task.id);
@@ -63,7 +67,7 @@ export function TaskCompletionButton({ task }: { task: Task }) {
       timerRef.current = setTimeout(() => setConfirming(false), 1500);
 
       showUndo(task.id, originalPrior);
-      toast.success(`Nice work! Updated ${task.name}`, {
+      toast.success(`Nice work! Updated ${displayName}`, {
         id: `complete-${task.id}`, // same id → a repeat tap replaces, never stacks
         action: {
           label: 'Undo',
@@ -87,7 +91,7 @@ export function TaskCompletionButton({ task }: { task: Task }) {
     <button
       type="button"
       onClick={handleComplete}
-      aria-label={`Mark ${task.name} complete`}
+      aria-label={`Mark ${displayName} complete`}
       className="grid size-11 shrink-0 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
       <span

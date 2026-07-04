@@ -42,7 +42,9 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5173,
+    // Tooling (e.g. editor preview harnesses) may assign a port via PORT;
+    // humans still get the 5173 default.
+    port: Number(process.env.PORT) || 5173,
     strictPort: true,
   },
   test: {
