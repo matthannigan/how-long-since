@@ -2,6 +2,7 @@ import { ChevronDown, ChevronUp, Clock } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { type SeriesGroup, seriesSummary } from '@/lib/series';
+import { TIME_COMMITMENT_META } from '@/lib/time-sections';
 import { cn } from '@/lib/utils';
 import type { Category, OverdueStatus } from '@/types';
 
@@ -45,6 +46,13 @@ export function TaskSeriesGroup({
   const { worst, overdueCount, total } = seriesSummary(group.tasks, now);
   const isOverdue = worst === 'overdue' || worst === 'very-overdue';
 
+  // Show the time chip only when every sibling shares one estimate (always
+  // true in By Time; in By Category an edited-apart series omits it).
+  const sharedTime = group.tasks.every((t) => t.timeCommitment === group.tasks[0].timeCommitment)
+    ? group.tasks[0].timeCommitment
+    : undefined;
+  const time = sharedTime ? TIME_COMMITMENT_META[sharedTime] : null;
+
   return (
     <div>
       <button
@@ -59,11 +67,15 @@ export function TaskSeriesGroup({
             : 'shadow-[0_2px_10px_-6px_rgba(70,62,55,0.18)]',
         )}
       >
-        {open ? (
-          <ChevronUp className="size-4 shrink-0 text-ink-meta-aa" aria-hidden="true" />
-        ) : (
-          <ChevronDown className="size-4 shrink-0 text-ink-meta-aa" aria-hidden="true" />
-        )}
+        {/* Same 44px footprint as TaskCompletionButton so the name column
+            lines up with plain task rows instead of reading as indented. */}
+        <span className="grid size-11 shrink-0 place-items-center" aria-hidden="true">
+          {open ? (
+            <ChevronUp className="size-6 text-ink-meta-aa" />
+          ) : (
+            <ChevronDown className="size-6 text-ink-meta-aa" />
+          )}
+        </span>
 
         <div className="min-w-0 flex-1">
           <p className="truncate font-body text-[0.9375rem] font-semibold text-ink">{group.name}</p>
@@ -71,6 +83,17 @@ export function TaskSeriesGroup({
             <span className="rounded-chip bg-surface-sunk px-2 py-0.5 text-xs text-ink-meta-aa">
               {total} places
             </span>
+            {time && (
+              <span
+                className={cn(
+                  'flex items-center gap-1 text-xs text-ink-meta-aa',
+                  variant === 'category' && 'rounded-chip bg-surface-sunk px-2 py-0.5',
+                )}
+              >
+                <span aria-hidden="true">{'●'.repeat(time.dots)}</span>
+                {time.label}
+              </span>
+            )}
           </div>
         </div>
 

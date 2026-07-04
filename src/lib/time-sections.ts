@@ -16,6 +16,19 @@ export interface TimeSection {
   buckets: TimeCommitment[];
 }
 
+/**
+ * Time-commitment → filled-circle count + label (style-guide §5). The circles
+ * are always paired with the text label so meaning never rides on the glyph
+ * alone. Shared by TaskCard and the series group row.
+ */
+export const TIME_COMMITMENT_META: Record<TimeCommitment, { dots: number; label: string }> = {
+  '15min': { dots: 1, label: '15 min' },
+  '30min': { dots: 2, label: '30 min' },
+  '1hr': { dots: 3, label: '1 hr' },
+  '2hrs': { dots: 4, label: '2 hrs' },
+  '4hrs+': { dots: 5, label: '4+ hrs' },
+};
+
 export const TIME_SECTIONS: TimeSection[] = [
   { id: 'quick', title: 'Quick tasks', shortLabel: '15 min', buckets: ['15min'] },
   { id: 'short', title: 'Short tasks', shortLabel: '30 min', buckets: ['30min'] },

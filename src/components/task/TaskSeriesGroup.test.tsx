@@ -41,9 +41,21 @@ function makeGroup(tasks: Task[]): SeriesGroup {
 }
 
 const MIXED = [
-  sibling('Guest room', { lastCompletedAt: daysAgo(8), expectedFrequency: WEEKLY }), // overdue
-  sibling("Kids' room", { lastCompletedAt: daysAgo(12), expectedFrequency: WEEKLY }), // very-overdue
-  sibling('Main bedroom', { lastCompletedAt: daysAgo(2), expectedFrequency: WEEKLY }), // none
+  sibling('Guest room', {
+    lastCompletedAt: daysAgo(8),
+    expectedFrequency: WEEKLY,
+    timeCommitment: '30min',
+  }), // overdue
+  sibling("Kids' room", {
+    lastCompletedAt: daysAgo(12),
+    expectedFrequency: WEEKLY,
+    timeCommitment: '30min',
+  }), // very-overdue
+  sibling('Main bedroom', {
+    lastCompletedAt: daysAgo(2),
+    expectedFrequency: WEEKLY,
+    timeCommitment: '30min',
+  }), // none
 ];
 
 describe('TaskSeriesGroup', () => {
@@ -68,6 +80,26 @@ describe('TaskSeriesGroup', () => {
     const list = getByRole('group', { name: 'Vacuum bedroom instances' });
     expect(list.id).toBe(listId);
     expect(list).toBeEmptyDOMElement(); // collapsed
+  });
+
+  it('shows the shared time-commitment chip on the collapsed row', async () => {
+    const { findByText } = renderWithRouter(
+      <TaskSeriesGroup group={makeGroup(MIXED)} variant="category" category={BEDROOM} now={NOW} />,
+    );
+    expect(await findByText('30 min')).toBeInTheDocument();
+  });
+
+  it('omits the time chip when siblings no longer share one estimate', async () => {
+    const group = makeGroup([
+      sibling('A', { timeCommitment: '15min' }),
+      sibling('B', { timeCommitment: '1hr' }),
+    ]);
+    const { findByText, queryByText } = renderWithRouter(
+      <TaskSeriesGroup group={group} variant="category" category={BEDROOM} now={NOW} />,
+    );
+    await findByText('2 places');
+    expect(queryByText('15 min')).toBeNull();
+    expect(queryByText('1 hr')).toBeNull();
   });
 
   it('expands to one TaskCard per sibling in label order, and collapses back', async () => {
