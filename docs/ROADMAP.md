@@ -172,6 +172,12 @@ unchained from any migration. Also the README's "Swipe gestures" item
 
 ## B3 — Data peace of mind ★ (S)
 
+> **Evaluated for 1.0.0 on 2026-07-07 and deliberately deferred** — unlike
+> the completions log there's no now-or-never property, and the Web Share
+> path needs real-device (iPhone, standalone) verification. Research note
+> with verified platform behavior, integration points, and the register's
+> open decisions: [dev/b3_persistence-web-share.md](../dev/b3_persistence-web-share.md).
+
 Backups are the app's only safety net, and the browser is allowed to evict
 IndexedDB under storage pressure. Two cheap durability wins, both in Settings
 → Data Management:

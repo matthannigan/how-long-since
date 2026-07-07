@@ -4,31 +4,6 @@ All notable changes to How Long Since are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-- **Notifications decision register** (Phase 2, B9) —
-  [`dev/2026-07-07_notifications-research/register.md`](dev/2026-07-07_notifications-research/register.md):
-  a dated, sourced 2026 browser-support snapshot (Web Push + VAPID, the Badging
-  API, Notification Triggers, Periodic Background Sync), an options matrix, the
-  privacy/local-first stance, and the recommendation — in-app "what's due"
-  surfaces are the Phase 2 reminder, a permission-free desktop app-icon badge is
-  a small add-on, and push waits for Phase 3 (it needs a server). No
-  notification feature was implemented.
-
-### Changed
-
-- **Honest Notifications copy in Settings** (Phase 2, B9) — the Settings →
-  Notifications section no longer shows a "Coming soon" chip over two disabled
-  toggles. It now plainly explains that your data stays on your device,
-  reminders live in the app (including the backup nudge), and phone
-  notifications may come later alongside optional cloud sync.
-- **Docs** — `docs/ROADMAP.md` marks B9 done and adds feed-forward notes to B4
-  (desktop icon badge on the overview strip) and B6 (monthly summary as an
-  in-app reminder surface); `docs/USER_GUIDE.md` updates the Settings
-  notifications line to match.
-
 ## [1.0.0] — 2026-07-07
 
 The first public release: a complete, installable, offline-capable PWA for
@@ -155,5 +130,17 @@ See [`dev/2026-07-07_completions-log/plan.md`](dev/2026-07-07_completions-log/pl
   includes `completions`; older backups import unchanged (bootstrap rows are
   synthesized), an explicit empty list is trusted as-is, and deleting a task
   deliberately keeps its log rows (event-log semantics).
+
+### Notifications research (Phase 2, B9)
+
+See [`dev/2026-07-07_notifications-research/register.md`](dev/2026-07-07_notifications-research/register.md).
+
+- **Decision register** — a dated, sourced 2026 support snapshot (Web Push,
+  Badging API, Notification Triggers, Periodic Background Sync) and the verdict:
+  in-app "what's due" surfaces are the reminder, a permission-free desktop icon
+  badge rides B4, and push waits for Phase 3. No feature was built.
+- **Honest Settings copy** — the Notifications section drops the "Coming soon"
+  chip and disabled toggles for plain copy: reminders live in the app; phone
+  push would need an account and may come with cloud sync later.
 
 [1.0.0]: https://github.com/matthannigan/how-long-since/releases/tag/v1.0.0
