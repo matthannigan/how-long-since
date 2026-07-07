@@ -11,7 +11,7 @@ tracking how long it's been since you last did each recurring task. Built across
 four chunks of work — the Phase 1 MVP, the Phase 1.1 instances & series feature,
 and this release's user documentation and developer-docs consolidation.
 
-### Phase 1 — MVP foundation
+### MVP foundation
 
 See [`dev/2026-07-01_phase1-mvp/phase1.md`](dev/2026-07-01_phase1-mvp/phase1.md).
 
@@ -37,7 +37,7 @@ See [`dev/2026-07-01_phase1-mvp/phase1.md`](dev/2026-07-01_phase1-mvp/phase1.md)
 - **Deployment** — a stateless, non-root Docker image served by a
   zero-dependency Node static server.
 
-### Phase 1.1 — Instances & series
+### Add instances & series
 
 See [`dev/2026-07-03_grouped-tasks/phase1.1.md`](dev/2026-07-03_grouped-tasks/phase1.1.md).
 
@@ -50,7 +50,7 @@ See [`dev/2026-07-03_grouped-tasks/phase1.1.md`](dev/2026-07-03_grouped-tasks/ph
   Category and By Time, with a "{n} places" chip and a worst-of-siblings overdue
   summary; they rank independently in Quick Wins.
 
-### This release — user documentation
+### User documentation
 
 See [`dev/2026-07-07_user-guide/plan.md`](dev/2026-07-07_user-guide/plan.md).
 
@@ -62,7 +62,7 @@ See [`dev/2026-07-07_user-guide/plan.md`](dev/2026-07-07_user-guide/plan.md).
   screenshots`) and a Markdown-to-HTML generator (`pnpm generate-user-guide`),
   both run manually with their outputs committed.
 
-### This release — developer documentation & docs reorganization
+### Developer documentation & docs reorganization
 
 - **Developer Guide** ([`docs/DEVELOPER_GUIDE.md`](docs/DEVELOPER_GUIDE.md)) —
   the pick-it-back-up entry point: commands and ports, repo map, architecture
