@@ -49,6 +49,35 @@ describe('PreferencesProvider', () => {
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
   });
 
+  it('points both theme-color metas at a forced theme, then restores them for system', async () => {
+    document.head.insertAdjacentHTML(
+      'beforeend',
+      '<meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)" />' +
+        '<meta name="theme-color" content="#24211D" media="(prefers-color-scheme: dark)" />',
+    );
+    const metaContents = () =>
+      Array.from(
+        document.head.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]'),
+        (m) => m.content,
+      );
+
+    try {
+      await db.settings.add({ ...DEFAULT_SETTINGS, theme: 'dark' });
+      render(<PreferencesProvider>app</PreferencesProvider>);
+
+      await waitFor(() => {
+        expect(metaContents()).toEqual(['#24211D', '#24211D']);
+      });
+
+      await db.settings.update('1', { theme: 'system' });
+      await waitFor(() => {
+        expect(metaContents()).toEqual(['#FAF8F4', '#24211D']);
+      });
+    } finally {
+      for (const m of document.head.querySelectorAll('meta[name="theme-color"]')) m.remove();
+    }
+  });
+
   it('adds no axe violations around its children', async () => {
     await db.settings.add({ ...DEFAULT_SETTINGS });
     const { container } = render(

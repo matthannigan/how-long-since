@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#FAF8F4" />
+    <!-- Media-scoped pair covers the 'system' theme; a forced light/dark choice
+         overrides both (pre-paint script below + PreferencesProvider). -->
+    <meta name="theme-color" content="#FAF8F4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#24211D" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="Track how long it's been since you last did something." />
     <title>How Long Since</title>
     <!--
@@ -18,7 +21,14 @@
         try {
           var p = JSON.parse(localStorage.getItem('hls-prefs') || '{}');
           var el = document.documentElement;
-          if (p.theme === 'light' || p.theme === 'dark') el.setAttribute('data-theme', p.theme);
+          if (p.theme === 'light' || p.theme === 'dark') {
+            el.setAttribute('data-theme', p.theme);
+            // Point both theme-color metas at the forced theme so the browser
+            // chrome matches even when it disagrees with prefers-color-scheme.
+            var color = p.theme === 'dark' ? '#24211D' : '#FAF8F4';
+            var metas = document.querySelectorAll('meta[name="theme-color"]');
+            for (var i = 0; i < metas.length; i++) metas[i].setAttribute('content', color);
+          }
           if (p.textSize && p.textSize !== 'default') el.setAttribute('data-text-size', p.textSize);
           if (p.highContrast) el.setAttribute('data-high-contrast', 'true');
           if (p.reducedMotion) el.setAttribute('data-reduced-motion', 'true');

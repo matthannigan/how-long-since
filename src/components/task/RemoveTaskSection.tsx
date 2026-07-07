@@ -40,7 +40,7 @@ export function RemoveTaskSection({ task, onRemoved }: RemoveTaskSectionProps) {
   const handleDelete = async () => {
     try {
       await deleteTask(task.id);
-      toast.success('Task removed');
+      toast.success('Task deleted');
       onRemoved();
     } catch {
       toast.error("Changes couldn't be saved. Try again.");
@@ -58,7 +58,7 @@ export function RemoveTaskSection({ task, onRemoved }: RemoveTaskSectionProps) {
         Remove Task
       </h3>
       <p className="mt-1 text-xs text-ink-meta-aa">
-        Archive keeps it (hidden, restorable). Delete removes it permanently.
+        Archive hides it from every view but keeps it in your data. Delete removes it permanently.
       </p>
       <div className="mt-3 flex gap-2">
         <Button type="button" variant="outline" onClick={handleArchive}>

@@ -10,9 +10,10 @@ The first public release: a complete, installable, offline-capable PWA for
 tracking how long it's been since you last did each recurring task. Built across
 five chunks of work — the Phase 1 MVP, the Phase 1.1 instances & series feature,
 and this release's user documentation, developer-docs consolidation, and release
-engineering. It also ships the scoped Phase 2 roadmap and — pulled forward from
-that roadmap's B6 — a silent completion log, so history accrues from the very
-first real-world completion.
+engineering. It also ships the scoped Phase 2 roadmap, the B9 notifications
+reality-check (a research spike whose one code change is the honest Settings
+copy), and — pulled forward from that roadmap's B6 — a silent completion log,
+so history accrues from the very first real-world completion.
 
 ### MVP foundation
 
@@ -106,7 +107,7 @@ See [`dev/2026-07-07_b0-housekeeping/plan.md`](dev/2026-07-07_b0-housekeeping/pl
   request to `main`.
 - **Bundle-size report** — each CI run publishes a per-asset size table
   (raw + gzipped) to the workflow summary, giving the "minimal bundle"
-  requirement (Req 11.7) a tripwire before Phase 2 adds its first new
+  requirement (Req 9.7) a tripwire before Phase 2 adds its first new
   runtime dependencies.
 - **Version guard** — CI fails if `CHANGELOG.md` has no entry for the
   current `package.json` version.

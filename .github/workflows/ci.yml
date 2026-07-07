@@ -65,7 +65,7 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      # Req 11.7 tripwire: per-asset sizes of the build the e2e step produced.
+      # Req 9.7 tripwire: per-asset sizes of the build the e2e step produced.
       - name: Bundle-size report
         run: |
           {

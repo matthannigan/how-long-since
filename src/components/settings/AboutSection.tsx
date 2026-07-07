@@ -25,7 +25,7 @@ export function AboutSection() {
         <span className="text-sm text-ink-meta-aa">v{APP_VERSION}</span>
       </div>
       <p className="text-sm text-ink-meta-aa">
-        Track when you last did each task, so nothing slips through the cracks.
+        Track when you last did each task, so you don&rsquo;t have to remember.
       </p>
       <a
         href="/user-guide.html"

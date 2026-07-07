@@ -44,10 +44,10 @@ A few things that stay true throughout:
 
 ## Add your first task
 
-![The Add Task form, showing the name field and category pills](../public/images/user-guide/add-task.png)
+![The New Task form, showing the name field and category pills](../public/images/user-guide/add-task.png)
 
-Tap the round **+** button (the terracotta circle in the bottom corner) to open
-the New Task form. Only two things are required:
+Tap the terracotta **+** button in the bottom corner to open the New Task form.
+Only two things are required:
 
 - **Task name** — what needs doing, like “Descale coffee maker.” Up to 128
   characters.
@@ -63,8 +63,8 @@ Everything else is optional, and each option earns its keep:
   what lets the app flag a task as due soon or overdue. Leave it blank and the
   task is never overdue — the app just tracks how long it’s been.
 - **Last done** — Today, Yesterday, or Pick date. Already did it a while ago?
-  Backfill the real date so the count starts from the right place. The default is
-  “Not done yet.”
+  Backfill the real date so the count starts from the right place. If you leave
+  it unset, the task starts as **New**.
 
 Need to jot down more? Open **Add details** for a description and private notes.
 When you’re happy, tap **Save task**.
@@ -86,7 +86,8 @@ When you save, How Long Since creates **one task per place**, all sharing the
 same name. From then on they’re independent: completing “Guest room” doesn’t
 touch “Main bedroom,” and editing one never changes the others. In the By
 Category and By Time views they tuck neatly into a single group row so your list
-stays tidy (more on that next).
+stays tidy (more on that next). In Quick Wins each place is ranked on its own,
+so an urgent one never hides inside a group.
 
 ## Three ways to see your tasks
 
@@ -168,10 +169,10 @@ details. Tap **Save changes** when you’re done.
 
 At the bottom is a **Remove Task** area with two choices:
 
-- **Archive** hides the task from every view but keeps it in your data. Use this
-  for something you’ve stopped doing but might pick up again. Note: this version
-  has no in-app “un-archive” button yet — an archived task stays in your backups,
-  so restoring a backup that still contains it brings it back.
+- **Archive** hides the task from every view but keeps it in your data and your
+  backups. Use it for something you’ve stopped doing but might pick up again.
+  This version has no un-archive button yet — archived tasks simply wait, safely
+  stored, until a future update adds one.
 - **Delete** removes the task permanently, after a quick confirmation. This one
   can’t be undone.
 
@@ -188,7 +189,8 @@ From there you can rename any category, change its color (12 to choose from) or
 icon (15 options plus “None”), and add categories of your own. Deleting follows a
 few sensible rules:
 
-- An **empty** category deletes after a quick confirm.
+- An **empty** category deletes after a quick confirm. (Archived tasks still
+  count — a category holding only archived tasks asks for reassignment too.)
 - A category **with tasks** asks you to reassign those tasks to another category
   first.
 - A **default** category that still has tasks can’t be deleted — edit it instead.
@@ -204,7 +206,8 @@ Open Settings from the gear icon in the header. Under **Appearance** you can:
 - Turn on **High contrast** for stronger borders and text.
 - Turn on **Reduced motion** to calm animations.
 
-You can also set your **default view** — the tab the app opens to. Under
+You can also pick your **Default View** — the tab the app opens to. Switching
+tabs updates it too, so the app normally opens right where you left off. Under
 **Notifications**, you’ll see why reminders live inside the app: your data stays
 on your device with no account, so there are no phone or email alerts to turn on
 yet. Phone notifications may come in a later release, alongside optional cloud
@@ -217,15 +220,15 @@ sync.
 Because your data lives only on your device, backups matter. In Settings under
 **Data Management**:
 
-- **Export Data** saves a complete JSON backup file. This is the full,
+- **Export data** saves a complete JSON backup file. This is the full,
   restorable copy of everything, and it stamps the “Last backup” date.
 - **Export CSV** saves a tasks-only spreadsheet — handy for viewing your tasks
   elsewhere, though it isn’t used for restoring.
-- **Import Data** restores from a JSON backup. Importing **replaces everything**
+- **Import data** restores from a JSON backup. Importing **replaces everything**
   currently in the app, so it asks you to confirm first.
 
 If it’s been more than two weeks since your last backup, a gentle reminder banner
-appears. And in the Danger Zone, **Clear All Data** wipes your tasks and resets
+appears. And in the Danger Zone, **Clear all data** wipes your tasks and resets
 the categories to the ten defaults — useful for starting fresh, but there’s no
 undo, so export first.
 
@@ -247,13 +250,13 @@ at all.
 
 **Can I share my tasks with my household?**
 Not yet — sharing and syncing between devices are planned for a later release.
-For now, you can move your data between devices with Export Data and Import Data.
+For now, you can move your data between devices with Export data and Import data.
 
 **How do I back up my data?**
-Go to Settings → Data Management → Export Data. Keep that JSON file somewhere
+Go to Settings → Data Management → Export data. Keep that JSON file somewhere
 safe; it’s the only file that can fully restore your tasks.
 
 **What happens if I clear my browser data?**
-Because everything is stored in your browser, clearing site data (or using Clear
-All Data) removes your tasks. That’s exactly why regular backups are worth the
+Because everything is stored in your browser, clearing site data (or using
+Clear all data) removes your tasks. That’s exactly why regular backups are worth the
 few seconds — an exported JSON file lets you restore everything.

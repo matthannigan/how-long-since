@@ -48,7 +48,7 @@ export function BackupReminderBanner() {
         </p>
         <div className="flex shrink-0 items-center gap-2">
           <Button type="button" onClick={() => void handleExport()}>
-            Export Data
+            Export data
           </Button>
           <button
             type="button"

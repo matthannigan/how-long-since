@@ -16,10 +16,10 @@ describe('DataManagementSection', () => {
   it('shows the empty backup state and all data actions', () => {
     render(<DataManagementSection settings={{ ...DEFAULT_SETTINGS, lastBackupDate: null }} />);
     expect(screen.getByText('No previous backups found.')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Export Data/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Export data/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Export CSV/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Import Data/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Clear All Data/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Import data/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Clear all data/ })).toBeInTheDocument();
   });
 
   it('formats a stored backup date instead of the empty state', () => {
@@ -33,7 +33,7 @@ describe('DataManagementSection', () => {
 
   it('confirms before clearing all data', async () => {
     render(<DataManagementSection settings={{ ...DEFAULT_SETTINGS }} />);
-    fireEvent.click(screen.getByRole('button', { name: /Clear All Data/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Clear all data/ }));
     expect(await screen.findByRole('heading', { name: 'Clear all data?' })).toBeInTheDocument();
   });
 

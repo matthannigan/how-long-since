@@ -173,7 +173,6 @@ export function CategoryForm({
             >
               <RadioPill
                 value=""
-                aria-label="No icon"
                 className={cn(
                   'min-h-11 rounded-chip border-[1.5px] border-border-default bg-surface-card px-3 text-sm text-ink-meta-aa',
                   'data-[state=checked]:border-accent data-[state=checked]:text-ink',

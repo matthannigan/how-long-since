@@ -49,7 +49,7 @@ Recorded 2026-07-07 from a local production build at commit `7851257`
 (byte-identical sources to the first green CI run at `5a470fd` — only
 docs/CI-config commits in between). Gzip figures via zlib level 6, matching
 CI's `gzip -c` to within header bytes. CI regenerates this table on every
-run in the workflow **Summary** tab; this copy is the canonical Req 11.7
+run in the workflow **Summary** tab; this copy is the canonical Req 9.7
 reference point.
 
 | Asset | Raw | Gzipped |
@@ -85,7 +85,7 @@ reference point.
 - `settings-*.js` at 35K is the PapaParse isolation working — it never joins
   the entry chunk.
 
-**How to read future runs (the Req 11.7 tripwire):**
+**How to read future runs (the Req 9.7 tripwire):**
 
 - `index-*.js` should stay flat through B1 (no new dependencies planned).
 - B5's dnd-kit must appear as growth in the `categories-*.js` chunk, and

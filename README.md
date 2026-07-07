@@ -96,9 +96,10 @@ The app serves diverse users with different needs:
 Ten independently shippable batches, ordered by daily-use value: search and
 filtering, swipe-to-complete and snooze, data-durability safeguards, a
 desktop-friendly layout, drag-and-drop category reorder, completion history,
-template packs and onboarding, additional themes, and a notifications
-reality-check. **[docs/ROADMAP.md](docs/ROADMAP.md)** is canonical for the
-details and the order.
+template packs and onboarding, and additional themes. (The tenth — a
+notifications reality-check — already ran with 1.0.0; see the roadmap.)
+**[docs/ROADMAP.md](docs/ROADMAP.md)** is canonical for the details and the
+order.
 
 ### Phase 3: Cloud & Community
 - User accounts/authentication

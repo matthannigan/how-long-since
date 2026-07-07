@@ -50,6 +50,9 @@ This Content Strategy Guide provides standards for all text within the "How Long
 - Maintain consistent terminology throughout the app
 - Use the same terms for actions (e.g., "complete" not "finish" or "done")
 - Ensure category names and time references remain consistent
+- Capitalization: buttons and action links use sentence case ("Export data",
+  "Save task"); screen and dialog titles use Title Case ("New Task",
+  "Data Management"); acronyms stay uppercase ("Export CSV")
 
 **Inclusivity**
 - Use gender-neutral language
@@ -111,14 +114,13 @@ several, or none on a given day:
 ### 3.1 Task Management
 
 **Adding Tasks:**
-- Button: "Add Task"
+- Button: the terracotta "+" (accessible name "Add task")
 - Header: "New Task"
 - Confirmation: "Task added"
 - Empty state: "Add your first task to get started"
 
 **Completing Tasks:**
-- Button: "Just Done"
-- Confirmation: "Marked as complete"
+- Button: the row's circle ("Just Done" internally; accessible name "Mark [task name] complete")
 - Success message: "Nice work! Updated [task name]"
 - Reset option: "Undo"
 
@@ -139,12 +141,12 @@ several, or none on a given day:
 **Views:**
 - Quick Wins view (default): "Quick Wins" — leads with the prompt "How much time do you have?"
 - Category view: "By Category"
-- Time view: "By Time Needed"
-- Toggle: "Switch view"
+- Time view: "By Time"
+- Toggle (nav accessible name): "Choose a view"
 
 **Categories:**
 - Header: "Categories"
-- Add category: "New Category"
+- Add category: "New category"
 - Edit category: "Edit"
 - Delete category: "Remove"
 
@@ -157,15 +159,17 @@ several, or none on a given day:
 **App Settings:**
 - Header: "Settings"
 - Theme: "Appearance"
-- Data: "Manage Data"
-- Export: "Export Data"
-- Import: "Import Data"
-- Reset: "Reset App"
+- Data: "Data Management"
+- Export: "Export data" (JSON) / "Export CSV"
+- Import: "Import data"
+- Reset: "Clear all data" (in the Danger Zone)
 
 **Preferences:**
-- View preference: "Default view"
+- View preference: "Default View"
 - Theme preference: "Theme"
-- Overdue indicator: "Show overdue warnings"
+- Text size: "Text size"
+- Contrast: "High contrast"
+- Motion: "Reduced motion"
 
 ### 3.4 Task Status
 
@@ -268,7 +272,7 @@ several, or none on a given day:
 
 **Task Management Errors:**
 - Duplicate task: "This task already exists."
-- Cannot delete: "Cannot delete the default category. Try editing it instead."
+- Cannot remove: "Can't remove a default category that still has tasks. Try editing it instead."
 - Cannot save: "Changes couldn't be saved. Try again."
 
 **Data Errors:**

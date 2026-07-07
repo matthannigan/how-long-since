@@ -7,6 +7,13 @@ import { mirrorPrefsToStorage, type VisualPrefs } from '@/lib/settings';
 import type { AppSettings } from '@/types';
 
 /**
+ * Browser-chrome colors per theme — the Soft Daylight page surfaces
+ * (docs/STYLE_GUIDE.md §1). Must match the static <meta name="theme-color">
+ * pair and the pre-paint script in index.html.
+ */
+const THEME_COLOR = { light: '#FAF8F4', dark: '#24211D' } as const;
+
+/**
  * Applies the persisted `AppSettings` visual preferences to the document root as
  * data-attributes that styles/globals.css keys off:
  *   theme         → [data-theme] ('light'/'dark'; removed for 'system' so the
@@ -14,6 +21,7 @@ import type { AppSettings } from '@/types';
  *   textSize      → [data-text-size]
  *   highContrast  → [data-high-contrast]
  *   reducedMotion → [data-reduced-motion]
+ * Also keeps the theme-color metas (browser chrome) in step with the theme.
  * Persisted state lives in Dexie (read via useLiveQuery), never in Zustand.
  */
 function applyPreferences(settings: VisualPrefs): void {
@@ -23,6 +31,18 @@ function applyPreferences(settings: VisualPrefs): void {
     root.setAttribute('data-theme', settings.theme);
   } else {
     root.removeAttribute('data-theme');
+  }
+
+  // A forced theme overrides both media-scoped metas; 'system' restores each
+  // meta to its own color so prefers-color-scheme governs again.
+  for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+    if (settings.theme === 'light' || settings.theme === 'dark') {
+      meta.content = THEME_COLOR[settings.theme];
+    } else {
+      meta.content = (meta.getAttribute('media') ?? '').includes('dark')
+        ? THEME_COLOR.dark
+        : THEME_COLOR.light;
+    }
   }
 
   if (settings.textSize && settings.textSize !== 'default') {

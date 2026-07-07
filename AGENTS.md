@@ -172,7 +172,7 @@ All 10 default categories (see `docs/REQUIREMENTS.md` Req 3.1), matching `docs/S
 
 ## Overdue Status Thresholds
 
-Three tiers, computed only once a task has `lastCompletedAt` set and an `expectedFrequency` — a task that's never been completed is never overdue, regardless of how long ago it was created (see `docs/REQUIREMENTS.md` Req 2.7–2.8). Thresholds are a percentage of the expected interval elapsed since `lastCompletedAt`, so they scale with tasks from daily to yearly instead of using a fixed day count:
+Three tiers, computed only once a task has `lastCompletedAt` set and an `expectedFrequency` — a task that's never been completed is never overdue, regardless of how long ago it was created (see `docs/REQUIREMENTS.md` Req 2.7–2.9). Thresholds are a percentage of the expected interval elapsed since `lastCompletedAt`, so they scale with tasks from daily to yearly instead of using a fixed day count:
 
 - **Not due**: elapsed < 80% of interval
 - **Due soon**: 80% ≤ elapsed < 100% of interval (amber-gold #C08A2E / AA-safe #8A5E15, clock glyph)

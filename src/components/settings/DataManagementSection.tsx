@@ -110,13 +110,13 @@ export function DataManagementSection({ settings }: { settings: AppSettings }) {
 
       <div className="flex flex-wrap gap-2">
         <Button type="button" onClick={() => void handleExportJson()}>
-          <Download aria-hidden="true" /> Export Data
+          <Download aria-hidden="true" /> Export data
         </Button>
         <Button type="button" variant="outline" onClick={() => void handleExportCsv()}>
           <Download aria-hidden="true" /> Export CSV
         </Button>
         <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
-          <Upload aria-hidden="true" /> Import Data
+          <Upload aria-hidden="true" /> Import data
         </Button>
       </div>
       <input
@@ -140,7 +140,7 @@ export function DataManagementSection({ settings }: { settings: AppSettings }) {
           className="mt-3"
           onClick={() => setClearOpen(true)}
         >
-          <Trash2 aria-hidden="true" /> Clear All Data
+          <Trash2 aria-hidden="true" /> Clear all data
         </Button>
       </div>
 
@@ -154,7 +154,8 @@ export function DataManagementSection({ settings }: { settings: AppSettings }) {
           <DialogHeader>
             <DialogTitle>Import this backup?</DialogTitle>
             <DialogDescription>
-              Importing replaces your current tasks and categories. This can&rsquo;t be undone.
+              Importing replaces your current tasks, categories, and settings. This can&rsquo;t be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -181,7 +182,7 @@ export function DataManagementSection({ settings }: { settings: AppSettings }) {
               Cancel
             </Button>
             <Button type="button" variant="destructive" onClick={() => void confirmClear()}>
-              Clear All Data
+              Clear all data
             </Button>
           </DialogFooter>
         </DialogContent>

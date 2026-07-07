@@ -46,7 +46,7 @@ export function ManageCategories() {
   const handleRemoveClick = (category: Category) => {
     const count = counts.get(category.id) ?? 0;
     if (category.isDefault && count > 0) {
-      toast.error('Cannot delete the default category. Try editing it instead.');
+      toast.error("Can't remove a default category that still has tasks. Try editing it instead.");
       return;
     }
     setReassignTargetId('');
@@ -79,7 +79,7 @@ export function ManageCategories() {
           Categories
         </h2>
         <Button type="button" size="sm" onClick={() => setCreating(true)}>
-          New Category
+          New category
         </Button>
       </div>
 

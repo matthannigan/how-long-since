@@ -17,13 +17,13 @@ test('JSON export → clear → import round-trip restores the task; CSV export 
   await page.goto('/settings');
 
   // Scope to the Data Management section — the backup-reminder banner also has an
-  // "Export Data" button when no backup exists yet.
+  // "Export data" button when no backup exists yet.
   const dm = page.getByRole('region', { name: 'Data Management' });
 
   // Export the full JSON backup and capture its contents.
   const [jsonDownload] = await Promise.all([
     page.waitForEvent('download'),
-    dm.getByRole('button', { name: 'Export Data' }).click(),
+    dm.getByRole('button', { name: 'Export data' }).click(),
   ]);
   expect(jsonDownload.suggestedFilename()).toMatch(
     /^how-long-since-backup-\d{4}-\d{2}-\d{2}\.json$/,
@@ -33,9 +33,9 @@ test('JSON export → clear → import round-trip restores the task; CSV export 
   expect(backup.toString()).toContain(NAME);
 
   // Clear everything (the danger-zone button, then the confirm dialog's button).
-  await dm.getByRole('button', { name: 'Clear All Data' }).click();
+  await dm.getByRole('button', { name: 'Clear all data' }).click();
   const clearDialog = page.getByRole('dialog', { name: 'Clear all data?' });
-  await clearDialog.getByRole('button', { name: 'Clear All Data' }).click();
+  await clearDialog.getByRole('button', { name: 'Clear all data' }).click();
   await expect(page.getByText('All data cleared')).toBeVisible();
 
   // Re-import the captured backup via the hidden file input.
@@ -77,16 +77,16 @@ test('a series survives the JSON round-trip intact (Phase 1.1)', async ({ page }
 
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    dm.getByRole('button', { name: 'Export Data' }).click(),
+    dm.getByRole('button', { name: 'Export data' }).click(),
   ]);
   const backup = await readFile(await download.path());
   expect(backup.toString()).toContain('seriesId');
   expect(backup.toString()).toContain('instanceLabel');
 
-  await dm.getByRole('button', { name: 'Clear All Data' }).click();
+  await dm.getByRole('button', { name: 'Clear all data' }).click();
   await page
     .getByRole('dialog', { name: 'Clear all data?' })
-    .getByRole('button', { name: 'Clear All Data' })
+    .getByRole('button', { name: 'Clear all data' })
     .click();
   await expect(page.getByText('All data cleared')).toBeVisible();
 

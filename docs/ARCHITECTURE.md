@@ -180,8 +180,9 @@ this.version(3)
 > **Boolean-index trap:** `isArchived` appears in the index list, but
 > IndexedDB **cannot index booleans** — `where('isArchived')` silently returns
 > nothing. All views read the table and filter archived tasks **in memory**
-> (see `src/components/task/TaskList.tsx`). Keep doing that (or migrate the
-> field to 0/1) rather than reintroducing a `where` on it.
+> (see `src/components/category/ByCategoryView.tsx` — every view does the
+> same). Keep doing that (or migrate the field to 0/1) rather than
+> reintroducing a `where` on it.
 
 **Seeding — two distinct paths** (`src/lib/db/`):
 
@@ -263,17 +264,15 @@ The shipped read pattern (note the in-memory archived filter — see the
 boolean-index trap above):
 
 ```tsx
-// src/components/task/TaskList.tsx (abridged)
-export function TaskList({ categoryId }: TaskListProps) {
+// src/components/category/ByCategoryView.tsx (abridged)
+export function ByCategoryView() {
   const tasks = useLiveQuery(() => db.tasks.toArray(), []);
   const categories = useLiveQuery(() => db.categories.toArray(), []);
 
   if (tasks === undefined || categories === undefined) return <TaskListSkeleton />;
 
-  const active = tasks.filter(
-    (t) => !t.isArchived && (categoryId ? t.categoryId === categoryId : true),
-  );
-  // …render <TaskCard> per task
+  const active = tasks.filter((t) => !t.isArchived);
+  // …group by category and render <TaskCard> per task
 }
 ```
 
@@ -285,7 +284,7 @@ device. No `loading`/`error`/`data` state to wire up by hand, no manual
 
 ### Validation — Zod v4
 
-`src/schemas/{task,category,settings}.ts` hold the schemas;
+`src/schemas/{task,category,completion,settings}.ts` hold the schemas;
 `src/types/index.ts` derives the TS types with `z.infer`. Note Zod v4's
 top-level validators (`z.uuid()`, `z.date()`) — v3's chained
 `z.string().uuid()` form is gone. `createTaskSchema` is `taskSchema.omit({...})`
@@ -343,7 +342,7 @@ src/
 │   └── settings/              # SettingsView + section components (Data, About, …)
 ├── lib/                       # Business logic — plain functions, not classes
 │   ├── db/                    # schema.ts (Dexie class, versions, seed) · dev-seed.ts (DEV samples)
-│   ├── tasks.ts · categories.ts · series.ts · settings.ts
+│   ├── tasks.ts · categories.ts · series.ts · completions.ts · settings.ts
 │   ├── overdue.ts · time-format.ts · time-sections.ts
 │   ├── category-order.ts · category-tags.ts
 │   └── export-import.ts · csv-export.ts · download.ts · utils.ts

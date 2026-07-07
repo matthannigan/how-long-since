@@ -19,7 +19,7 @@ describe('BackupReminderBanner', () => {
     render(<BackupReminderBanner />);
 
     expect(await screen.findByRole('region', { name: 'Backup reminder' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Export Data' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Export data' })).toBeInTheDocument();
   });
 
   it('stays hidden when the last backup is recent', async () => {

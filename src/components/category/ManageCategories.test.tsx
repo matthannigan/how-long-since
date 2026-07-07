@@ -43,7 +43,7 @@ describe('ManageCategories', () => {
     await user.click(within(row).getByRole('button', { name: 'Remove' }));
 
     expect(toastError).toHaveBeenCalledWith(
-      'Cannot delete the default category. Try editing it instead.',
+      "Can't remove a default category that still has tasks. Try editing it instead.",
     );
     expect(screen.queryByText('Reassign tasks first')).not.toBeInTheDocument();
     expect(await db.categories.get(KITCHEN.id)).toBeTruthy();

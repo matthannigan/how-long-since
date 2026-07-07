@@ -23,7 +23,7 @@ export function DefaultViewSection({ settings }: { settings: AppSettings }) {
         <h2 id="default-view-heading" className="font-display text-lg font-semibold text-ink">
           Default View
         </h2>
-        <p className="text-sm text-ink-meta-aa">Choose your preferred starting view</p>
+        <p className="text-sm text-ink-meta-aa">Where the app opens. Switching views updates it too.</p>
       </div>
       <RadioGroup
         className="gap-0"

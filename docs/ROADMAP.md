@@ -1,6 +1,8 @@
 # How Long Since — Phase 2 Roadmap
 
-> **Scoped 2026-07-07, on top of the shipped 1.0.0. Nothing here is started.**
+> **Scoped 2026-07-07, on top of the shipped 1.0.0. Nothing here is started
+> except where marked ✅ — B0 and the B9 spike shipped with 1.0.0, and B6's
+> data layer rode along.**
 > This document turns the README's Phase 2 ("Enhanced Experience") bullets into
 > an ordered plan of **independently shippable batches**, sized against the
 > as-built code and researched against the locked stack. The
@@ -74,7 +76,7 @@ nothing ran `pnpm e2e` unless someone remembered to.
   **build first** then run against `vite preview` on :4173 (the specs assume a
   production build and clean DB). Keep `pnpm screenshots` out of CI (separate
   config by design). Add a bundle-size report per PR — Phase 2 adds the first
-  new runtime deps since 1.0 and [REQUIREMENTS.md](REQUIREMENTS.md) Req 11.7
+  new runtime deps since 1.0 and [REQUIREMENTS.md](REQUIREMENTS.md) Req 9.7
   currently has no tripwire — and a cheap assert that `CHANGELOG.md` mentions
   the `package.json` version.
 - **`APP_VERSION` from package.json:** one Vite `define` (the hardcoded
@@ -357,8 +359,8 @@ mood; both sit below the daily-use line.
 > sourced support snapshot plus the decision). No notification feature was
 > built; the one code change is the honest `NotificationsSection` copy.
 
-The README lists notifications and Settings had shown "Coming soon" since 1.0.
-The verified 2026 answer:
+The README lists notifications, and Settings had shown "Coming soon" throughout
+the pre-release builds. The verified 2026 answer:
 
 - **Scheduled local notifications are dead** — Notification Triggers never
   shipped to stable, its development formally ended, and Firefox/WebKit show no

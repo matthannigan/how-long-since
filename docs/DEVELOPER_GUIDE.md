@@ -13,11 +13,13 @@ All data lives in the browser's IndexedDB; there is no server, no account, and
 nothing uploaded. What it does and how it behaves, with screenshots:
 [USER_GUIDE.md](USER_GUIDE.md).
 
-**Status: 1.0.0, shipped 2026-07-07.** Three chunks of work are done and on
-`main` — the Phase 1 MVP, Phase 1.1 (instances & series), and the user
-guide — each detailed in [CHANGELOG.md](../CHANGELOG.md). Phase 2 is scoped
-as ordered batches in [ROADMAP.md](ROADMAP.md) (not started); Phase 3 remains
-unscoped — see [Where we left off](#where-we-left-off--whats-next).
+**Status: 1.0.0, shipped 2026-07-07.** Five chunks of work are done and on
+`main` — the Phase 1 MVP, Phase 1.1 (instances & series), the user guide,
+the developer-docs consolidation, and release engineering — plus the silent
+completion log (B6 groundwork) and the B9 notifications research, each
+detailed in [CHANGELOG.md](../CHANGELOG.md). Phase 2 is scoped as ordered
+batches in [ROADMAP.md](ROADMAP.md) (B1 is the next batch to start); Phase 3
+remains unscoped — see [Where we left off](#where-we-left-off--whats-next).
 
 ## Run it
 
@@ -220,13 +222,16 @@ folder also holds the frozen planning docs that predate this guide
 
 **Last work (2026-07-07):** shipped 1.0.0 — the user guide
 ([plan](../dev/2026-07-07_user-guide/plan.md)), the developer-docs
-consolidation, Phase 2 scoping ([ROADMAP.md](ROADMAP.md)), and B0
+consolidation, Phase 2 scoping ([ROADMAP.md](ROADMAP.md)), B0
 (CI + `APP_VERSION` wiring,
-[plan](../dev/2026-07-07_b0-housekeeping/plan.md)).
+[plan](../dev/2026-07-07_b0-housekeeping/plan.md)), the silent completion
+log (B6 groundwork — Dexie v3, no UI yet), and the B9 notifications spike
+([register](../dev/2026-07-07_notifications-research/register.md)).
 
 **Stubs already in the code, waiting for Phase 2/3:**
 
-- Settings → Notifications: disabled "Coming soon"
+- Settings → Notifications: honest no-push-yet copy per the B9 register — no
+  toggles to build against until Phase 3
   ([NotificationsSection.tsx](../src/components/settings/NotificationsSection.tsx))
 - Settings → About: "Send Feedback" placeholder
   ([AboutSection.tsx](../src/components/settings/AboutSection.tsx))
@@ -240,16 +245,18 @@ consolidation, Phase 2 scoping ([ROADMAP.md](ROADMAP.md)), and B0
 - **Phase 2 — Enhanced Experience:** scoped 2026-07-07 as ten independently
   shippable batches (B0–B9) ordered by daily-use value — start from the
   at-a-glance table in [ROADMAP.md](ROADMAP.md). B0 (CI + version wiring)
-  shipped with 1.0.0; B1 (find & focus) is next, and the B9 notifications
-  spike can run anytime
-  ([handoff prompt](../dev/2026-07-07_notifications-research/prompt.md)).
+  shipped with 1.0.0; B1 (find & focus) is next. The B9 notifications spike
+  is ✅ done — its findings
+  ([register](../dev/2026-07-07_notifications-research/register.md)) are
+  folded into B4 and the Phase 3 plan.
 - **Phase 3 — Cloud & Community:** accounts, sync, shared households
   ("Partner A sees when Partner B completed a task") — via Dexie Cloud, per
   the ARCHITECTURE plan. Unscoped; gated on B9's findings.
 
 **Smaller known gaps**: no unarchive UI (see gotchas; scheduled as ROADMAP
-B1), and notifications unbuilt (B9 — a ready-to-run handoff prompt sits at
-[dev/2026-07-07_notifications-research/prompt.md](../dev/2026-07-07_notifications-research/prompt.md)).
+B1), and no notification feature — by decision, not omission: the B9 spike
+concluded push needs the Phase 3 server
+([register](../dev/2026-07-07_notifications-research/register.md)).
 CI and `APP_VERSION` wiring shipped with 1.0.0 (B0).
 
 **How to start the next batch** (the working convention so far):
@@ -261,4 +268,5 @@ CI and `APP_VERSION` wiring shipped with 1.0.0 (B0).
 3. On ship: update [CHANGELOG.md](../CHANGELOG.md) and the README status/
    roadmap; update [AGENTS.md](../AGENTS.md) if the data model or conventions
    changed; if the UI changed, recapture `pnpm screenshots` and regenerate
-   `pnpm generate-user-guide`; bump the version in all three places.
+   `pnpm generate-user-guide`; bump the version in both places
+   (package.json + CHANGELOG.md).
