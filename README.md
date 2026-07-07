@@ -18,14 +18,18 @@ A household and personal task management application that tracks *when* tasks we
 
 Phase 1 (MVP) is implemented: a Vite + React 19 + TypeScript PWA with local IndexedDB storage (Dexie), task and category CRUD, "Just Done" completion with undo, the three views (Quick Wins / By Category / By Time), Settings with JSON/CSV import-export, WCAG 2.1 AA accessibility, and an installable, offline-capable service worker. It also ships a containerized production deployment — see [Deployment](#deployment). Phase 1.1 (Instances & Series) adds multi-location tracking: one "Add task" can fan out into a task per place or pet (five bedrooms, two dogs), with per-category label suggestions and collapsible series rows in the By Category and By Time views. Phases 2–3 (see the [Roadmap](#roadmap)) are still to come; the architecture is described below.
 
-## Planning Documentation
+## Documentation
 
-New here? The **[User Guide](docs/USER_GUIDE.md)** explains what the app does and
-how to use every feature, with screenshots. It's also served in-app at
-`/user-guide.html` (linked from Settings → About & Help). The served HTML and its
-screenshots are generated and committed — regenerate them with
-`pnpm generate-user-guide` (after editing the Markdown) and `pnpm screenshots`
-(after UI changes).
+New here? Two entry points:
+
+- **[User Guide](docs/USER_GUIDE.md)** — what the app does and how to use every
+  feature, with screenshots. It's also served in-app at `/user-guide.html`
+  (linked from Settings → About & Help). The served HTML and its screenshots
+  are generated and committed — regenerate them with `pnpm generate-user-guide`
+  (after editing the Markdown) and `pnpm screenshots` (after UI changes).
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** — start here to work on the
+  code: commands, repo map, conventions and gotchas, the documentation index,
+  and what's next.
 
 ### Vision & Requirements
 
@@ -57,6 +61,11 @@ doesn't require building or hosting a custom backend.
 |----------|-------------|
 | [Architecture](docs/ARCHITECTURE.md) | The as-built architecture: stack, data layer, component patterns, project structure, Phase 3 sync plan |
 
+Historical planning material — the original product briefing, page-by-page UI
+prompts, and each phase's plans and decision registers — lives in dated `dev/`
+folders; the [Developer Guide](docs/DEVELOPER_GUIDE.md) explains how to read
+them.
+
 ## Target Users
 
 The app serves diverse users with different needs:
@@ -67,13 +76,17 @@ The app serves diverse users with different needs:
 
 ## Roadmap
 
-### Phase 1: Foundation (MVP)
+### Phase 1: Foundation (MVP) — shipped in 1.0.0
 - Create, Edit, Archive, Delete tasks
 - "Just Done" completion logic
-- Category and Time views
+- Quick Wins, Category, and Time views
 - Local data storage (IndexedDB)
-- CSV Import/Export
+- JSON backup & restore, plus CSV export
 - Full accessibility compliance
+
+### Phase 1.1: Instances & Series — shipped in 1.0.0
+- One "Add task" fans out into a task per place or pet, with per-category
+  label suggestions and collapsible series rows
 
 ### Phase 2: Enhanced Experience
 - Swipe gestures
@@ -83,6 +96,7 @@ The app serves diverse users with different needs:
 - Desktop-optimized dashboard
 - Onboarding tutorials
 - Advanced filtering
+- Notifications (Settings already shows the "Coming soon" placeholder)
 
 ### Phase 3: Cloud & Community
 - User accounts/authentication

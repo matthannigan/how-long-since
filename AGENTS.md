@@ -9,7 +9,9 @@
 **Shipped: 1.0.0 (2026-07-07).** Phase 1 (MVP), Phase 1.1 (Instances &
 Series), and the User Guide are implemented, merged to `main`, and deployable
 via Docker — see [CHANGELOG.md](CHANGELOG.md) for what each chunk delivered.
-Phases 2–3 (README roadmap) are unscoped future work.
+Phases 2–3 (README roadmap) are unscoped future work. For commands, the repo
+map, conventions/gotchas, and what's next, start with
+[docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
 
 **The architecture is decided** (locked in June 2026, after evaluating and
 rejecting two Next.js-based alternatives) **and built**: Vite + React 19 +
@@ -41,6 +43,8 @@ cloud-sync plan.
 
 | Document | Purpose |
 |----------|---------|
+| [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) | Entry point: commands, repo map, conventions, generated-file matrix, what's next |
+| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | User-facing behavior of every feature, with screenshots |
 | [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Full EARS-format functional requirements (reflects shipped 1.0.0) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The as-built architecture: stack, data layer, structure, Phase 3 sync plan |
 
