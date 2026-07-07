@@ -4,6 +4,16 @@ All notable changes to How Long Since are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Phase 2 roadmap** ([`docs/ROADMAP.md`](docs/ROADMAP.md)) — Phase 2 scoped
+  as ten independently shippable batches (B0–B9) ordered by daily-use value,
+  with per-batch briefs grounded in the as-built code, a schema-change
+  strategy, a cut line, and a parking lot. README, the Developer Guide, and
+  AGENTS.md now point to it.
+
 ## [1.0.0] — 2026-07-07
 
 The first public release: a complete, installable, offline-capable PWA for

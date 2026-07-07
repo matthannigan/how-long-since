@@ -15,8 +15,9 @@ nothing uploaded. What it does and how it behaves, with screenshots:
 
 **Status: 1.0.0, shipped 2026-07-07.** Three chunks of work are done and on
 `main` — the Phase 1 MVP, Phase 1.1 (instances & series), and the user
-guide — each detailed in [CHANGELOG.md](../CHANGELOG.md). Phases 2–3 (see
-[Where we left off](#where-we-left-off--whats-next)) are unscoped future work.
+guide — each detailed in [CHANGELOG.md](../CHANGELOG.md). Phase 2 is scoped
+as ordered batches in [ROADMAP.md](ROADMAP.md) (not started); Phase 3 remains
+unscoped — see [Where we left off](#where-we-left-off--whats-next).
 
 ## Run it
 
@@ -179,6 +180,7 @@ Living references, all in `docs/`:
 |---|---|
 | [USER_GUIDE.md](USER_GUIDE.md) | User-facing behavior, with screenshots (also served in-app at `/user-guide.html`) |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Stack rationale, data layer, patterns, project structure, Phase 3 sync plan |
+| [ROADMAP.md](ROADMAP.md) | Phase 2 scope: ordered feature batches, schema strategy, the cut line |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | EARS functional requirements (Req 1–11, annotated for what's Phase 2) |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Soft Daylight tokens (§1 — `globals.css` traces to it), typography, component specs, AA reconciliation |
 | [CONTENT_STRATEGY_GUIDE.md](CONTENT_STRATEGY_GUIDE.md) | Tone and every user-visible string, incl. §11 instances-&-series copy |
@@ -204,9 +206,9 @@ folder also holds the frozen planning docs that predate this guide
 
 ## Where we left off & what's next
 
-**Last work (2026-07-07):** the 1.0.0 user guide — screenshots, generated
-HTML served at `/user-guide.html`, Settings link, e2e coverage
-([plan](../dev/2026-07-07_user-guide/plan.md)).
+**Last work (2026-07-07):** shipped 1.0.0 — the user guide
+([plan](../dev/2026-07-07_user-guide/plan.md)) and the developer-docs
+consolidation — then scoped Phase 2 in [ROADMAP.md](ROADMAP.md).
 
 **Stubs already in the code, waiting for Phase 2/3:**
 
@@ -218,19 +220,21 @@ HTML served at `/user-guide.html`, Settings link, e2e coverage
   [schema.ts](../src/lib/db/schema.ts) — the Phase 3 on-ramp, with the full
   plan in [ARCHITECTURE.md](ARCHITECTURE.md#phase-3-turning-on-sync)
 
-**Roadmap** ([README.md](../README.md#roadmap) is canonical):
+**Roadmap** ([ROADMAP.md](ROADMAP.md) is canonical for Phase 2; the
+[README](../README.md#roadmap) keeps the phase-level summary):
 
-- **Phase 2 — Enhanced Experience:** swipe gestures, drag-and-drop category
-  reorder, multiple UI themes, pre-built task templates (the briefing
-  imagined e.g. a "New Homeowner Starter Pack"), a desktop-optimized
-  dashboard, onboarding tutorials, advanced filtering, notifications.
+- **Phase 2 — Enhanced Experience:** scoped 2026-07-07 as ten independently
+  shippable batches (B0–B9) ordered by daily-use value — start from the
+  at-a-glance table in [ROADMAP.md](ROADMAP.md); B0 (CI + housekeeping) is
+  the natural first batch, and the B9 notifications spike runs early.
 - **Phase 3 — Cloud & Community:** accounts, sync, shared households
   ("Partner A sees when Partner B completed a task") — via Dexie Cloud, per
-  the ARCHITECTURE plan.
+  the ARCHITECTURE plan. Unscoped; gated on B9's findings.
 
 **Smaller known gaps** (any of these is a good warm-up task): no unarchive UI
 (see gotchas), notifications unbuilt, no CI, `APP_VERSION` not wired to
-package.json.
+package.json — all now scheduled in [ROADMAP.md](ROADMAP.md) (B1, B9, B0, B0
+respectively).
 
 **How to start the next batch** (the working convention so far):
 

@@ -30,6 +30,9 @@ New here? Two entry points:
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** — start here to work on the
   code: commands, repo map, conventions and gotchas, the documentation index,
   and what's next.
+- **[Roadmap](docs/ROADMAP.md)** — the scoped Phase 2 plan: ordered,
+  independently shippable feature batches with complexity/value analysis and
+  the schema strategy for each.
 
 ### Vision & Requirements
 
@@ -88,15 +91,14 @@ The app serves diverse users with different needs:
 - One "Add task" fans out into a task per place or pet, with per-category
   label suggestions and collapsible series rows
 
-### Phase 2: Enhanced Experience
-- Swipe gestures
-- Reorder categories with touch drag-and-drop sorting
-- Multiple UI themes
-- Pre-built task templates
-- Desktop-optimized dashboard
-- Onboarding tutorials
-- Advanced filtering
-- Notifications (Settings already shows the "Coming soon" placeholder)
+### Phase 2: Enhanced Experience — scoped, not started
+
+Ten independently shippable batches, ordered by daily-use value: search and
+filtering, swipe-to-complete and snooze, data-durability safeguards, a
+desktop-friendly layout, drag-and-drop category reorder, completion history,
+template packs and onboarding, additional themes, and a notifications
+reality-check. **[docs/ROADMAP.md](docs/ROADMAP.md)** is canonical for the
+details and the order.
 
 ### Phase 3: Cloud & Community
 - User accounts/authentication

@@ -9,8 +9,9 @@
 **Shipped: 1.0.0 (2026-07-07).** Phase 1 (MVP), Phase 1.1 (Instances &
 Series), and the User Guide are implemented, merged to `main`, and deployable
 via Docker — see [CHANGELOG.md](CHANGELOG.md) for what each chunk delivered.
-Phases 2–3 (README roadmap) are unscoped future work. For commands, the repo
-map, conventions/gotchas, and what's next, start with
+Phase 2 is scoped as ordered feature batches in
+[docs/ROADMAP.md](docs/ROADMAP.md) (not started); Phase 3 remains unscoped.
+For commands, the repo map, conventions/gotchas, and what's next, start with
 [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
 
 **The architecture is decided** (locked in June 2026, after evaluating and
