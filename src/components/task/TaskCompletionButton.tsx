@@ -21,10 +21,11 @@ const BURST_MS = 5000;
  * to `undoComplete` — never recomputed.
  *
  * Repeat taps within the undo window (e.g. an accidental double-click) collapse
- * to a single toast (stable id) and keep the *original* prior in `burstRef`, so
- * one Undo always jumps back to the true earlier date rather than the
- * intermediate "just now". The window is a per-row wall-clock ref, independent
- * of the toast lifecycle, so it's correct even for same-tick double-fires.
+ * to a single toast (stable id) and keep the *original* prior in `burstRef` —
+ * plus every completion-log row the burst appended — so one Undo always jumps
+ * back to the true earlier date and removes all of the burst's log rows. The
+ * window is a per-row wall-clock ref, independent of the toast lifecycle, so
+ * it's correct even for same-tick double-fires.
  */
 export function TaskCompletionButton({ task }: { task: Task }) {
   const showUndo = useUIStore((s) => s.showUndo);
@@ -32,7 +33,11 @@ export function TaskCompletionButton({ task }: { task: Task }) {
 
   const [confirming, setConfirming] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const burstRef = useRef<{ prior: Date | null; expiresAt: number } | null>(null);
+  const burstRef = useRef<{
+    prior: Date | null;
+    completionIds: string[];
+    expiresAt: number;
+  } | null>(null);
 
   useEffect(
     () => () => {
@@ -47,14 +52,18 @@ export function TaskCompletionButton({ task }: { task: Task }) {
 
   async function handleComplete() {
     try {
-      const prior = await markTaskComplete(task.id);
+      const { previous, completionId } = await markTaskComplete(task.id);
 
-      // Within an active burst, keep the original prior; otherwise this tap
-      // starts a fresh one from the date it just replaced.
+      // Within an active burst, keep the original prior and accumulate the
+      // appended log rows; otherwise this tap starts a fresh burst from the
+      // date it just replaced.
       const now = Date.now();
       const inBurst = burstRef.current !== null && now < burstRef.current.expiresAt;
-      const originalPrior = inBurst ? burstRef.current!.prior : prior;
-      burstRef.current = { prior: originalPrior, expiresAt: now + BURST_MS };
+      const originalPrior = inBurst ? burstRef.current!.prior : previous;
+      const completionIds = inBurst
+        ? [...burstRef.current!.completionIds, completionId]
+        : [completionId];
+      burstRef.current = { prior: originalPrior, completionIds, expiresAt: now + BURST_MS };
 
       // Clear our undo-store slot only while it's still ours (never clobber
       // another row's active undo — the store holds a single slot).
@@ -66,13 +75,13 @@ export function TaskCompletionButton({ task }: { task: Task }) {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setConfirming(false), 1500);
 
-      showUndo(task.id, originalPrior);
+      showUndo(task.id, originalPrior, completionIds);
       toast.success(`Nice work! Updated ${displayName}`, {
         id: `complete-${task.id}`, // same id → a repeat tap replaces, never stacks
         action: {
           label: 'Undo',
           onClick: () => {
-            void undoComplete(task.id, originalPrior);
+            void undoComplete(task.id, originalPrior, completionIds);
             burstRef.current = null;
             setConfirming(false);
             clearOurUndo();

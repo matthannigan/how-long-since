@@ -15,11 +15,13 @@ interface UIState {
   /**
    * The pending "Just Done" undo. `previous` is the task's prior
    * `lastCompletedAt`, exactly as returned by `markTaskComplete` — a `Date`
-   * for a re-completion or `null` for a first completion — so `undoComplete`
-   * can restore it faithfully (Step 5 consumes this).
+   * for a re-completion or `null` for a first completion — and
+   * `completionIds` are the completion-log rows the tap (or burst of taps)
+   * appended. Together they are exactly what `undoComplete` needs to restore
+   * the date faithfully and delete the log rows.
    */
-  undoSnackbar: { taskId: string; previous: Date | null } | null;
-  showUndo: (taskId: string, previous: Date | null) => void;
+  undoSnackbar: { taskId: string; previous: Date | null; completionIds: string[] } | null;
+  showUndo: (taskId: string, previous: Date | null, completionIds: string[]) => void;
   dismissUndo: () => void;
 
   /**
@@ -45,7 +47,8 @@ export const useUIStore = create<UIState>((set) => ({
   closeAddTask: () => set({ isAddTaskOpen: false }),
 
   undoSnackbar: null,
-  showUndo: (taskId, previous) => set({ undoSnackbar: { taskId, previous } }),
+  showUndo: (taskId, previous, completionIds) =>
+    set({ undoSnackbar: { taskId, previous, completionIds } }),
   dismissUndo: () => set({ undoSnackbar: null }),
 
   lastUsedCategoryId: null,

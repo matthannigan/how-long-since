@@ -100,6 +100,18 @@ interface Category {
 }
 ```
 
+### Completion
+
+Silent, append-only completion log (Dexie v3, shipped in 1.0.0 as Phase 2 B6 groundwork — no UI yet). `markTaskComplete` appends one row per completion (bursts included) and returns `{ previous, completionId }`; one undo deletes **all** rows its burst appended (the ui-store undo slot carries `completionIds`). Bootstrap rows are synthesized from `lastCompletedAt` wherever a completed task can exist without log rows (v3 upgrade, pre-v3 backup imports, dev seed, create-time "Last done" backfill). Deleting a task deliberately keeps its rows (event-log semantics); manual `lastCompletedAt` edits do NOT log.
+
+```typescript
+interface Completion {
+  id: string;
+  taskId: string;
+  completedAt: Date;
+}
+```
+
 ### AppSettings
 
 Singleton row, `id` always `'1'`. No `personaPreference` field — persona-mode-switching was considered and explicitly cut (see `docs/STYLE_GUIDE.md`); personas remain illustrative examples only, not a targeting mechanism.

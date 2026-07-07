@@ -1,19 +1,30 @@
+import Dexie from 'dexie';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { db, DEFAULT_CATEGORIES, seedDatabase } from '@/lib/db/schema';
+import { db, DEFAULT_CATEGORIES, HowLongSinceDB, seedDatabase } from '@/lib/db/schema';
 import { taskSchema } from '@/schemas/task';
 import type { Task } from '@/types';
 
 beforeEach(async () => {
   // The `db` module singleton persists across cases under fake-indexeddb, so
   // clear every store before each test for deterministic isolation.
-  await Promise.all([db.tasks.clear(), db.categories.clear(), db.settings.clear()]);
+  await Promise.all([
+    db.tasks.clear(),
+    db.categories.clear(),
+    db.settings.clear(),
+    db.completions.clear(),
+  ]);
 });
 
 describe('HowLongSinceDB', () => {
-  it('opens with the v1 stores', async () => {
+  it('opens with the current stores', async () => {
     await db.open();
-    expect(db.tables.map((t) => t.name).sort()).toEqual(['categories', 'settings', 'tasks']);
+    expect(db.tables.map((t) => t.name).sort()).toEqual([
+      'categories',
+      'completions',
+      'settings',
+      'tasks',
+    ]);
   });
 
   it('stores and reads Date fields as native Date objects (no ISO strings)', async () => {
@@ -35,6 +46,46 @@ describe('HowLongSinceDB', () => {
     expect(read?.createdAt).toBeInstanceOf(Date);
     expect(read?.lastCompletedAt).toBeInstanceOf(Date);
     expect(read?.createdAt.getTime()).toBe(now.getTime());
+  });
+});
+
+describe('v2 → v3 upgrade (completions log backfill)', () => {
+  it('synthesizes one completion per already-completed task, none for never-completed', async () => {
+    const name = `HLSUpgradeTest-${crypto.randomUUID()}`;
+
+    // Recreate the pre-v3 database shape under a scratch name...
+    const legacy = new Dexie(name);
+    legacy.version(2).stores({
+      tasks: 'id, categoryId, lastCompletedAt, isArchived',
+      categories: 'id, isDefault',
+      settings: 'id',
+    });
+    const doneAt = new Date('2026-06-15T14:30:00.000Z');
+    const done = {
+      id: '22222222-2222-4222-8222-222222222222',
+      name: 'Clean oven',
+      description: '',
+      categoryId: DEFAULT_CATEGORIES[0].id,
+      createdAt: new Date('2026-06-01T10:00:00.000Z'),
+      lastCompletedAt: doneAt,
+      isArchived: false,
+      notes: '',
+    };
+    const never = { ...done, id: '33333333-3333-4333-8333-333333333333', lastCompletedAt: null };
+    await legacy.table('tasks').bulkAdd([done, never]);
+    legacy.close();
+
+    // ...then reopen it through the real class so the real 2→3 upgrade runs.
+    const upgraded = new HowLongSinceDB(name);
+    try {
+      const completions = await upgraded.completions.toArray();
+      expect(completions).toHaveLength(1);
+      expect(completions[0].taskId).toBe(done.id);
+      expect(completions[0].completedAt.getTime()).toBe(doneAt.getTime());
+    } finally {
+      upgraded.close();
+      await Dexie.delete(name);
+    }
   });
 });
 

@@ -1,5 +1,6 @@
 import type { Task } from '@/types';
 
+import { synthesizeCompletions } from '../completions';
 import { db, DEFAULT_CATEGORIES } from './schema';
 
 const DAY_MS = 864e5;
@@ -222,5 +223,10 @@ export async function seedSampleTasks(): Promise<void> {
     },
   ];
 
-  await db.tasks.bulkAdd(samples);
+  // Mirror production bootstrapping: one synthesized log row per completed
+  // sample, so dev data honors the completions-log invariant too.
+  await db.transaction('rw', db.tasks, db.completions, async () => {
+    await db.tasks.bulkAdd(samples);
+    await db.completions.bulkAdd(synthesizeCompletions(samples));
+  });
 }

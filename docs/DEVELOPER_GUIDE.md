@@ -85,9 +85,11 @@ the stack): [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Data & schema essentials
 
-- Database `HowLongSinceDB`, three stores (`tasks`, `categories`, `settings`),
-  currently **schema version 2** (v2 migrated the `timeCommitment` enum:
-  `5hrs+` dropped, `4hrs` → `4hrs+`). Defined in
+- Database `HowLongSinceDB`, four stores (`tasks`, `categories`, `settings`,
+  `completions`), currently **schema version 3** (v2 migrated the
+  `timeCommitment` enum; v3 added the silent, append-only `completions` log —
+  Phase 2 B6 groundwork shipped inside 1.0.0, backfilled with one synthetic
+  row per already-completed task). Defined in
   [src/lib/db/schema.ts](../src/lib/db/schema.ts).
 - **Boolean-index trap:** IndexedDB can't index booleans, so
   `where('isArchived')` silently returns nothing. Views read whole tables and
@@ -100,9 +102,11 @@ the stack): [ARCHITECTURE.md](ARCHITECTURE.md).
   creates the 10 fixed-UUID default categories + the settings singleton
   (`id: '1'`); `seedSampleTasks()` (15 tasks incl. a 3-task series) runs in
   **`pnpm dev` only** — preview, e2e, and production always start clean.
-- **Backup envelope:** `{ app: 'how-long-since', schemaVersion: 2, exportedAt,
-  data: { tasks, categories, settings } }` — Zod-validated on import; JSON is
-  the only restore format; import **replaces** everything.
+- **Backup envelope:** `{ app: 'how-long-since', schemaVersion: 3, exportedAt,
+  data: { tasks, categories, settings, completions } }` — Zod-validated on
+  import; JSON is the only restore format; import **replaces** everything.
+  Pre-v3 backups (no `completions` key) import fine — one bootstrap row is
+  synthesized per completed task; an explicit `[]` is trusted as-is.
 - Dexie Cloud wiring for Phase 3 sits commented out at the bottom of the
   schema constructor.
 
@@ -159,6 +163,11 @@ env vars, and the network-layer security stance:
 - **Zod `.optional()` fields and updates:** `updateTask` treats an explicit
   `undefined` for `instanceLabel` as "clear the label" — omit the key to
   leave it unchanged. (Locked decision; see the Phase 1.1 register.)
+- **The completions log rides every complete/undo:** `markTaskComplete`
+  returns `{ previous, completionId }`, and one undo must delete **all** rows
+  a tap-burst appended (the ui-store undo slot carries `completionIds`).
+  Deleting a task deliberately keeps its log rows; manual `lastCompletedAt`
+  edits do NOT log. See `dev/2026-07-07_completions-log/plan.md`.
 - **Instance-label chips commit on blur** as well as Enter/comma — tests and
   future edits should preserve that.
 - **The version lives in two places:** `package.json` and

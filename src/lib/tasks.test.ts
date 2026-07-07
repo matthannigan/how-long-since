@@ -16,7 +16,12 @@ import {
 
 // The fake-indexeddb singleton persists across cases — clear it per test.
 beforeEach(async () => {
-  await Promise.all([db.tasks.clear(), db.categories.clear(), db.settings.clear()]);
+  await Promise.all([
+    db.tasks.clear(),
+    db.categories.clear(),
+    db.settings.clear(),
+    db.completions.clear(),
+  ]);
 });
 
 const baseInput = {
@@ -37,6 +42,17 @@ describe('createTask', () => {
 
     const stored = await db.tasks.get(task.id);
     expect(stored?.name).toBe('Water the plants');
+    expect(await db.completions.count()).toBe(0); // never completed → nothing logged
+  });
+
+  it('bootstraps a completion row when "Last done" is backfilled at create time', async () => {
+    const lastDone = new Date('2026-06-20T09:00:00.000Z');
+    const task = await createTask({ ...baseInput, lastCompletedAt: lastDone });
+
+    const rows = await db.completions.toArray();
+    expect(rows).toHaveLength(1);
+    expect(rows[0].taskId).toBe(task.id);
+    expect(rows[0].completedAt.getTime()).toBe(lastDone.getTime());
   });
 
   it('rejects a name longer than 128 characters with a ZodError', async () => {
@@ -63,6 +79,15 @@ describe('createTaskSeries', () => {
   it('trims labels, drops empties, and dedupes case-insensitively', async () => {
     const tasks = await createTaskSeries(baseInput, ['  Luna ', '', 'luna', 'Biscuit', '   ']);
     expect(tasks.map((t) => t.instanceLabel)).toEqual(['Luna', 'Biscuit']);
+  });
+
+  it('bootstraps one completion row per sibling when "Last done" is backfilled', async () => {
+    const lastDone = new Date('2026-06-20T09:00:00.000Z');
+    const tasks = await createTaskSeries({ ...baseInput, lastCompletedAt: lastDone }, ['A', 'B']);
+
+    const rows = await db.completions.toArray();
+    expect(rows).toHaveLength(2);
+    expect(new Set(rows.map((r) => r.taskId))).toEqual(new Set(tasks.map((t) => t.id)));
   });
 
   it('throws when no labels survive cleanup, without writing anything', async () => {
@@ -126,14 +151,19 @@ describe('updateTask', () => {
 });
 
 describe('markTaskComplete / undoComplete', () => {
-  it('sets a fresh completion date and returns the prior null', async () => {
+  it('sets a fresh completion date, logs a row, and returns the prior null', async () => {
     const task = await createTask(baseInput);
 
-    const prior = await markTaskComplete(task.id);
-    expect(prior).toBeNull();
+    const { previous, completionId } = await markTaskComplete(task.id);
+    expect(previous).toBeNull();
 
     const stored = await db.tasks.get(task.id);
     expect(stored?.lastCompletedAt).toBeInstanceOf(Date);
+
+    // The log row matches the stamped date exactly.
+    const logged = await db.completions.get(completionId);
+    expect(logged?.taskId).toBe(task.id);
+    expect(logged?.completedAt.getTime()).toBe(stored?.lastCompletedAt?.getTime());
   });
 
   it('returns the prior completion date on a subsequent completion', async () => {
@@ -141,16 +171,17 @@ describe('markTaskComplete / undoComplete', () => {
     await markTaskComplete(task.id);
     const firstDate = (await db.tasks.get(task.id))!.lastCompletedAt!;
 
-    const prior = await markTaskComplete(task.id);
-    expect(prior?.getTime()).toBe(firstDate.getTime());
+    const { previous } = await markTaskComplete(task.id);
+    expect(previous?.getTime()).toBe(firstDate.getTime());
   });
 
-  it('undo restores a null prior (never nulls a real earlier value by mistake)', async () => {
+  it('undo restores a null prior and deletes the logged row', async () => {
     const task = await createTask(baseInput);
-    const prior = await markTaskComplete(task.id);
+    const { previous, completionId } = await markTaskComplete(task.id);
 
-    await undoComplete(task.id, prior);
+    await undoComplete(task.id, previous, [completionId]);
     expect((await db.tasks.get(task.id))?.lastCompletedAt).toBeNull();
+    expect(await db.completions.count()).toBe(0);
   });
 
   it('undo restores the exact prior completion date', async () => {
@@ -158,10 +189,29 @@ describe('markTaskComplete / undoComplete', () => {
     const earlier = new Date(2020, 0, 1, 8, 0, 0);
     await db.tasks.update(task.id, { lastCompletedAt: earlier });
 
-    const prior = await markTaskComplete(task.id);
-    await undoComplete(task.id, prior);
+    const { previous, completionId } = await markTaskComplete(task.id);
+    await undoComplete(task.id, previous, [completionId]);
 
     expect((await db.tasks.get(task.id))?.lastCompletedAt?.getTime()).toBe(earlier.getTime());
+  });
+
+  it('one undo reverses a whole burst: N completions → N rows → 0 rows', async () => {
+    const task = await createTask(baseInput);
+
+    const first = await markTaskComplete(task.id);
+    const second = await markTaskComplete(task.id);
+    const third = await markTaskComplete(task.id);
+    expect(await db.completions.count()).toBe(3);
+
+    // The component accumulates a burst's ids and undoes with all of them.
+    await undoComplete(task.id, first.previous, [
+      first.completionId,
+      second.completionId,
+      third.completionId,
+    ]);
+
+    expect((await db.tasks.get(task.id))?.lastCompletedAt).toBeNull();
+    expect(await db.completions.count()).toBe(0);
   });
 
   it('throws when completing a task that does not exist', async () => {
@@ -184,5 +234,15 @@ describe('archiveTask / unarchiveTask / deleteTask', () => {
     const task = await createTask(baseInput);
     await deleteTask(task.id);
     expect(await db.tasks.get(task.id)).toBeUndefined();
+  });
+
+  it('keeps completion history when a task is deleted (append-only log)', async () => {
+    const task = await createTask(baseInput);
+    const { completionId } = await markTaskComplete(task.id);
+
+    await deleteTask(task.id);
+
+    expect(await db.tasks.get(task.id)).toBeUndefined();
+    expect(await db.completions.get(completionId)).toBeDefined();
   });
 });

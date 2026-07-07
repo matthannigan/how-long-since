@@ -38,7 +38,12 @@ const sampleTask: Task = {
 };
 
 async function clearAll(): Promise<void> {
-  await Promise.all([db.tasks.clear(), db.categories.clear(), db.settings.clear()]);
+  await Promise.all([
+    db.tasks.clear(),
+    db.categories.clear(),
+    db.settings.clear(),
+    db.completions.clear(),
+  ]);
 }
 
 describe('lib/export-import', () => {
@@ -48,12 +53,18 @@ describe('lib/export-import', () => {
   });
 
   describe('JSON round-trip', () => {
-    it('restores tasks, categories, and settings losslessly with real Dates', async () => {
+    it('restores tasks, categories, settings, and completions losslessly with real Dates', async () => {
       await db.categories.add(sampleCategory);
       await db.tasks.add(sampleTask);
       await db.settings.add({ ...DEFAULT_SETTINGS, currentView: 'quick', theme: 'dark' });
+      await db.completions.add({
+        id: '88888888-8888-4888-8888-888888888888',
+        taskId: sampleTask.id,
+        completedAt: sampleTask.lastCompletedAt!,
+      });
 
       const json = serializeBackup(await buildBackup());
+      expect(JSON.parse(json).schemaVersion).toBe(3);
       await clearAll();
       await importJson(json);
 
@@ -70,6 +81,12 @@ describe('lib/export-import', () => {
       const settings = await db.settings.get('1');
       expect(settings?.currentView).toBe('quick');
       expect(settings?.theme).toBe('dark');
+
+      const completions = await db.completions.toArray();
+      expect(completions).toHaveLength(1);
+      expect(completions[0].taskId).toBe(sampleTask.id);
+      expect(completions[0].completedAt).toBeInstanceOf(Date);
+      expect(completions[0].completedAt.getTime()).toBe(sampleTask.lastCompletedAt!.getTime());
     });
 
     it('round-trips every currentView value, including the widened "quick"', async () => {
@@ -147,6 +164,12 @@ describe('lib/export-import', () => {
       expect(tasks).toHaveLength(1);
       expect(tasks[0].instanceLabel).toBeUndefined();
       expect(tasks[0].seriesId).toBeUndefined();
+
+      // No completions key in a pre-v3 backup → one bootstrap row synthesized.
+      const completions = await db.completions.toArray();
+      expect(completions).toHaveLength(1);
+      expect(completions[0].taskId).toBe(tasks[0].id);
+      expect(completions[0].completedAt.getTime()).toBe(tasks[0].lastCompletedAt!.getTime());
     });
   });
 
@@ -182,6 +205,35 @@ describe('lib/export-import', () => {
 
       const tasks = await db.tasks.toArray();
       expect(tasks.map((t) => t.timeCommitment)).toEqual(['4hrs+', '4hrs+']);
+      // Both fixture tasks are never-completed → nothing to synthesize.
+      expect(await db.completions.count()).toBe(0);
+    });
+  });
+
+  describe('completions import rules', () => {
+    it('trusts an explicit empty completions array (no synthesis for v3+ backups)', async () => {
+      const envelope = {
+        app: 'how-long-since',
+        schemaVersion: 3,
+        exportedAt: new Date().toISOString(),
+        data: {
+          tasks: [
+            {
+              ...sampleTask,
+              createdAt: sampleTask.createdAt.toISOString(),
+              lastCompletedAt: sampleTask.lastCompletedAt!.toISOString(),
+            },
+          ],
+          categories: [sampleCategory],
+          settings: { ...DEFAULT_SETTINGS, lastBackupDate: null },
+          completions: [],
+        },
+      };
+
+      await importJson(JSON.stringify(envelope));
+
+      expect(await db.tasks.count()).toBe(1);
+      expect(await db.completions.count()).toBe(0);
     });
   });
 
@@ -200,10 +252,16 @@ describe('lib/export-import', () => {
       await db.categories.add(sampleCategory);
       await db.tasks.add(sampleTask);
       await db.settings.add({ ...DEFAULT_SETTINGS, theme: 'dark' });
+      await db.completions.add({
+        id: '99999999-9999-4999-8999-999999999999',
+        taskId: sampleTask.id,
+        completedAt: new Date(),
+      });
 
       await clearAllData();
 
       expect(await db.tasks.count()).toBe(0);
+      expect(await db.completions.count()).toBe(0);
       expect(await db.categories.count()).toBe(DEFAULT_CATEGORIES.length);
       const settings = await db.settings.get('1');
       expect(settings).toBeDefined();

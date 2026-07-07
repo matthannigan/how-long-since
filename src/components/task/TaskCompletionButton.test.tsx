@@ -27,6 +27,7 @@ function makeTask(): Task {
 describe('TaskCompletionButton', () => {
   beforeEach(async () => {
     await db.tasks.clear();
+    await db.completions.clear();
     await db.tasks.add(makeTask());
   });
 
@@ -51,13 +52,17 @@ describe('TaskCompletionButton', () => {
       expect(stored?.lastCompletedAt?.getTime()).toBeGreaterThan(PRIOR.getTime());
     });
 
-    // ...and the prior date is stashed so undo can restore it exactly.
+    // ...and the prior date plus the appended log row are stashed for undo.
     const undo = useUIStore.getState().undoSnackbar;
-    expect(undo).toEqual({ taskId: task.id, previous: PRIOR });
+    expect(undo).toMatchObject({ taskId: task.id, previous: PRIOR });
+    expect(undo!.completionIds).toHaveLength(1);
+    expect(await db.completions.count()).toBe(1);
 
-    // Restoring with the captured value returns the exact prior date.
-    await undoComplete(undo!.taskId, undo!.previous);
+    // Restoring with the captured values returns the exact prior date and
+    // removes the log row.
+    await undoComplete(undo!.taskId, undo!.previous, undo!.completionIds);
     expect((await db.tasks.get(task.id))?.lastCompletedAt?.getTime()).toBe(PRIOR.getTime());
+    expect(await db.completions.count()).toBe(0);
   });
 
   it('collapses a rapid double-click so one undo returns to the true original', async () => {
@@ -80,10 +85,17 @@ describe('TaskCompletionButton', () => {
       expect(useUIStore.getState().undoSnackbar?.previous).toEqual(PRIOR);
     });
 
-    // A single undo therefore restores the true original.
+    // Both taps' log rows are accumulated on the single undo record.
+    await waitFor(() => {
+      expect(useUIStore.getState().undoSnackbar?.completionIds).toHaveLength(2);
+    });
+    expect(await db.completions.count()).toBe(2);
+
+    // A single undo therefore restores the true original and clears both rows.
     const undo = useUIStore.getState().undoSnackbar!;
-    await undoComplete(undo.taskId, undo.previous);
+    await undoComplete(undo.taskId, undo.previous, undo.completionIds);
     expect((await db.tasks.get(task.id))?.lastCompletedAt).toEqual(PRIOR);
+    expect(await db.completions.count()).toBe(0);
   });
 
   it('has no axe violations', async () => {

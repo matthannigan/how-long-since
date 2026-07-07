@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
 import { categorySchema } from '@/schemas/category';
+import { completionSchema } from '@/schemas/completion';
 import { appSettingsSchema } from '@/schemas/settings';
 import { taskSchema } from '@/schemas/task';
-import type { Category, Task } from '@/types';
+import type { Category, Completion, Task } from '@/types';
 
+import { synthesizeCompletions } from './completions';
 import { db, DEFAULT_SETTINGS, seedDatabase } from './db/schema';
 import { backupFilename, downloadBlob } from './download';
 import { getSettings, mirrorPrefsToStorage, updateSettings } from './settings';
@@ -21,8 +23,8 @@ import { getSettings, mirrorPrefsToStorage, updateSettings } from './settings';
  * `export*` orchestrator touches the DOM.
  */
 
-/** Current Dexie schema version, stamped into JSON backups. */
-const DB_SCHEMA_VERSION = 2;
+/** Current Dexie schema version, stamped into JSON backups (bump in lockstep with db/schema.ts). */
+const DB_SCHEMA_VERSION = 3;
 
 /** Two weeks in milliseconds — the backup-reminder threshold (Req 7.7). */
 const BACKUP_INTERVAL_MS = 14 * 24 * 60 * 60 * 1000;
@@ -51,10 +53,16 @@ const settingsImportSchema = appSettingsSchema.extend({
   lastBackupDate: z.coerce.date().nullable(),
 });
 
+const completionImportSchema = completionSchema.extend({
+  completedAt: z.coerce.date(),
+});
+
 const backupDataSchema = z.object({
   tasks: z.array(taskImportSchema),
   categories: z.array(categorySchema),
   settings: settingsImportSchema,
+  // Absent in pre-v3 backups — parseBackup synthesizes bootstrap rows then.
+  completions: z.array(completionImportSchema).optional(),
 });
 
 const backupEnvelopeSchema = z.object({
@@ -64,31 +72,39 @@ const backupEnvelopeSchema = z.object({
   data: backupDataSchema,
 });
 
-/** The validated, date-revived payload restored from a JSON backup. */
-export type BackupData = z.infer<typeof backupDataSchema>;
+/** The validated, date-revived payload restored from a JSON backup (completions resolved). */
+export type BackupData = Omit<z.infer<typeof backupDataSchema>, 'completions'> & {
+  completions: Completion[];
+};
 
 /** Full JSON backup envelope. */
 export interface BackupEnvelope {
   app: 'how-long-since';
   schemaVersion: number;
   exportedAt: string;
-  data: { tasks: Task[]; categories: Category[]; settings: BackupData['settings'] };
+  data: {
+    tasks: Task[];
+    categories: Category[];
+    settings: BackupData['settings'];
+    completions: Completion[];
+  };
 }
 
 // --- JSON backup --------------------------------------------------------------
 
-/** Read all three tables into an in-memory backup envelope. */
+/** Read all four tables into an in-memory backup envelope. */
 export async function buildBackup(): Promise<BackupEnvelope> {
-  const [tasks, categories, settings] = await Promise.all([
+  const [tasks, categories, settings, completions] = await Promise.all([
     db.tasks.toArray(),
     db.categories.toArray(),
     getSettings(),
+    db.completions.toArray(),
   ]);
   return {
     app: 'how-long-since',
     schemaVersion: DB_SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
-    data: { tasks, categories, settings },
+    data: { tasks, categories, settings, completions },
   };
 }
 
@@ -113,18 +129,25 @@ export function parseBackup(text: string): BackupData {
   if (!result.success) {
     throw new Error('Backup file is not a valid How Long Since backup');
   }
-  return result.data.data;
+  const { data } = result.data;
+  // A pre-v3 backup has no `completions` key: synthesize one bootstrap row per
+  // completed task (mirroring the Dexie v3 upgrade) so restored data keeps the
+  // one reconstructable row of history. A v3+ backup always carries the key —
+  // even as an empty array — and is trusted as-is.
+  return { ...data, completions: data.completions ?? synthesizeCompletions(data.tasks) };
 }
 
 /** Replace all data with a validated backup payload (all-or-nothing). */
 export async function applyBackup(data: BackupData): Promise<void> {
-  await db.transaction('rw', db.tasks, db.categories, db.settings, async () => {
+  await db.transaction('rw', db.tasks, db.categories, db.settings, db.completions, async () => {
     await db.tasks.clear();
     await db.categories.clear();
     await db.settings.clear();
+    await db.completions.clear();
     await db.tasks.bulkPut(data.tasks);
     await db.categories.bulkPut(data.categories);
     await db.settings.put(data.settings);
+    await db.completions.bulkPut(data.completions);
   });
   // Keep the pre-paint flash guard in sync with the restored appearance prefs.
   mirrorPrefsToStorage(data.settings);
@@ -153,10 +176,11 @@ export async function importJson(text: string): Promise<void> {
  * Seeding runs after the clear transaction to avoid nesting transactions.
  */
 export async function clearAllData(): Promise<void> {
-  await db.transaction('rw', db.tasks, db.categories, db.settings, async () => {
+  await db.transaction('rw', db.tasks, db.categories, db.settings, db.completions, async () => {
     await db.tasks.clear();
     await db.categories.clear();
     await db.settings.clear();
+    await db.completions.clear();
   });
   await seedDatabase();
   mirrorPrefsToStorage(DEFAULT_SETTINGS);

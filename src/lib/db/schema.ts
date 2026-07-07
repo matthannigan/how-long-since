@@ -1,14 +1,21 @@
 import Dexie, { type EntityTable } from 'dexie';
 
-import type { AppSettings, Category, Task } from '@/types';
+import { synthesizeCompletions } from '@/lib/completions';
+import type { AppSettings, Category, Completion, Task } from '@/types';
 
 export class HowLongSinceDB extends Dexie {
   tasks!: EntityTable<Task, 'id'>;
   categories!: EntityTable<Category, 'id'>;
   settings!: EntityTable<AppSettings, 'id'>;
+  completions!: EntityTable<Completion, 'id'>;
 
-  constructor() {
-    super('HowLongSinceDB');
+  /**
+   * `name` is a test seam: migration tests create an older-version DB under a
+   * scratch name, then re-open it through this class to exercise the real
+   * upgrade chain. Production always uses the default.
+   */
+  constructor(name = 'HowLongSinceDB') {
+    super(name);
 
     this.version(1).stores({
       tasks: 'id, categoryId, lastCompletedAt, isArchived',
@@ -36,6 +43,23 @@ export class HowLongSinceDB extends Dexie {
             }
           }),
       );
+
+    // v3 (shipped inside 1.0.0): the append-only `completions` log — Phase 2 B6
+    // groundwork pulled forward because history can't be backfilled after the
+    // fact. The upgrade synthesizes one bootstrap row per already-completed
+    // task so future stats don't start at zero; `taskId` and `completedAt` are
+    // indexed now so the B6 history UI won't need another version bump.
+    this.version(3)
+      .stores({
+        tasks: 'id, categoryId, lastCompletedAt, isArchived',
+        categories: 'id, isDefault',
+        settings: 'id',
+        completions: 'id, taskId, completedAt',
+      })
+      .upgrade(async (tx) => {
+        const tasks = (await tx.table('tasks').toArray()) as Task[];
+        await tx.table('completions').bulkAdd(synthesizeCompletions(tasks));
+      });
 
     // --- Phase 3, not enabled in v1 — see docs/ARCHITECTURE.md "Turning on sync" ---
     // super('HowLongSinceDB', { addons: [dexieCloud] });

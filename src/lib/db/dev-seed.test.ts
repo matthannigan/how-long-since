@@ -5,18 +5,20 @@ import { db } from './schema';
 
 describe('seedSampleTasks', () => {
   beforeEach(async () => {
-    await db.tasks.clear();
+    await Promise.all([db.tasks.clear(), db.completions.clear()]);
   });
 
-  it('seeds sample tasks into an empty table', async () => {
+  it('seeds sample tasks into an empty table, with bootstrap completion rows', async () => {
     await seedSampleTasks();
     expect(await db.tasks.count()).toBe(15);
+    expect(await db.completions.count()).toBe(14); // 15 samples − 1 never-completed
   });
 
   it('is idempotent — a second call adds nothing', async () => {
     await seedSampleTasks();
     await seedSampleTasks();
     expect(await db.tasks.count()).toBe(15);
+    expect(await db.completions.count()).toBe(14);
   });
 
   it('seeds a 3-task series sharing one seriesId, spanning status tiers', async () => {
@@ -46,5 +48,6 @@ describe('seedSampleTasks', () => {
     });
     await seedSampleTasks();
     expect(await db.tasks.count()).toBe(1);
+    expect(await db.completions.count()).toBe(0);
   });
 });
