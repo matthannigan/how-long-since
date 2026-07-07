@@ -1,11 +1,15 @@
+import { ExternalLink } from 'lucide-react';
+
 const COMING_SOON = 'rounded-chip bg-surface-sunk px-2 py-0.5 text-xs font-medium text-ink-meta-aa';
 
 /** App version constant. A build-time inject from package.json is a later nicety. */
 const APP_VERSION = '1.0.0';
 
 /**
- * About & Help. Version + a one-line description are live; the User Guide and
- * Send Feedback links are Phase 2, shown disabled rather than as dead links.
+ * About & Help. Version + a one-line description are live; the User Guide links
+ * to the served static guide (public/user-guide.html) in a new tab — a raw
+ * anchor, not a router Link, since it's a standalone page outside the SPA. Send
+ * Feedback stays a Phase 2 placeholder rather than a dead link.
  */
 export function AboutSection() {
   return (
@@ -23,10 +27,15 @@ export function AboutSection() {
       <p className="text-sm text-ink-meta-aa">
         Track when you last did each task, so nothing slips through the cracks.
       </p>
-      <div className="flex min-h-11 items-center justify-between gap-4 opacity-60">
+      <a
+        href="/user-guide.html"
+        target="_blank"
+        rel="noopener"
+        className="flex min-h-11 items-center justify-between gap-4 rounded-input px-1 outline-none hover:text-accent-deep focus-visible:ring-2 focus-visible:ring-accent"
+      >
         <span className="text-[0.9375rem] font-medium text-ink">User Guide</span>
-        <span className={COMING_SOON}>Coming soon</span>
-      </div>
+        <ExternalLink className="size-4 text-ink-secondary" aria-hidden="true" />
+      </a>
       <div className="flex min-h-11 items-center justify-between gap-4 opacity-60">
         <span className="text-[0.9375rem] font-medium text-ink">Send Feedback</span>
         <span className={COMING_SOON}>Coming soon</span>

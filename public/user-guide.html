@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#FAF8F4" />
+    <meta name="description" content="How to use How Long Since." />
+    <title>How Long Since — User Guide</title>
+    <!--
+      Generated from docs/USER_GUIDE.md — do not edit by hand.
+      Run `pnpm generate-user-guide` to regenerate.
+    -->
+    <!-- Pre-paint theme guard, copied verbatim from index.html (source of truth). -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('hls-prefs') || '{}');
+          var el = document.documentElement;
+          if (p.theme === 'light' || p.theme === 'dark') el.setAttribute('data-theme', p.theme);
+          if (p.textSize && p.textSize !== 'default') el.setAttribute('data-text-size', p.textSize);
+          if (p.highContrast) el.setAttribute('data-high-contrast', 'true');
+          if (p.reducedMotion) el.setAttribute('data-reduced-motion', 'true');
+        } catch (e) {
+          /* storage unavailable — fall back to system theme */
+        }
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        --page: #faf8f4;
+        --card: #ffffff;
+        --sunk: #efebe3;
+        --border: #e4e0d8;
+        --ink: #3a3330;
+        --ink-meta: #6e675e;
+        --accent: #d98c63;
+        --accent-deep: #c0794c;
+        --due-soon: #8a5e15;
+        --overdue: #b2452f;
+      }
+      /* Dark, under both the OS media query and an explicit theme selector. */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']):not(.light) {
+          color-scheme: dark;
+          --page: #24211d;
+          --card: #2e2a25;
+          --sunk: #302c27;
+          --border: #37322c;
+          --ink: #f3eee7;
+          --ink-meta: #a69e93;
+          --accent: #d98c63;
+          --accent-deep: #e8875a;
+          --due-soon: #e0a94e;
+          --overdue: #f0876b;
+        }
+      }
+      [data-theme='dark'],
+      .dark {
+        color-scheme: dark;
+        --page: #24211d;
+        --card: #2e2a25;
+        --sunk: #302c27;
+        --border: #37322c;
+        --ink: #f3eee7;
+        --ink-meta: #a69e93;
+        --accent: #d98c63;
+        --accent-deep: #e8875a;
+        --due-soon: #e0a94e;
+        --overdue: #f0876b;
+      }
+      html[data-text-size='large'] { font-size: 112.5%; }
+      html[data-text-size='larger'] { font-size: 125%; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 42rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+      .topbar { margin-bottom: 1.5rem; }
+      .topbar a {
+        color: var(--accent-deep);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9375rem;
+      }
+      .topbar a:hover { text-decoration: underline; }
+      h1 { font-size: 2rem; line-height: 1.2; margin: 0.5rem 0 1rem; }
+      h2 {
+        font-size: 1.375rem;
+        margin: 2.5rem 0 0.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+      h3 { font-size: 1.125rem; margin: 1.75rem 0 0.5rem; }
+      p { margin: 0.75rem 0; }
+      a { color: var(--accent-deep); }
+      strong { color: var(--ink); }
+      ul, ol { padding-left: 1.5rem; }
+      li { margin: 0.35rem 0; }
+      code {
+        background: var(--sunk);
+        padding: 0.1rem 0.35rem;
+        border-radius: 6px;
+        font-size: 0.875em;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 1.25rem auto;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+      }
+      nav.toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0 2rem;
+      }
+      nav.toc p { margin: 0 0 0.5rem; font-weight: 700; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-meta); }
+      nav.toc ul { margin: 0; padding-left: 1.1rem; }
+      nav.toc a { text-decoration: none; }
+      nav.toc a:hover { text-decoration: underline; }
+      footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        color: var(--ink-meta);
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="topbar"><a href="/">← Back to How Long Since</a></div>
+      <h1>How Long Since — User Guide</h1>
+      <nav class="toc" aria-label="Contents">
+        <p>Contents</p>
+        <ul>
+      <li><a href="#what-how-long-since-is">What How Long Since is</a></li>
+      <li><a href="#add-your-first-task">Add your first task</a></li>
+      <li><a href="#track-one-job-in-many-places">Track one job in many places</a></li>
+      <li><a href="#three-ways-to-see-your-tasks">Three ways to see your tasks</a></li>
+      <li><a href="#mark-it-done-and-undo">Mark it done (and undo)</a></li>
+      <li><a href="#overdue-without-the-guilt">Overdue, without the guilt</a></li>
+      <li><a href="#edit-archive-or-delete">Edit, archive, or delete</a></li>
+      <li><a href="#organize-with-categories">Organize with categories</a></li>
+      <li><a href="#make-it-yours-settings">Make it yours (Settings)</a></li>
+      <li><a href="#back-up-and-restore">Back up and restore</a></li>
+      <li><a href="#install-it-and-use-it-offline">Install it and use it offline</a></li>
+      <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+      <main>
+<!--
+  User guide for How Long Since. This file is the source of truth; the served
+  page at public/user-guide.html is generated from it.
+
+  After editing: run `pnpm curly-quotes` to smarten straight quotes in this
+  file, then `pnpm generate-user-guide` to rebuild the HTML (and
+  `pnpm screenshots` if the UI changed), then commit docs/USER_GUIDE.md,
+  public/user-guide.html, and any updated PNGs together. (The generator also
+  smartifies quotes in the HTML output on its own.)
+
+  Images use ../public/... paths so they render on GitHub; the generator
+  rewrites them to root-relative paths for the HTML.
+--><p>How Long Since keeps track of <em>when you last did</em> the recurring things in your
+life — cleaning the fridge, watering the plants, calling a friend, changing the
+car’s oil. It’s not a to-do list, and it won’t nag you. It just remembers the
+last time, so you don’t have to.</p>
+<p>Everything lives on your device. There’s no account to create and nothing to
+sign in to — you can start adding tasks the moment you open the app.</p>
+<h2 id="what-how-long-since-is">What How Long Since is</h2>
+<p>Most apps track <em>what</em> you need to do and <em>when it’s due</em>. How Long Since tracks
+something quieter but more useful for household and personal upkeep: <strong>how long
+it’s been</strong> since you last did each thing.</p>
+<p>That small shift matters. A lot of recurring jobs don’t have a hard deadline —
+they just need doing “every so often.” You want to descale the coffee maker
+roughly every week, deep-clean the fridge every couple of weeks, and change the
+HVAC filter every few months. How Long Since holds those rhythms for you and
+gently flags a task once enough time has passed.</p>
+<p>A few things that stay true throughout:</p>
+<ul>
+<li><strong>Local-first.</strong> Your data is stored in your browser on your device. Nothing
+is uploaded, and no account is required.</li>
+<li><strong>No guilt.</strong> Overdue tasks are marked clearly, but the tone stays neutral —
+a fact, not a scolding.</li>
+<li><strong>Fast.</strong> Adding a task takes seconds, and marking one done is a single tap.</li>
+</ul>
+<h2 id="add-your-first-task">Add your first task</h2>
+<p><img src="images/user-guide/add-task.png" alt="The Add Task form, showing the name field and category pills" loading="lazy" /></p>
+<p>Tap the round <strong>+</strong> button (the terracotta circle in the bottom corner) to open
+the New Task form. Only two things are required:</p>
+<ul>
+<li><strong>Task name</strong> — what needs doing, like “Descale coffee maker.” Up to 128
+characters.</li>
+<li><strong>Category</strong> — pick one of the colored pills, or tap <strong>+ New</strong> to create your
+own on the spot.</li>
+</ul>
+<p>Everything else is optional, and each option earns its keep:</p>
+<ul>
+<li><strong>Time estimate</strong> — roughly how long the task takes: 15 min, 30 min, 1 hr,
+2 hrs, or 4+ hrs. This powers the Quick Wins and By Time views, so it’s worth
+setting.</li>
+<li><strong>Should happen every</strong> — a number plus Days, Weeks, Months, or Years. This is
+what lets the app flag a task as due soon or overdue. Leave it blank and the
+task is never overdue — the app just tracks how long it’s been.</li>
+<li><strong>Last done</strong> — Today, Yesterday, or Pick date. Already did it a while ago?
+Backfill the real date so the count starts from the right place. The default is
+“Not done yet.”</li>
+</ul>
+<p>Need to jot down more? Open <strong>Add details</strong> for a description and private notes.
+When you’re happy, tap <strong>Save task</strong>.</p>
+<h2 id="track-one-job-in-many-places">Track one job in many places</h2>
+<p><img src="images/user-guide/add-task-places.png" alt="The “Track in multiple places” section with place chips and suggestions" loading="lazy" /></p>
+<p>Some jobs happen in more than one spot — vacuuming three bedrooms, watering
+plants in two rooms, or the same care routine for two pets. Instead of adding
+the same task over and over, open <strong>Track in multiple places</strong> while creating a
+task.</p>
+<p>Type each place or name — “Main bedroom,” “Guest room,” “Luna” — and press Enter
+or comma to turn it into a chip. If you’ve used labels in this category before,
+they show up as dashed suggestions you can tap to reuse.</p>
+<p>When you save, How Long Since creates <strong>one task per place</strong>, all sharing the
+same name. From then on they’re independent: completing “Guest room” doesn’t
+touch “Main bedroom,” and editing one never changes the others. In the By
+Category and By Time views they tuck neatly into a single group row so your list
+stays tidy (more on that next).</p>
+<h2 id="three-ways-to-see-your-tasks">Three ways to see your tasks</h2>
+<p>Three tabs sit at the top of the app, and it remembers whichever one you used
+last.</p>
+<p><strong>Quick Wins</strong> answers a simple question: <em>how much time do you have?</em></p>
+<p><img src="images/user-guide/quick-wins.png" alt="Quick Wins with the time filter and a ranked list" loading="lazy" /></p>
+<p>Pick 15 min, 30 min, 1 hour, or 2 hours, and the app shows the tasks that fit —
+most urgent first. Only tasks with a time estimate of 2 hours or less appear
+here, so it’s the place to go when you’ve got a spare pocket of time and want
+something you can actually finish. It shows up to eight suggestions at a time.</p>
+<p><strong>By Category</strong> groups everything under color-dot headers — Kitchen, Bathroom,
+Bedroom, and so on.</p>
+<p><img src="images/user-guide/by-category.png" alt="By Category view with color-dot headers and a series group row" loading="lazy" /></p>
+<p>Tasks you’re tracking in multiple places collapse into one row with a
+“{n} places” chip and a quick “x of n overdue” summary. Tap it to expand the
+group and see each place on its own card:</p>
+<p><img src="images/user-guide/series-expanded.png" alt="An expanded series group showing one card per place" loading="lazy" /></p>
+<p><strong>By Time</strong> sorts by how long tasks take — Quick tasks (15 min), Short tasks
+(30 min), Medium tasks (1 hr), Longer tasks (2 hrs), Big projects (4+ hrs), and a
+“No time set” group at the end.</p>
+<p><img src="images/user-guide/by-time.png" alt="By Time view with time buckets and tinted category tags" loading="lazy" /></p>
+<p>Each card carries a small tinted tag showing its category, so you never lose
+track of what belongs where.</p>
+<h2 id="mark-it-done-and-undo">Mark it done (and undo)</h2>
+<p><img src="images/user-guide/complete-undo.png" alt="The “Nice work!” confirmation with an Undo button" loading="lazy" /></p>
+<p>When you finish a task, tap the circle on the left of its row. That’s it — the
+app records the moment and resets the clock. You’ll see a brief <strong>“Nice work!”</strong>
+message with an <strong>Undo</strong> button.</p>
+<p>Tapped the wrong row? Undo within five seconds and the task snaps back to exactly
+where it was, including its previous date. No harm done.</p>
+<p>Each row also shows how long it’s been at a glance: <strong>New</strong> (never done),
+<strong>Today</strong>, <strong>Yest.</strong>, or a compact count like <strong>6 d</strong>, <strong>1 wk</strong>, <strong>3 mo</strong>, or
+<strong>2 yr</strong>.</p>
+<h2 id="overdue-without-the-guilt">Overdue, without the guilt</h2>
+<p><img src="images/user-guide/overdue-states.png" alt="A category section stacking due-soon, overdue, and very-overdue tasks" loading="lazy" /></p>
+<p>A task can be flagged only when it has <strong>both</strong> an expected frequency and a
+last-done date. Given those, How Long Since compares how much of the interval has
+passed:</p>
+<ul>
+<li><strong>Due soon</strong> — you’re at 80% or more of the interval. A small clock icon
+appears.</li>
+<li><strong>Overdue</strong> — the full interval has passed. The card gets a soft red border and
+a red “!” badge.</li>
+<li><strong>Very overdue</strong> — half again past the interval (150%+). It adds a clear
+“Very overdue” label.</li>
+</ul>
+<p>Because the flag scales with each task’s own rhythm, a daily task and a yearly
+task are judged fairly — not against a fixed number of days. A task marked
+<strong>New</strong> has never been completed, so it’s never overdue, no matter how long ago
+you added it. And the wording stays factual throughout: these are signals, not
+judgments.</p>
+<h2 id="edit-archive-or-delete">Edit, archive, or delete</h2>
+<p><img src="images/user-guide/edit-task.png" alt="The edit page with the label field and the Remove Task zone" loading="lazy" /></p>
+<p>Tap any task’s name to open its edit page. You can change anything — name,
+category, time estimate, frequency, last-done date, the place label, and the
+details. Tap <strong>Save changes</strong> when you’re done.</p>
+<p>At the bottom is a <strong>Remove Task</strong> area with two choices:</p>
+<ul>
+<li><strong>Archive</strong> hides the task from every view but keeps it in your data. Use this
+for something you’ve stopped doing but might pick up again. Note: this version
+has no in-app “un-archive” button yet — an archived task stays in your backups,
+so restoring a backup that still contains it brings it back.</li>
+<li><strong>Delete</strong> removes the task permanently, after a quick confirmation. This one
+can’t be undone.</li>
+</ul>
+<h2 id="organize-with-categories">Organize with categories</h2>
+<p><img src="images/user-guide/categories.png" alt="The Manage Categories screen" loading="lazy" /></p>
+<p>How Long Since starts you with ten categories — Kitchen, Bathroom, Bedroom,
+Living Areas, Exterior, Vehicles, Digital/Tech, Health, Pets, and Garden/Plants.
+You can reach <strong>Manage Categories</strong> from Settings or the footer of the By
+Category view.</p>
+<p>From there you can rename any category, change its color (12 to choose from) or
+icon (15 options plus “None”), and add categories of your own. Deleting follows a
+few sensible rules:</p>
+<ul>
+<li>An <strong>empty</strong> category deletes after a quick confirm.</li>
+<li>A category <strong>with tasks</strong> asks you to reassign those tasks to another category
+first.</li>
+<li>A <strong>default</strong> category that still has tasks can’t be deleted — edit it instead.</li>
+</ul>
+<h2 id="make-it-yours-settings">Make it yours (Settings)</h2>
+<p><img src="images/user-guide/settings.png" alt="The Appearance settings — theme, text size, contrast, and motion" loading="lazy" /></p>
+<p>Open Settings from the gear icon in the header. Under <strong>Appearance</strong> you can:</p>
+<ul>
+<li>Switch between <strong>Light</strong>, <strong>Dark</strong>, and <strong>System</strong> themes.</li>
+<li>Bump the <strong>text size</strong> up to Large or Larger.</li>
+<li>Turn on <strong>High contrast</strong> for stronger borders and text.</li>
+<li>Turn on <strong>Reduced motion</strong> to calm animations.</li>
+</ul>
+<p>You can also set your <strong>default view</strong> — the tab the app opens to. Notifications
+are noted as coming soon; there’s nothing to configure there yet.</p>
+<h2 id="back-up-and-restore">Back up and restore</h2>
+<p><img src="images/user-guide/settings-data.png" alt="The Data Management section with export and import options" loading="lazy" /></p>
+<p>Because your data lives only on your device, backups matter. In Settings under
+<strong>Data Management</strong>:</p>
+<ul>
+<li><strong>Export Data</strong> saves a complete JSON backup file. This is the full,
+restorable copy of everything, and it stamps the “Last backup” date.</li>
+<li><strong>Export CSV</strong> saves a tasks-only spreadsheet — handy for viewing your tasks
+elsewhere, though it isn’t used for restoring.</li>
+<li><strong>Import Data</strong> restores from a JSON backup. Importing <strong>replaces everything</strong>
+currently in the app, so it asks you to confirm first.</li>
+</ul>
+<p>If it’s been more than two weeks since your last backup, a gentle reminder banner
+appears. And in the Danger Zone, <strong>Clear All Data</strong> wipes your tasks and resets
+the categories to the ten defaults — useful for starting fresh, but there’s no
+undo, so export first.</p>
+<h2 id="install-it-and-use-it-offline">Install it and use it offline</h2>
+<p>How Long Since is a Progressive Web App, which means you can install it like a
+regular app straight from your browser — look for <strong>Add to Home Screen</strong> or an
+<strong>Install</strong> option. Once installed, it runs full-screen and works completely
+offline, since all your data is already on your device. Updates arrive quietly in
+the background, so you’re always on the latest version without doing anything.</p>
+<h2 id="faq">FAQ</h2>
+<p><strong>How does the app decide something is overdue?</strong>
+It compares the time since you last completed a task against the frequency you
+set. Past 80% of that interval, it’s “due soon”; past 100%, “overdue”; past 150%,
+“very overdue.” A task needs both a frequency and a last-done date to be flagged
+at all.</p>
+<p><strong>Can I share my tasks with my household?</strong>
+Not yet — sharing and syncing between devices are planned for a later release.
+For now, you can move your data between devices with Export Data and Import Data.</p>
+<p><strong>How do I back up my data?</strong>
+Go to Settings → Data Management → Export Data. Keep that JSON file somewhere
+safe; it’s the only file that can fully restore your tasks.</p>
+<p><strong>What happens if I clear my browser data?</strong>
+Because everything is stored in your browser, clearing site data (or using Clear
+All Data) removes your tasks. That’s exactly why regular backups are worth the
+few seconds — an exported JSON file lets you restore everything.</p>
+      </main>
+      <footer>
+        <p>How Long Since — your data stays on your device.</p>
+      </footer>
+    </div>
+  </body>
+</html>

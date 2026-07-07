@@ -38,6 +38,17 @@ describe('SettingsView', () => {
     expect(await findByRole('heading', { name: 'About & Help' })).toBeInTheDocument();
   });
 
+  it('links the User Guide to the served static page in a new tab', async () => {
+    const { findByRole } = renderWithRouter(
+      <main>
+        <SettingsView />
+      </main>,
+    );
+    const link = await findByRole('link', { name: 'User Guide' });
+    expect(link).toHaveAttribute('href', '/user-guide.html');
+    expect(link).toHaveAttribute('target', '_blank');
+  });
+
   it('persists a theme change to the settings singleton', async () => {
     const { findByRole } = renderWithRouter(
       <main>

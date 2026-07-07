@@ -32,6 +32,21 @@ export default defineConfig({
       // precached and the first offline paint would lose the type system.
       workbox: {
         globPatterns: ['**/*.{js,css,html,woff2,png,svg,ico,webmanifest}'],
+        // The user guide is a standalone static page, not part of the app
+        // shell. Keep it (and its screenshots) OUT of the precache so installs
+        // stay lean; a StaleWhileRevalidate runtime cache makes it work offline
+        // after the first view. Without the navigateFallback denylist, the SW's
+        // SPA NavigationRoute would serve the app shell for /user-guide.html.
+        globIgnores: ['user-guide.html', 'images/user-guide/**'],
+        navigateFallbackDenylist: [/^\/user-guide/],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) =>
+              url.pathname === '/user-guide.html' || url.pathname.startsWith('/images/user-guide/'),
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'user-guide' },
+          },
+        ],
       },
       devOptions: { enabled: false },
     }),

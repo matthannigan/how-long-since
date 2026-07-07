@@ -57,9 +57,10 @@ export default tseslint.config(
     },
   },
   {
-    // The production static server is plain Node ESM (not part of tsc); declare
-    // the Node globals it uses so `no-undef` from js.recommended stays happy.
-    files: ['server/**/*.mjs'],
+    // Plain Node ESM outside tsc — the production static server and the
+    // build-time scripts (e.g. generate-user-guide). Declare the Node globals
+    // they use so `no-undef` from js.recommended stays happy.
+    files: ['server/**/*.mjs', 'scripts/**/*.mjs'],
     languageOptions: {
       globals: { process: 'readonly', console: 'readonly', URL: 'readonly' },
     },

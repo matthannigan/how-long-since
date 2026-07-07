@@ -3,6 +3,9 @@ import { defineConfig, devices } from '@playwright/test';
 // https://playwright.dev/docs/test-configuration
 export default defineConfig({
   testDir: './e2e',
+  // The screenshot-capture spec has its own config (playwright.screenshots.config.ts,
+  // run via `pnpm screenshots`) — keep it out of the recursive ./e2e sweep.
+  testIgnore: 'screenshots/**',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

@@ -20,6 +20,13 @@ Phase 1 (MVP) is implemented: a Vite + React 19 + TypeScript PWA with local Inde
 
 ## Planning Documentation
 
+New here? The **[User Guide](docs/USER_GUIDE.md)** explains what the app does and
+how to use every feature, with screenshots. It's also served in-app at
+`/user-guide.html` (linked from Settings → About & Help). The served HTML and its
+screenshots are generated and committed — regenerate them with
+`pnpm generate-user-guide` (after editing the Markdown) and `pnpm screenshots`
+(after UI changes).
+
 ### Vision & Requirements
 
 Stack-agnostic — settled, independent of implementation details.
