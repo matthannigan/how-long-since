@@ -4,22 +4,13 @@ All notable changes to How Long Since are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-- **Phase 2 roadmap** ([`docs/ROADMAP.md`](docs/ROADMAP.md)) — Phase 2 scoped
-  as ten independently shippable batches (B0–B9) ordered by daily-use value,
-  with per-batch briefs grounded in the as-built code, a schema-change
-  strategy, a cut line, and a parking lot. README, the Developer Guide, and
-  AGENTS.md now point to it.
-
 ## [1.0.0] — 2026-07-07
 
 The first public release: a complete, installable, offline-capable PWA for
 tracking how long it's been since you last did each recurring task. Built across
-four chunks of work — the Phase 1 MVP, the Phase 1.1 instances & series feature,
-and this release's user documentation and developer-docs consolidation.
+five chunks of work — the Phase 1 MVP, the Phase 1.1 instances & series feature,
+and this release's user documentation, developer-docs consolidation, and release
+engineering. It also ships the scoped Phase 2 roadmap.
 
 ### MVP foundation
 
@@ -92,5 +83,34 @@ See [`dev/2026-07-07_user-guide/plan.md`](dev/2026-07-07_user-guide/plan.md).
 - **Housekeeping** — README and AGENTS.md statuses and links refreshed, and
   `package.json` aligned to 1.0.0 to match this changelog and the in-app
   About section.
+
+### Phase 2 roadmap
+
+- **Roadmap** ([`docs/ROADMAP.md`](docs/ROADMAP.md)) — Phase 2 scoped as ten
+  independently shippable batches (B0–B9) ordered by daily-use value, with
+  per-batch briefs grounded in the as-built code, a schema-change strategy, a
+  cut line, and a parking lot. README, the Developer Guide, and AGENTS.md
+  point to it, and a ready-to-run handoff prompt for the B9 notifications
+  spike sits at
+  [`dev/2026-07-07_notifications-research/prompt.md`](dev/2026-07-07_notifications-research/prompt.md).
+
+### Release engineering (Phase 2, B0)
+
+See [`dev/2026-07-07_b0-housekeeping/plan.md`](dev/2026-07-07_b0-housekeeping/plan.md).
+
+- **Continuous integration** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+  — lint, typecheck, unit/component tests, and the Playwright e2e suite
+  (built first, run against the production preview) on every push and pull
+  request to `main`.
+- **Bundle-size report** — each CI run publishes a per-asset size table
+  (raw + gzipped) to the workflow summary, giving the "minimal bundle"
+  requirement (Req 11.7) a tripwire before Phase 2 adds its first new
+  runtime dependencies.
+- **Version guard** — CI fails if `CHANGELOG.md` has no entry for the
+  current `package.json` version.
+- **`APP_VERSION` wired to package.json** — the About section's version is
+  now injected at build time (`__APP_VERSION__` via Vite `define`); the
+  version lives in two places (package.json + this changelog) instead of
+  three.
 
 [1.0.0]: https://github.com/matthannigan/how-long-since/releases/tag/v1.0.0

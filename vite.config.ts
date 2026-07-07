@@ -6,8 +6,13 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
 
+import pkg from './package.json';
+
 // https://vite.dev/config/
 export default defineConfig({
+  // Build-time app version (global `__APP_VERSION__`, declared in
+  // src/vite-env.d.ts). CI checks CHANGELOG.md against the same version.
+  define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [
     // The router plugin must run before @vitejs/plugin-react.
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),

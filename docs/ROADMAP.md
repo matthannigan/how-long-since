@@ -40,7 +40,7 @@
 
 | # | Batch | Ships | Daily-use value | Effort | Schema | New deps |
 |---|-------|-------|-----------------|--------|--------|----------|
-| [B0](#b0--housekeeping-before-features--sm) | Housekeeping ★ | CI, `APP_VERSION` wiring, bundle report | — (safety net) | S–M | none | dev-only |
+| [B0](#b0--housekeeping-before-features--sm) | Housekeeping ★ — **✅ shipped in 1.0.0** | CI, `APP_VERSION` wiring, bundle report | — (safety net) | S–M | none | dev-only |
 | [B1](#b1--find--focus-m) | Find & focus | text search ★, unarchive ★, "Done today" ★; facet filters + sort as stretch | **High** | M | none | none |
 | [B2](#b2--swipe--snooze-m) | Swipe & snooze | swipe-to-complete, swipe-to-snooze ★ | **High** | M | field-only | none |
 | [B3](#b3--data-peace-of-mind--s) | Data peace of mind ★ | `storage.persist()`, usage readout, Web Share backups | Med (durability) | S | none | none |
@@ -60,8 +60,11 @@
 
 ## B0 — Housekeeping before features ★ (S–M)
 
-A multi-batch phase needs regression safety before feature one; today there is
-no CI and `pnpm e2e` only runs when someone remembers.
+> **✅ Shipped in 1.0.0 (2026-07-07)** —
+> [dev/2026-07-07_b0-housekeeping/plan.md](../dev/2026-07-07_b0-housekeeping/plan.md).
+
+A multi-batch phase needs regression safety before feature one; before B0,
+nothing ran `pnpm e2e` unless someone remembered to.
 
 - **CI (GitHub Actions):** `pnpm test && lint && typecheck && e2e` on PRs —
   pnpm + Node 22 caching, `playwright install --with-deps`, and e2e must
@@ -351,6 +354,8 @@ next to Phase 3's accounts. So: a time-boxed spike, not a build.
   planning.** Its findings feed B4's overview strip and B6's summary surface.
 - **Done means:** the register exists with a clear recommendation; Settings
   no longer promises something undecided.
+- **Ready to run:** a standalone handoff prompt for this spike lives at
+  [dev/2026-07-07_notifications-research/prompt.md](../dev/2026-07-07_notifications-research/prompt.md).
 
 ---
 

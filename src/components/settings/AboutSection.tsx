@@ -2,8 +2,8 @@ import { ExternalLink } from 'lucide-react';
 
 const COMING_SOON = 'rounded-chip bg-surface-sunk px-2 py-0.5 text-xs font-medium text-ink-meta-aa';
 
-/** App version constant. A build-time inject from package.json is a later nicety. */
-const APP_VERSION = '1.0.0';
+/** Injected from package.json at build time (`define` in vite.config.ts). */
+const APP_VERSION = __APP_VERSION__;
 
 /**
  * About & Help. Version + a one-line description are live; the User Guide links

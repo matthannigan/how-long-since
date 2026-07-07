@@ -43,8 +43,11 @@ Ports: **5173** dev · **4173** e2e/screenshots preview · **3000** Docker.
 The Claude Code preview panel uses [.claude/launch.json](../.claude/launch.json)
 (`dev` configuration).
 
-There is **no CI** — run `pnpm test && pnpm lint && pnpm typecheck && pnpm e2e`
-locally before pushing.
+CI ([.github/workflows/ci.yml](../.github/workflows/ci.yml)) runs
+`pnpm lint && pnpm typecheck && pnpm test && pnpm e2e` on every push and PR to
+`main`, plus a bundle-size report (workflow step summary) and a check that
+CHANGELOG.md mentions the package.json version. Still run the suite locally
+before pushing — CI is the net, not the workflow.
 
 ## Repo map
 
@@ -158,11 +161,11 @@ env vars, and the network-layer security stance:
   leave it unchanged. (Locked decision; see the Phase 1.1 register.)
 - **Instance-label chips commit on blur** as well as Enter/comma — tests and
   future edits should preserve that.
-- **The version lives in three places:** `package.json`,
-  [CHANGELOG.md](../CHANGELOG.md), and a hardcoded `APP_VERSION` in
-  [AboutSection.tsx](../src/components/settings/AboutSection.tsx). Bump all
-  three on release (build-time injection from package.json is a noted
-  future nicety).
+- **The version lives in two places:** `package.json` and
+  [CHANGELOG.md](../CHANGELOG.md) — bump both on release. The About section
+  reads `__APP_VERSION__`, injected from package.json at build time
+  (`define` in [vite.config.ts](../vite.config.ts)); CI fails if the
+  CHANGELOG doesn't mention the current version.
 - **Workbox denylist:** `/user-guide.html` and its images are excluded from
   the precache and SPA navigation fallback (otherwise the installed app's SW
   would serve the app shell instead of the guide) and cached
@@ -207,8 +210,10 @@ folder also holds the frozen planning docs that predate this guide
 ## Where we left off & what's next
 
 **Last work (2026-07-07):** shipped 1.0.0 — the user guide
-([plan](../dev/2026-07-07_user-guide/plan.md)) and the developer-docs
-consolidation — then scoped Phase 2 in [ROADMAP.md](ROADMAP.md).
+([plan](../dev/2026-07-07_user-guide/plan.md)), the developer-docs
+consolidation, Phase 2 scoping ([ROADMAP.md](ROADMAP.md)), and B0
+(CI + `APP_VERSION` wiring,
+[plan](../dev/2026-07-07_b0-housekeeping/plan.md)).
 
 **Stubs already in the code, waiting for Phase 2/3:**
 
@@ -225,16 +230,18 @@ consolidation — then scoped Phase 2 in [ROADMAP.md](ROADMAP.md).
 
 - **Phase 2 — Enhanced Experience:** scoped 2026-07-07 as ten independently
   shippable batches (B0–B9) ordered by daily-use value — start from the
-  at-a-glance table in [ROADMAP.md](ROADMAP.md); B0 (CI + housekeeping) is
-  the natural first batch, and the B9 notifications spike runs early.
+  at-a-glance table in [ROADMAP.md](ROADMAP.md). B0 (CI + version wiring)
+  shipped with 1.0.0; B1 (find & focus) is next, and the B9 notifications
+  spike can run anytime
+  ([handoff prompt](../dev/2026-07-07_notifications-research/prompt.md)).
 - **Phase 3 — Cloud & Community:** accounts, sync, shared households
   ("Partner A sees when Partner B completed a task") — via Dexie Cloud, per
   the ARCHITECTURE plan. Unscoped; gated on B9's findings.
 
-**Smaller known gaps** (any of these is a good warm-up task): no unarchive UI
-(see gotchas), notifications unbuilt, no CI, `APP_VERSION` not wired to
-package.json — all now scheduled in [ROADMAP.md](ROADMAP.md) (B1, B9, B0, B0
-respectively).
+**Smaller known gaps**: no unarchive UI (see gotchas; scheduled as ROADMAP
+B1), and notifications unbuilt (B9 — a ready-to-run handoff prompt sits at
+[dev/2026-07-07_notifications-research/prompt.md](../dev/2026-07-07_notifications-research/prompt.md)).
+CI and `APP_VERSION` wiring shipped with 1.0.0 (B0).
 
 **How to start the next batch** (the working convention so far):
 
