@@ -124,6 +124,12 @@ interface Category {
   isDefault: boolean;
 }
 
+interface Completion {
+  id: string;
+  taskId: string;
+  completedAt: Date;   // one row per "Just Done" (bursts included) + bootstrap rows
+}
+
 interface AppSettings {
   id: string;                      // singleton row, always '1'
   lastBackupDate: Date | null;
@@ -146,8 +152,8 @@ backups import unchanged. Decisions register:
 
 ## Dexie Schema & Versioning
 
-`src/lib/db/schema.ts` — database `HowLongSinceDB`, three stores, currently
-**version 2**:
+`src/lib/db/schema.ts` — database `HowLongSinceDB`, four stores, currently
+**version 3**:
 
 ```typescript
 this.version(1).stores({
@@ -160,6 +166,15 @@ this.version(1).stores({
 // (one open-ended "Big projects" bucket). Indexes unchanged; the upgrade
 // rewrites any orphaned value on existing rows.
 this.version(2).stores({ /* same indexes */ }).upgrade(/* … */);
+
+// v3 (shipped inside 1.0.0): the silent, append-only `completions` log —
+// Phase 2 B6 groundwork pulled forward, because history can't be backfilled
+// after the fact. The upgrade synthesizes one bootstrap row per
+// already-completed task; taskId/completedAt are indexed now so the future
+// history UI won't need another bump.
+this.version(3)
+  .stores({ /* + */ completions: 'id, taskId, completedAt' })
+  .upgrade(/* bulkAdd(synthesizeCompletions(tasks)) */);
 ```
 
 > **Boolean-index trap:** `isArchived` appears in the index list, but
@@ -181,11 +196,13 @@ this.version(2).stores({ /* same indexes */ }).upgrade(/* … */);
   preview, e2e, or production builds.
 
 **Backup envelope** (`src/lib/export-import.ts`):
-`{ app: 'how-long-since', schemaVersion: 2, exportedAt, data: { tasks,
-categories, settings } }`, revived and validated with Zod
-(`z.coerce.date()` for ISO strings). Import is a full **replace**, JSON is the
-only import format, and `schemaVersion` stays `2` across Phase 1.1 (see
-above).
+`{ app: 'how-long-since', schemaVersion: 3, exportedAt, data: { tasks,
+categories, settings, completions } }`, revived and validated with Zod
+(`z.coerce.date()` for ISO strings). Import is a full **replace** and JSON is
+the only import format. Older envelopes import forever (the validator never
+range-compares `schemaVersion`); a backup with **no** `completions` key gets
+one bootstrap row synthesized per completed task, while an explicit `[]` is
+trusted as-is.
 
 ## Business Logic — Plain Functions, Not Service Classes
 
@@ -195,16 +212,20 @@ above).
 export async function createTask(input: unknown): Promise<Task>;            // Zod-parses, stamps id/createdAt
 export async function createTaskSeries(baseInput: unknown, labels: string[]): Promise<Task[]>; // Phase 1.1 fan-out
 export async function updateTask(id: string, patch: unknown): Promise<void>;
-export async function markTaskComplete(id: string): Promise<Date | null>;   // returns the PRIOR date — the undo contract
-export async function undoComplete(id: string, previous: Date | null): Promise<void>;
+export async function markTaskComplete(id: string): Promise<CompleteResult>; // { previous, completionId } — the undo contract
+export async function undoComplete(id: string, previous: Date | null, completionIds?: string[]): Promise<void>;
 export async function archiveTask(id: string): Promise<void>;
 export async function unarchiveTask(id: string): Promise<void>;             // no UI calls this yet (restore = backup import)
 export async function deleteTask(id: string): Promise<void>;
 ```
 
-`markTaskComplete` returning the previous `lastCompletedAt` is what makes the
-5-second Undo exact: the toast's Undo button calls
-`undoComplete(id, previous)`, restoring even a `null` (never-completed) state.
+`markTaskComplete` stamps the task, appends a row to the `completions` log
+(v3 — silent Phase 2 B6 groundwork), and returns `{ previous, completionId }`.
+That is what makes the 5-second Undo exact: the toast's Undo button calls
+`undoComplete(id, previous, completionIds)`, restoring even a `null`
+(never-completed) state and deleting every log row the tap burst appended —
+an undo that restored the date but left rows behind would silently corrupt
+history.
 
 Errors are real thrown `Error`/`ZodError` objects, not a hand-formatted
 `{ status: 'error', message }` envelope — React error boundaries and a thin
@@ -387,8 +408,11 @@ real page, works offline after first view, and doesn't bloat installs. See
 the `VitePWA` block in `vite.config.ts`.
 
 Push notifications (overdue reminders, backup nudges) are explicitly out of
-scope for v1 — the backup reminder ships as an in-app banner; Settings lists
-Notifications as "Coming soon" (Phase 2).
+scope for v1 — the backup reminder ships as an in-app banner, and Settings now
+explains plainly that reminders live in the app while phone push waits for a
+later cloud phase. The [B9 research spike](../dev/2026-07-07_notifications-research/register.md)
+(2026-07-07) confirmed why: push always needs a server, so it belongs in Phase 3
+(see "Phase 3: Turning On Sync" below).
 
 ## Phase 3: Turning On Sync
 

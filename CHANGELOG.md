@@ -4,13 +4,40 @@ All notable changes to How Long Since are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Notifications decision register** (Phase 2, B9) —
+  [`dev/2026-07-07_notifications-research/register.md`](dev/2026-07-07_notifications-research/register.md):
+  a dated, sourced 2026 browser-support snapshot (Web Push + VAPID, the Badging
+  API, Notification Triggers, Periodic Background Sync), an options matrix, the
+  privacy/local-first stance, and the recommendation — in-app "what's due"
+  surfaces are the Phase 2 reminder, a permission-free desktop app-icon badge is
+  a small add-on, and push waits for Phase 3 (it needs a server). No
+  notification feature was implemented.
+
+### Changed
+
+- **Honest Notifications copy in Settings** (Phase 2, B9) — the Settings →
+  Notifications section no longer shows a "Coming soon" chip over two disabled
+  toggles. It now plainly explains that your data stays on your device,
+  reminders live in the app (including the backup nudge), and phone
+  notifications may come later alongside optional cloud sync.
+- **Docs** — `docs/ROADMAP.md` marks B9 done and adds feed-forward notes to B4
+  (desktop icon badge on the overview strip) and B6 (monthly summary as an
+  in-app reminder surface); `docs/USER_GUIDE.md` updates the Settings
+  notifications line to match.
+
 ## [1.0.0] — 2026-07-07
 
 The first public release: a complete, installable, offline-capable PWA for
 tracking how long it's been since you last did each recurring task. Built across
 five chunks of work — the Phase 1 MVP, the Phase 1.1 instances & series feature,
 and this release's user documentation, developer-docs consolidation, and release
-engineering. It also ships the scoped Phase 2 roadmap.
+engineering. It also ships the scoped Phase 2 roadmap and — pulled forward from
+that roadmap's B6 — a silent completion log, so history accrues from the very
+first real-world completion.
 
 ### MVP foundation
 
@@ -112,5 +139,21 @@ See [`dev/2026-07-07_b0-housekeeping/plan.md`](dev/2026-07-07_b0-housekeeping/pl
   now injected at build time (`__APP_VERSION__` via Vite `define`); the
   version lives in two places (package.json + this changelog) instead of
   three.
+
+### Completion log groundwork (Phase 2 B6, pulled forward)
+
+See [`dev/2026-07-07_completions-log/plan.md`](dev/2026-07-07_completions-log/plan.md).
+
+- **Silent, append-only `completions` store** (Dexie v3) — `markTaskComplete`
+  logs one row per completion (bursts included) and the 5-second Undo deletes
+  exactly the rows its burst appended. No UI yet — that arrives with Phase 2's
+  insights batch; shipping the log first means no history is ever lost.
+- **Bootstrap synthesis** — one synthetic row per already-completed task: on
+  the v3 upgrade, on imports of pre-v3 backups, in the dev seed, and for
+  create-time "Last done" backfills.
+- **Backups carry history** — the JSON envelope (now `schemaVersion: 3`)
+  includes `completions`; older backups import unchanged (bootstrap rows are
+  synthesized), an explicit empty list is trusted as-is, and deleting a task
+  deliberately keeps its log rows (event-log semantics).
 
 [1.0.0]: https://github.com/matthannigan/how-long-since/releases/tag/v1.0.0

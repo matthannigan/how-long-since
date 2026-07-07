@@ -1,12 +1,12 @@
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-
-const COMING_SOON = 'rounded-chip bg-surface-sunk px-2 py-0.5 text-xs font-medium text-ink-meta-aa';
-
 /**
- * Notifications are a Phase 2 feature (app-pages §5.3). Shown here disabled with
- * a "Coming soon" marker rather than hidden, so the surface is discoverable —
- * and never renders toggles that silently do nothing.
+ * Notifications. The B9 research spike (2026-07-07,
+ * `dev/2026-07-07_notifications-research/register.md`) decided *against*
+ * building OS notifications in Phase 2: cross-browser scheduled local
+ * notifications don't exist (Notification Triggers is abandoned), and real push
+ * needs a server + account — which breaks local-first and belongs in Phase 3
+ * (Dexie Cloud). So this section stays visible and discoverable but honest:
+ * plain copy explaining where reminders live and why phone push waits, with no
+ * toggles that silently do nothing.
  */
 export function NotificationsSection() {
   return (
@@ -14,19 +14,25 @@ export function NotificationsSection() {
       aria-labelledby="notifications-heading"
       className="space-y-3 border-t border-border-default pt-6"
     >
-      <div className="flex items-center justify-between gap-4">
-        <h2 id="notifications-heading" className="font-display text-lg font-semibold text-ink">
-          Notifications
-        </h2>
-        <span className={COMING_SOON}>Coming soon</span>
-      </div>
-      <div className="flex min-h-11 items-center justify-between gap-4 opacity-60">
-        <Label htmlFor="notif-overdue">Overdue task reminders</Label>
-        <Switch id="notif-overdue" checked={false} disabled />
-      </div>
-      <div className="flex min-h-11 items-center justify-between gap-4 opacity-60">
-        <Label htmlFor="notif-backup">Backup reminders</Label>
-        <Switch id="notif-backup" checked={false} disabled />
+      <h2 id="notifications-heading" className="font-display text-lg font-semibold text-ink">
+        Notifications
+      </h2>
+      <div className="space-y-3 text-sm text-ink-meta-aa">
+        <p>
+          How Long Since keeps everything on your device — no account, and
+          nothing leaves your device. That&rsquo;s also why it can&rsquo;t send
+          alerts to your phone or email: reaching you while the app is closed
+          would take an always-on server and a sign-in.
+        </p>
+        <p>
+          Your reminders live in the app instead. Open it any time to see
+          what&rsquo;s due or overdue, and it&rsquo;ll remind you to back up your
+          data every couple of weeks.
+        </p>
+        <p>
+          Phone notifications may come in a later release, along with optional
+          cloud sync — always your choice, and only if you sign in.
+        </p>
       </div>
     </section>
   );

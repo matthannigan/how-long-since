@@ -78,10 +78,12 @@ Our app serves diverse users with different needs, not a fixed set of life
 stages. These patterns are organized by *need* — any user might match one,
 several, or none on a given day:
 
-> **Phase note (2026-07):** The "Example notification" lines below are
-> aspirational — notifications are a Phase 2 feature and are not in the shipped
-> 1.0.0 app (Settings lists Notifications as "Coming soon"). The rest of each
-> pattern applies to in-app copy today.
+> **Phase note (2026-07, updated post-B9):** The "Example notification" lines
+> below are aspirational — OS/push notifications are deferred to Phase 3 (they
+> need a server; see the B9 register,
+> `dev/2026-07-07_notifications-research/register.md`). The shipped app delivers
+> reminders *in-app*, and the Settings → Notifications copy now says so plainly.
+> The rest of each pattern applies to in-app copy today.
 
 **For time-constrained moments:**
 - **Acknowledge time constraints:** "Find tasks that fit between school drop-off and your next meeting."

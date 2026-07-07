@@ -33,8 +33,9 @@
   (the PapaParse precedent), never the root chunk. Phase 2 adds at most two
   small runtime deps: dnd-kit (B5) and driver.js (B7).
 - **Schema changes follow one rule** — see the
-  [schema strategy](#schema-strategy) table. Only one real Dexie migration in
-  the whole phase (B6's `completions` table).
+  [schema strategy](#schema-strategy) table. The phase's one real Dexie
+  migration — the `completions` table — already **shipped inside 1.0.0**
+  (pulled forward from B6), so Phase 2 proper contains zero migrations.
 
 ## At a glance
 
@@ -46,15 +47,17 @@
 | [B3](#b3--data-peace-of-mind--s) | Data peace of mind ★ | `storage.persist()`, usage readout, Web Share backups | Med (durability) | S | none | none |
 | [B4](#b4--desktop-at-home-m) | Desktop at home | responsive dashboard, keyboard shortcuts ★, PWA shortcuts ★, install CTA ★ | Med–High | M | none | none |
 | [B5](#b5--categories-your-order-sm) | Categories, your order | drag-and-drop category reorder | Med (set & forget) | S–M | field-only | **dnd-kit** |
-| [B6](#b6--insights--history--m) | Insights & history ★ | completion log, per-task history, gentle monthly summary | Med | M | **Dexie v3** | none |
+| [B6](#b6--insights--history--sm--ui-only) | Insights & history ★ | per-task history + gentle monthly summary (**log itself ✅ shipped in 1.0.0**) | Med | S–M | ✅ done (v3, in 1.0.0) | none |
 | [B7](#b7--welcome-kit-m) | Welcome kit | template packs, guided empty states, optional tour | Low (owner) / High (new users) | M | field-only | **driver.js** |
 | [B8](#b8--make-it-yours-ml) | Make it yours | two additional color palettes | Low (delight) | M–L | field-only | none |
-| [B9](#b9--notifications-reality-check-spike-s--run-early) | Notifications spike ★ | decision register + honest Settings copy | — (informs B4/B6 & Phase 3) | S | none | none |
+| [B9](#b9--notifications-reality-check-spike-s--run-early) | Notifications spike ★ — **✅ done 2026-07-07** | decision register + honest Settings copy | — (informs B4/B6 & Phase 3) | S | none | none |
 
-> **B9 doesn't wait its turn** — run it early, in parallel with B1–B3. Its
-> likely answer ("an in-app due-today surface and maybe an icon badge, not
-> push") shapes B4's stat chips and B6's summary. Hard trigger: it must be
-> done before any Phase 3 planning starts.
+> **B9 is done** ([register](../dev/2026-07-07_notifications-research/register.md),
+> 2026-07-07). Verified answer: **in-app "what's due" surfaces (B4/B6) are the
+> reminder**; a permission-free **due-count icon badge on installed desktop
+> Chromium** is a small B4 add-on; **push waits for Phase 3** (it needs a
+> server). Those findings shape B4's overview strip and B6's summary below, and
+> the decision must stay settled before any Phase 3 planning starts.
 
 ---
 
@@ -153,12 +156,14 @@ unchained from any migration. Also the README's "Swipe gestures" item
   (gesture-free path). CSV export appends the column **last** (pinned-header
   test, `instanceLabel` precedent). Copy is gentle: "Not now — remind me
   later," never "skipped."
-- **Decision box — the silent log option:** B6 wants a `completions` table,
-  and history **cannot be backfilled later** (only one synthetic row per task
-  can ever be reconstructed). Since this batch already extracts
-  `useCompleteTask`, appending silently to a `completions` store here is
-  small. Taking it pulls the phase's only Dexie bump into B2; skipping it
-  keeps B2 migration-free. Decide in the batch register.
+- **Decision box — the silent log option: ✅ resolved 2026-07-07, taken even
+  earlier than B2.** The silent `completions` log shipped inside 1.0.0 itself
+  (history can't be backfilled later, and the release was still unpushed) —
+  see [dev/2026-07-07_completions-log/plan.md](../dev/2026-07-07_completions-log/plan.md).
+  B2 carries no data work anymore. One note for the `useCompleteTask`
+  extraction: the undo contract is now `{previous, completionId}` and the
+  ui-store undo slot carries the burst's `completionIds` — swipe must
+  preserve both.
 - **Testing:** Playwright `page.mouse` drags against the preview build; unit
   tests for the snooze branch of `overdue.ts`; axe pass on revealed actions.
 - **Done means:** complete and snooze reachable by swipe on touch *and* by
@@ -195,6 +200,15 @@ migration-bearing batches while the schema is still boring.
   (a11y). An overview strip (overdue / due soon / done this week) computes
   from the already-loaded `useLiveQuery` arrays — richer once B6 exists, and
   informed by B9's findings.
+- **★ App-icon due-count badge (B9's one shippable OS touch):** where the
+  overview strip already has the overdue/due-soon count, add a guarded
+  `navigator.setAppBadge(count)` (and `clearAppBadge()` at zero) — feature-
+  detected, **no permission prompt**, renders only on installed desktop Chromium
+  and is a silent no-op everywhere else. This is the *entire* Phase 2
+  notification story: no push, nothing sent off-device. The (now honest)
+  Settings → Notifications section can host a single "Show due count on the app
+  icon" toggle. Decide count semantics + default in this batch's register. See
+  the [B9 register](../dev/2026-07-07_notifications-research/register.md).
 - **★ Keyboard shortcuts:** `n` new task, `/` focus search (B1), `1/2/3`
   switch views, `?` help dialog. One small hook in AppShell; **no-op when
   `event.target` is input/textarea/contenteditable or a dialog is open**
@@ -240,34 +254,30 @@ needed.**
   screen readers); order survives reload and export/import round-trips; a
   fresh install still shows the familiar default order.
 
-## B6 — Insights & history ★ (M)
+## B6 — Insights & history ★ (S–M — UI only)
 
-The phase's one true migration, taken deliberately late (or pulled into B2 via
-the decision box there). Answers "how often do I *really* do this?" — data the
-app quietly throws away today.
+> **✅ The data layer shipped inside 1.0.0** (via B2's decision box, resolved
+> even earlier — [plan](../dev/2026-07-07_completions-log/plan.md)): the
+> `completions` store (Dexie v3, envelope stamp 3), the append + burst-aware
+> undo interlock, bootstrap synthesis (v3 upgrade, pre-v3 imports, dev seed,
+> create-time "Last done"), and export/import/clear-all coverage — all pinned
+> by unit tests. **What remains in this batch is UI only.**
 
-- **Data:** new `completions` store `{id, taskId, completedAt}` — Dexie
-  `version(3).stores({ completions: 'id, taskId, completedAt' })`, and the
-  export stamp bumps to 3 in lockstep (`DB_SCHEMA_VERSION` in
-  `src/lib/export-import.ts` deliberately mirrors the Dexie version).
-  Backfill on upgrade: synthesize one completion per task from
-  `lastCompletedAt` — otherwise every stat reads zero for months.
-- **The undo interlock (the subtle part):** `markTaskComplete` widens its
-  transaction to append a completion and returns `{previous, completionId}`;
-  **burst taps create N rows and the single undo must delete all of them**
-  (the burst ref accumulates ids). An asymmetric undo would silently corrupt
-  history. `applyBackup` and `clearAllData` must include and clear the new
-  table — restoring a pre-B6 backup legitimately wipes history; say so in the
-  import confirm copy.
-- **Envelope:** `data.completions` is optional with default `[]` — every
-  older backup keeps importing.
+Answers "how often do I *really* do this?" — data the app has been logging
+since 1.0.0's very first completion.
+
 - **UI:** a completion history list on the task edit page; a gentle monthly
   summary ("12 things done this month — nice.") surfaced per B9's findings
   (Settings card or a Quick Wins footer). **No streaks, no chains, no broken
-  anything** — encouragement only, per the content guide.
-- **Done means:** every completion is logged exactly once (bursts included);
-  undo leaves no orphan rows; old backups import; history renders on the edit
-  page; the summary reads as a pat on the back, not a scoreboard.
+  anything** — encouragement only, per the content guide. Per the
+  [B9 register](../dev/2026-07-07_notifications-research/register.md), this
+  summary is one of the two in-app reminder surfaces (with B4's overview strip)
+  that stand in for OS notifications in Phase 2 — so keep it a pat on the back,
+  never a nudge to "catch up."
+- **Done means:** history renders on the edit page; the summary reads as a
+  pat on the back, not a scoreboard. (The data invariants — exactly-once
+  logging, burst-safe undo, old-backup imports — already ship in 1.0.0 and
+  are pinned by unit tests.)
 
 ## B7 — Welcome kit (M)
 
@@ -336,25 +346,39 @@ mood; both sit below the daily-use line.
 
 ## B9 — Notifications reality-check ★spike (S — run early)
 
-The README lists notifications and Settings has shown "Coming soon" since 1.0.
-The honest research answer so far: **scheduled local notifications are not a
-cross-browser reality** (Notification Triggers stalled, Chrome-only), and real
-push reminders need a server — which collides with local-first v2 and belongs
-next to Phase 3's accounts. So: a time-boxed spike, not a build.
+> **✅ Done 2026-07-07** —
+> [register](../dev/2026-07-07_notifications-research/register.md) (a dated,
+> sourced support snapshot plus the decision). No notification feature was
+> built; the one code change is the honest `NotificationsSection` copy.
 
-- **Deliverable:** a decision register in `dev/` — options matrix (Web Push +
-  minimal server · **Badging API**: a due-count on the installed icon, no push
-  needed on desktop Chromium — likely the 80% win · in-app "due today"
-  surfaces · defer entirely to Phase 3/Dexie Cloud), a late-2026
-  browser-support snapshot, the privacy/local-first stance, and a
-  recommendation with a Phase 2-shippable subset.
-- **Plus one code touch:** rewrite the `NotificationsSection` "Coming soon"
-  copy to whatever is true.
-- **Scheduling:** parallel with B1–B3; **must complete before any Phase 3
-  planning.** Its findings feed B4's overview strip and B6's summary surface.
-- **Done means:** the register exists with a clear recommendation; Settings
-  no longer promises something undecided.
-- **Ready to run:** a standalone handoff prompt for this spike lives at
+The README lists notifications and Settings had shown "Coming soon" since 1.0.
+The verified 2026 answer:
+
+- **Scheduled local notifications are dead** — Notification Triggers never
+  shipped to stable, its development formally ended, and Firefox/WebKit show no
+  interest. No cross-browser, no-server "remind me while the app is closed"
+  API exists.
+- **Web Push works almost everywhere but always needs a server** (a VAPID sender
+  + scheduler + subscription store; iOS also needs a home-screen install + a
+  permission grant). It breaks local-first, so it's **deferred to Phase 3**,
+  where the Dexie Cloud backend already exists and push becomes a bounded
+  add-on rather than a rearchitecture.
+- **The Badging API is the only no-server OS touch — and only a partial one:** a
+  permission-free due-count on the app icon works on **installed desktop
+  Chromium**, needs a notification permission (and goes stale between opens) on
+  iOS, and is absent on Android Chrome / Firefox. It ships as a small **B4**
+  enhancement, not a feature of its own.
+- **The real reminder is in-app:** the "what's due" surfaces in **B4** (overview
+  strip) and **B6** (monthly summary) reach every user on every browser, with no
+  permission and no server.
+
+- **Delivered:** the decision register (options matrix · dated, sourced support
+  snapshot · privacy/local-first stance · recommendation · Phase 2-shippable
+  subset · Phase 3 hand-off); the rewritten Settings copy; and the feed-forward
+  notes on B4 and B6 above.
+- **Done means:** ✅ the register exists with a clear, act-on-able recommendation;
+  ✅ Settings no longer promises something undecided.
+- **Origin:** the standalone handoff prompt for this spike is at
   [dev/2026-07-07_notifications-research/prompt.md](../dev/2026-07-07_notifications-research/prompt.md).
 
 ---
@@ -374,15 +398,15 @@ in the import confirm copy).
 |---|---|---|---|
 | `Category.order` (B5) | **No** — no index; materialize on first drag | `.optional()`, heuristic fallback | unchanged |
 | `Task.snoozedUntil` (B2) | **No** — filtered in memory | `.optional()`; import `z.coerce.date().optional()`; CSV column appended last | unchanged |
-| `completions` table (B6) | **Yes — the phase's only bump** (`version(3)`) | new `completionSchema`; `data.completions` optional, default `[]` | stamp → 3 (lockstep `DB_SCHEMA_VERSION`) |
+| `completions` table (B6) | **✅ shipped in 1.0.0** (`version(3)` + bootstrap backfill) | `completionSchema`; absent `completions` key ⇒ synthesis, explicit `[]` trusted | ✅ stamp → 3 (lockstep `DB_SCHEMA_VERSION`) |
 | `settings.colorTheme` (B8) | No | `.default('soft-daylight')` | unchanged |
 | `settings.hasSeenTour` (B7) | No | `.default(false)` + tasks-empty gate | unchanged |
 
 **The rule:** new store/index ⇒ Dexie version bump + envelope stamp bump (in
 lockstep with `DB_SCHEMA_VERSION` in `src/lib/export-import.ts`) + a migration
 unit test. Optional per-row field with a safe default ⇒ Zod-only, no bump —
-the proven Phase 1.1 pattern. If B2's silent-log option is taken, the one bump
-moves there and B6 becomes UI-only.
+the proven Phase 1.1 pattern. The one bump (completions) shipped inside 1.0.0,
+so Phase 2 proper contains zero Dexie migrations.
 
 ### Every batch, before it ships
 
@@ -404,10 +428,9 @@ version bumped. Plus, standing for Phase 2:
 
 ## The cut line
 
-If Phase 2 had to halve, keep: **B0** (CI), **B1 slimmed** (search +
-unarchive), **B2** (swipe + snooze — and smuggle in the silent completions log
-if the hook extraction happens anyway, since history can't be backfilled
-later), and **B9** (a day, and it gates Phase 3). Everything else defers:
+If Phase 2 had to halve, keep: **B0** (✅ shipped), **B1 slimmed** (search +
+unarchive), **B2** (swipe + snooze — its silent-log rider already shipped in
+1.0.0), and **B9** (✅ done). Everything else defers:
 reorder is rare-use (the ten defaults already have a sane order), and
 desktop / history UI / welcome kit / themes are either not-daily or
 design-heavy.
@@ -427,7 +450,7 @@ Considered for Phase 2 and deliberately deferred:
 | Confetti / celebration moments | Tone risk + reduced-motion complexity; the "Nice work!" toast already lands |
 | File System Access auto-backup | Chromium-only; B3's share path covers the need |
 | Home-screen widgets | Not a web-platform capability |
-| Notification *implementation* | Pending B9's verdict → likely Phase 3 |
+| Push notification *implementation* | B9 decided: **Phase 3** (needs a server); in-app "what's due" surfaces (B4/B6) + a desktop icon badge (B4) cover Phase 2 — see the [register](../dev/2026-07-07_notifications-research/register.md) |
 
 ## Phase 3 horizon
 

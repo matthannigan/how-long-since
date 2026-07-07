@@ -204,8 +204,11 @@ Open Settings from the gear icon in the header. Under **Appearance** you can:
 - Turn on **High contrast** for stronger borders and text.
 - Turn on **Reduced motion** to calm animations.
 
-You can also set your **default view** — the tab the app opens to. Notifications
-are noted as coming soon; there’s nothing to configure there yet.
+You can also set your **default view** — the tab the app opens to. Under
+**Notifications**, you’ll see why reminders live inside the app: your data stays
+on your device with no account, so there are no phone or email alerts to turn on
+yet. Phone notifications may come in a later release, alongside optional cloud
+sync.
 
 ## Back up and restore
 
