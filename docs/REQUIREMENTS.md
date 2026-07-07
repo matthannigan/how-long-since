@@ -1,5 +1,10 @@
 # How Long Since App - Requirements Document
 
+> **Status (2026-07-07):** These requirements are the settled functional spec
+> and reflect the shipped 1.0.0 app, with two exceptions annotated inline as
+> Phase 2 (Req 5.3 swipe gestures, Req 8.1 onboarding). Requirement 11 covers
+> the Phase 1.1 instances-&-series addition.
+
 ## Introduction
 
 The "How Long Since" application is a household and personal task management system that focuses on tracking when tasks were last completed rather than creating traditional to-do lists. The app helps users identify suitable tasks based on available time and provides visual indicators for overdue tasks, all while maintaining high accessibility standards.
@@ -81,7 +86,7 @@ Unlike traditional task managers, this app answers the question "How long has it
 
 1. WHEN viewing tasks THEN the system SHALL provide a prominent "Just Done" checkbox or button for each task
 2. WHEN a user taps/clicks the completion control THEN the system SHALL immediately mark the task as complete
-3. WHEN on mobile devices THEN the system SHALL support swipe-right gesture to mark tasks complete
+3. WHEN on mobile devices THEN the system SHALL support swipe-right gesture to mark tasks complete *(Phase 2 — not in the shipped 1.0.0 app)*
 4. WHEN swipe gestures are used THEN the system SHALL provide alternative button-based methods for accessibility
 5. WHEN a task is marked complete THEN the system SHALL provide immediate visual feedback
 6. WHEN a task is marked complete THEN the system SHALL update the time elapsed display immediately
@@ -128,7 +133,7 @@ Unlike traditional task managers, this app answers the question "How long has it
 
 #### Acceptance Criteria
 
-1. WHEN the user first opens the app THEN the system SHALL provide a brief onboarding experience explaining core functionality
+1. WHEN the user first opens the app THEN the system SHALL provide a brief onboarding experience explaining core functionality *(Phase 2 — not in the shipped 1.0.0 app; the [User Guide](USER_GUIDE.md) covers orientation for now)*
 2. WHEN displaying tasks THEN the system SHALL use a clean, scannable layout with clear visual hierarchy
 3. WHEN the user needs help THEN the system SHALL provide contextual help text and tooltips
 4. WHEN displaying time elapsed THEN the system SHALL use human-friendly formats ("2 days ago", "3 weeks ago")
@@ -172,3 +177,20 @@ Unlike traditional task managers, this app answers the question "How long has it
 8. WHEN displaying time commitments THEN the system SHALL use consistent, clear terminology
 9. WHEN providing feedback THEN the system SHALL match the user's effort level (simple acknowledgment for routine actions)
 10. WHEN the interface includes microcopy THEN it SHALL maintain consistent voice and terminology throughout the application
+
+### Requirement 11: Instances & Series (Phase 1.1)
+
+**User Story:** As a user doing the same job in several places (five bedrooms, two dogs), I want one Add Task to create a tracked task per place or pet, so that each location's "how long since" stays accurate without repetitive data entry.
+
+#### Acceptance Criteria
+
+1. WHEN creating a task THEN the system SHALL offer an optional "Track in multiple places" control that accepts a list of instance labels ("where — or who?", max 40 characters each, trimmed and de-duplicated case-insensitively)
+2. WHEN a task is saved with N instance labels THEN the system SHALL create N independent tasks sharing a system-owned `seriesId` and confirm with "{n} tasks added"
+3. WHEN entering labels THEN the system SHALL suggest labels already in use within the selected category
+4. WHEN displaying the By Category or By Time views THEN the system SHALL collapse sibling tasks sharing a `seriesId` into one expandable group row with a "{n} places" chip and, when applicable, an "{x} of {n} overdue" summary
+5. WHEN displaying the Quick Wins view THEN series siblings SHALL rank independently and never collapse into a group
+6. WHEN completing or editing one sibling THEN the system SHALL never modify the other siblings
+7. WHEN editing an existing task THEN the system SHALL expose a single instance-label field only — fan-out is create-only
+
+Design rationale and the locked-decisions register live in
+[`dev/2026-07-03_grouped-tasks/phase1.1.md`](../dev/2026-07-03_grouped-tasks/phase1.1.md).

@@ -1,7 +1,7 @@
 /*
  * How Long Since — global styles.
  * Design system: "Soft Daylight" (warm white & greige). Tokens trace to
- * docs/style-guide.md §1 (colors), §2 (typography), §3 (radius scale).
+ * docs/STYLE_GUIDE.md §1 (colors), §2 (typography), §3 (radius scale).
  *
  * Tailwind v4 is CSS-first: theme tokens live here in @theme, not a JS config.
  * Light values are declared in @theme (also emitted to :root). Dark values

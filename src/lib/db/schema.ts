@@ -37,7 +37,7 @@ export class HowLongSinceDB extends Dexie {
           }),
       );
 
-    // --- Phase 3, not enabled in v1 — see design.md "Turning on sync" ---
+    // --- Phase 3, not enabled in v1 — see docs/ARCHITECTURE.md "Turning on sync" ---
     // super('HowLongSinceDB', { addons: [dexieCloud] });
     // this.cloud.configure({ databaseUrl: 'https://xxxxx.dexie.cloud' });
   }
@@ -47,7 +47,7 @@ export const db = new HowLongSinceDB();
 
 /**
  * The 10 built-in categories seeded on first run. Colors come from
- * style-guide.md §1.4; icons are Lucide names. IDs are fixed UUIDs so that
+ * STYLE_GUIDE.md §1.4; icons are Lucide names. IDs are fixed UUIDs so that
  * re-seeding and task reassignment stay deterministic across sessions.
  */
 export const DEFAULT_CATEGORIES: Category[] = [

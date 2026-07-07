@@ -6,17 +6,18 @@
 
 ## Project Status
 
-Pre-implementation. No code, no scaffold, nothing built. This repo is docs-only right now.
+**Shipped: 1.0.0 (2026-07-07).** Phase 1 (MVP), Phase 1.1 (Instances &
+Series), and the User Guide are implemented, merged to `main`, and deployable
+via Docker — see [CHANGELOG.md](CHANGELOG.md) for what each chunk delivered.
+Phases 2–3 (README roadmap) are unscoped future work.
 
 **The architecture is decided** (locked in June 2026, after evaluating and
-rejecting two Next.js-based alternatives): Vite + React 19 + TypeScript,
-Tailwind v4 + shadcn/ui, Dexie.js with `useLiveQuery` for reactive local
-storage, Zustand for transient UI state, Zod v4 + react-hook-form for
-validation. See [`docs/architecture/`](docs/architecture/) for the full
-design — [`tech.md`](docs/architecture/tech.md) for the stack,
-[`design.md`](docs/architecture/design.md) for architecture and the Phase 3
-cloud-sync plan, [`structure.md`](docs/architecture/structure.md) for the
-folder layout. Implementation hasn't started yet.
+rejecting two Next.js-based alternatives) **and built**: Vite + React 19 +
+TypeScript, Tailwind v4 + shadcn/ui, Dexie.js with `useLiveQuery` for reactive
+local storage, Zustand for transient UI state, Zod v4 + react-hook-form for
+validation. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full
+as-built design — stack, data layer, folder conventions, and the Phase 3
+cloud-sync plan.
 
 ## Technology Stack
 
@@ -40,22 +41,24 @@ folder layout. Implementation hasn't started yet.
 
 | Document | Purpose |
 |----------|---------|
-| [docs/product-briefing.md](docs/product-briefing.md) | Product vision, features, roadmap, design principles |
-| [docs/requirements.md](docs/requirements.md) | Full EARS-format functional requirements |
-| [docs/architecture/](docs/architecture/) | The confirmed architecture (tech.md, design.md, structure.md) |
+| [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Full EARS-format functional requirements (reflects shipped 1.0.0) |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | The as-built architecture: stack, data layer, structure, Phase 3 sync plan |
 
 ### Design & Content
 
 | Document | Purpose |
 |----------|---------|
-| [docs/user-personas.md](docs/user-personas.md) | Illustrative example users (Alex, Jordan, Pat) — not the exclusive audience; see the disclaimer at the top of that file |
-| [docs/style-guide.md](docs/style-guide.md) | Colors, typography, components, accessibility |
-| [docs/content-strategy-guide.md](docs/content-strategy-guide.md) | Tone, microcopy, error messages |
-| [docs/app-pages-prompts.md](docs/app-pages-prompts.md) | Detailed UI specifications for each page |
+| [docs/USER_PERSONAS.md](docs/USER_PERSONAS.md) | Illustrative example users (Alex, Jordan, Pat) — not the exclusive audience; see the disclaimer at the top of that file |
+| [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md) | Colors, typography, components, accessibility |
+| [docs/CONTENT_STRATEGY_GUIDE.md](docs/CONTENT_STRATEGY_GUIDE.md) | Tone, microcopy, error messages |
+
+Historical planning material (product briefing, page-by-page UI prompts, and
+the per-phase plans/decision registers) lives in dated `dev/` folders — see
+[dev/2026-07-01_phase1-mvp/docs/README.md](dev/2026-07-01_phase1-mvp/docs/README.md).
 
 ## Core Data Models
 
-This is the settled data model for the app, stable regardless of implementation detail. `AppSettings` was formalized here in June 2026; earlier drafts had independently invented shapes for it, including a `personaPreference` field for persona-mode-switching that was never built — that idea has since been explicitly cut, see `docs/user-personas.md` and `docs/style-guide.md`.
+This is the settled data model for the app, stable regardless of implementation detail. `AppSettings` was formalized here in June 2026; earlier drafts had independently invented shapes for it, including a `personaPreference` field for persona-mode-switching that was never built — that idea has since been explicitly cut, see `docs/USER_PERSONAS.md` and `docs/STYLE_GUIDE.md`.
 
 ### Task
 ```typescript
@@ -79,7 +82,7 @@ Instances & series (Phase 1.1, July 2026): tasks stay independent rows;
 siblings sharing a `seriesId` collapse into an expandable group row in
 By Time and By Category (never in Quick Wins, where siblings rank
 independently). No Dexie index on these fields — grouping runs in memory.
-See `dev/phase1.1.md` for the decisions register.
+See `dev/2026-07-03_grouped-tasks/phase1.1.md` for the decisions register.
 
 ### Category
 ```typescript
@@ -94,7 +97,7 @@ interface Category {
 
 ### AppSettings
 
-Singleton row, `id` always `'1'`. No `personaPreference` field — persona-mode-switching was considered and explicitly cut (see `docs/style-guide.md`); personas remain illustrative examples only, not a targeting mechanism.
+Singleton row, `id` always `'1'`. No `personaPreference` field — persona-mode-switching was considered and explicitly cut (see `docs/STYLE_GUIDE.md`); personas remain illustrative examples only, not a targeting mechanism.
 
 ```typescript
 interface AppSettings {
@@ -120,7 +123,7 @@ interface AppSettings {
 ## Design Tokens
 
 Design system: **Soft Daylight (warm white & greige)** — warm-neutral surfaces,
-Bricolage Grotesque + DM Sans type, single terracotta accent. `docs/style-guide.md`
+Bricolage Grotesque + DM Sans type, single terracotta accent. `docs/STYLE_GUIDE.md`
 §1 is the source of truth (full token set, dark mode, and the WCAG AA
 reconciliation); the values below are the quick reference.
 
@@ -137,14 +140,14 @@ reconciliation); the values below are the quick reference.
 - Success (sage): #5B9E86
 
 Dark mode: charcoal-brown surfaces #24211D / #2E2A25, warm off-white text
-#F3EEE7, terracotta kept as the accent (see `docs/style-guide.md` §1.5).
+#F3EEE7, terracotta kept as the accent (see `docs/STYLE_GUIDE.md` §1.5).
 
 > The soft grays #9B948B / #ADA69C fall below 4.5:1 on the warm-white page —
 > decorative/large text only; use #6E675E for small informational text. See
-> `docs/style-guide.md` §1.6.
+> `docs/STYLE_GUIDE.md` §1.6.
 
 ### Category Colors
-All 10 default categories (see `docs/requirements.md` Req 3.1), matching `docs/style-guide.md`:
+All 10 default categories (see `docs/REQUIREMENTS.md` Req 3.1), matching `docs/STYLE_GUIDE.md`:
 - Kitchen: #3B82F6, Bathroom: #8B5CF6, Bedroom: #EC4899
 - Living Areas: #10B981, Exterior: #F59E0B, Vehicles: #EF4444
 - Digital/Tech: #6366F1, Health: #14B8A6
@@ -152,12 +155,12 @@ All 10 default categories (see `docs/requirements.md` Req 3.1), matching `docs/s
 
 ## Overdue Status Thresholds
 
-Three tiers, computed only once a task has `lastCompletedAt` set and an `expectedFrequency` — a task that's never been completed is never overdue, regardless of how long ago it was created (see `docs/requirements.md` Req 2.7–2.8). Thresholds are a percentage of the expected interval elapsed since `lastCompletedAt`, so they scale with tasks from daily to yearly instead of using a fixed day count:
+Three tiers, computed only once a task has `lastCompletedAt` set and an `expectedFrequency` — a task that's never been completed is never overdue, regardless of how long ago it was created (see `docs/REQUIREMENTS.md` Req 2.7–2.8). Thresholds are a percentage of the expected interval elapsed since `lastCompletedAt`, so they scale with tasks from daily to yearly instead of using a fixed day count:
 
 - **Not due**: elapsed < 80% of interval
 - **Due soon**: 80% ≤ elapsed < 100% of interval (amber-gold #C08A2E / AA-safe #8A5E15, clock glyph)
 - **Overdue**: 100% ≤ elapsed < 150% of interval (terracotta #C6533C / AA-safe #B2452F, "!" badge + soft card border)
-- **Very overdue**: elapsed ≥ 150% of interval (same terracotta, plus an explicit "Very overdue" pill/text label — see `docs/style-guide.md` and `docs/content-strategy-guide.md`)
+- **Very overdue**: elapsed ≥ 150% of interval (same terracotta, plus an explicit "Very overdue" pill/text label — see `docs/STYLE_GUIDE.md` and `docs/CONTENT_STRATEGY_GUIDE.md`)
 
 ## Content Tone
 

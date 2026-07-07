@@ -33,9 +33,8 @@ Stack-agnostic — settled, independent of implementation details.
 
 | Document | Description |
 |----------|-------------|
-| [Product Briefing](docs/product-briefing.md) | Core product overview, key differentiators, user story, functionality, platform capabilities, accessibility commitment, roadmap, design principles |
-| [Requirements](docs/requirements.md) | Full EARS-format functional requirements: task management, completion tracking, categories, time views, accessibility, data persistence, performance, content |
-| [User Personas](docs/user-personas.md) | Detailed personas for Alex (busy parent), Jordan (new homeowner), and Pat (active retiree) — example use cases, not the only intended users |
+| [Requirements](docs/REQUIREMENTS.md) | Full EARS-format functional requirements: task management, completion tracking, categories, time views, accessibility, data persistence, performance, content |
+| [User Personas](docs/USER_PERSONAS.md) | Detailed personas for Alex (busy parent), Jordan (new homeowner), and Pat (active retiree) — example use cases, not the only intended users |
 
 ### Design & Content
 
@@ -43,9 +42,8 @@ Also stack-agnostic.
 
 | Document | Description |
 |----------|-------------|
-| [Style Guide](docs/style-guide.md) | Color palette, typography, UI component patterns, iconography, visual indicators, accessibility implementation guidelines |
-| [Content Strategy Guide](docs/content-strategy-guide.md) | Tone and voice guidelines, microcopy, error message standards, help text, need-based content patterns |
-| [App Pages Prompts](docs/app-pages-prompts.md) | Page-by-page UI/mockup specifications (Homepage, Add/Edit Task, Category View, Time View, Settings) — useful as prompts for AI design tools |
+| [Style Guide](docs/STYLE_GUIDE.md) | Color palette, typography, UI component patterns, iconography, visual indicators, accessibility implementation guidelines |
+| [Content Strategy Guide](docs/CONTENT_STRATEGY_GUIDE.md) | Tone and voice guidelines, microcopy, error message standards, help text, need-based content patterns |
 
 ### Architecture
 
@@ -57,9 +55,7 @@ doesn't require building or hosting a custom backend.
 
 | Document | Description |
 |----------|-------------|
-| [Tech Stack](docs/architecture/tech.md) | Full stack summary, tooling, common commands |
-| [Design](docs/architecture/design.md) | Architecture, data layer, component patterns, Phase 3 sync plan |
-| [Structure](docs/architecture/structure.md) | Folder/file layout conventions |
+| [Architecture](docs/ARCHITECTURE.md) | The as-built architecture: stack, data layer, component patterns, project structure, Phase 3 sync plan |
 
 ## Target Users
 

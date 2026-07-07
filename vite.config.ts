@@ -20,7 +20,7 @@ export default defineConfig({
       // manifest `icons` entry and the html <link> tags. injectThemeColor is off
       // because index.html already declares the theme-color meta.
       pwaAssets: { config: true, injectThemeColor: false },
-      // theme_color is the Soft Daylight page surface (design.md's #2563eb is stale).
+      // theme_color is the Soft Daylight page surface (STYLE_GUIDE.md §1.1).
       manifest: {
         name: 'How Long Since',
         short_name: 'HowLongSince',

@@ -13,7 +13,7 @@ interface TaskListProps {
 }
 
 /**
- * Reactive flat list of non-archived tasks (design.md "Reactive Reads"). Built
+ * Reactive flat list of non-archived tasks (ARCHITECTURE.md "Reactive Reads"). Built
  * here for Step 6's By Time view; the By Category view does its own grouping.
  *
  * NOTE: `isArchived` is a boolean, which IndexedDB cannot index — a

@@ -8,7 +8,7 @@
 > replaces the earlier blue/Inter direction throughout.
 
 > Where this doc references Alex, Jordan, or Pat, those are the illustrative
-> example users from `docs/user-personas.md` — not an exclusive audience.
+> example users from `docs/USER_PERSONAS.md` — not an exclusive audience.
 > Persona-gated features (separate UI modes, persona-exclusive
 > categories/settings) have been explicitly cut; see the notes inline below.
 
@@ -72,7 +72,7 @@ and/or a text label (see §5).
 ### 1.4 Category Colors
 
 The ten default category **base** hues are unchanged (they remain the source of
-truth in `docs/requirements.md` Req 3.1, `AGENTS.md`, and the `Category.color`
+truth in `docs/REQUIREMENTS.md` Req 3.1, `AGENTS.md`, and the `Category.color`
 field). Soft Daylight renders them three ways:
 
 1. **Dot** — the solid base hue as a 12px circle in By Category headers.
@@ -147,7 +147,7 @@ light mode.
 
 This is the one real tension in the system: Soft Daylight's warmth comes from
 low-contrast surfaces and desaturated text, several of which fall under the
-4.5:1 AA floor the app commits to (`AGENTS.md`, `docs/requirements.md` Req 5).
+4.5:1 AA floor the app commits to (`AGENTS.md`, `docs/REQUIREMENTS.md` Req 6).
 The design direction stays; the fix is a small set of AA-safe **text** tokens
 used wherever a value is small, informational text. Decorative uses (dots,
 borders, large numerals, fills behind icons) keep the soft values.
@@ -203,8 +203,12 @@ row). DM Sans carries everything else: task names, labels, tags, meta.
 - **Body / UI**: DM Sans (weights 400–700)
 - **System fallback stack**: `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`
 
-Google Fonts import:
+Both families are **self-hosted** via `@fontsource-variable/bricolage-grotesque`
+and `@fontsource-variable/dm-sans` (imported in `src/styles/globals.css`) so the
+installed PWA renders offline with no third-party font request; the woff2 files
+are precached by the service worker. (The equivalent Google Fonts import —
 `family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;500;600;700`
+— is the non-PWA alternative.)
 
 ### Type Scale (mobile baseline)
 
@@ -305,7 +309,7 @@ The row is the core component, shared by By Time and By Category.
   ~360px.
 - This top toggle is the app's primary view switch (there is no bottom nav bar
   in the Soft Daylight mocks — see the navigation note in
-  `docs/app-pages-prompts.md`).
+  `dev/2026-07-01_phase1-mvp/docs/app-pages-prompts.md`, archived).
 
 ### 3.5 Segmented Pickers (time estimate, frequency unit)
 - Same track pattern as the view toggle at a smaller scale: `--surface-track`
@@ -444,7 +448,7 @@ Animation: none for any tier (avoid distracting movement).
 - Ship the palette in §1 as CSS custom properties on `:root` (light) and a
   `.dark` / `[data-theme="dark"]` scope (§1.5), consumed through the Tailwind v4
   `@theme` layer.
-- Two font families loaded via Google Fonts (or self-hosted for offline/PWA):
+- Two font families, self-hosted via `@fontsource-variable` for offline/PWA:
   Bricolage Grotesque, DM Sans.
 - 4px base spacing unit; the radius scale in §3.
 
@@ -464,7 +468,7 @@ Animation: none for any tier (avoid distracting movement).
 > Note: an earlier draft proposed persona-selectable UI modes (e.g. "Busy
 > Parent Mode"). That's cut — there's no `persona` field in the data model, and
 > it conflicted with this app not being designed for a limited set of named
-> audiences (see `docs/user-personas.md`). Personalization stays behavior-based
+> audiences (see `docs/USER_PERSONAS.md`). Personalization stays behavior-based
 > (what a user actually does), not identity-based.
 
 ### Dark Mode
@@ -476,7 +480,9 @@ Animation: none for any tier (avoid distracting movement).
 
 ### Accessibility Guidelines
 - WCAG 2.1 AA: 4.5:1 for normal text (see §1.6 for the AA-safe token set).
-- High-contrast mode: swap the warm text ramp for `--ink` and strengthen borders.
+- High-contrast mode: swap the warm text ramp for `--ink` and strengthen borders;
+  the shipped implementation also forces a high-visibility focus outline (see the
+  `[data-high-contrast='true']` block in `src/styles/globals.css`).
 - Text resizing without breaking layout; visible focus states (terracotta ring).
 - Touch targets ≥44px (48px preferred); reduced-motion honored.
 - Screen-reader labels for all controls and every status change.

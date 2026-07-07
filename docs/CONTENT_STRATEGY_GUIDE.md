@@ -1,7 +1,7 @@
 # How Long Since - Content Strategy Guide
 
 > Where this doc references Alex, Jordan, or Pat, those are the illustrative
-> example users from `docs/user-personas.md` — not an exclusive audience.
+> example users from `docs/USER_PERSONAS.md` — not an exclusive audience.
 > Copy is organized by *need* (time-constrained, new to a responsibility,
 > seeking variety/connection), not by persona identity — there's no
 > mechanism in the app that detects or targets a specific persona.
@@ -77,6 +77,11 @@ This Content Strategy Guide provides standards for all text within the "How Long
 Our app serves diverse users with different needs, not a fixed set of life
 stages. These patterns are organized by *need* — any user might match one,
 several, or none on a given day:
+
+> **Phase note (2026-07):** The "Example notification" lines below are
+> aspirational — notifications are a Phase 2 feature and are not in the shipped
+> 1.0.0 app (Settings lists Notifications as "Coming soon"). The rest of each
+> pattern applies to in-app copy today.
 
 **For time-constrained moments:**
 - **Acknowledge time constraints:** "Find tasks that fit between school drop-off and your next meeting."
@@ -310,7 +315,8 @@ several, or none on a given day:
 - Placement: Below form fields
 - Example: "Choose a time estimate that best fits this task."
 
-**Onboarding Hints:**
+**Onboarding Hints** *(Phase 2 — the shipped app has no onboarding tour or
+swipe gestures; pattern retained for when it does)*:
 - Length: 1-3 sentences
 - Purpose: Guide first-time users
 - Trigger: First use of a feature
@@ -339,7 +345,8 @@ several, or none on a given day:
 **Time Elapsed Help:**
 "'How Long Since' tracks when you last completed each task. Tasks become red when they're overdue based on your expected frequency. No frequency set? No pressure—we'll still track when it was last done."
 
-**Swipe Gestures Help:**
+**Swipe Gestures Help** *(Phase 2 — swipe gestures are not in the shipped
+1.0.0 app; do not surface this copy yet)*:
 "Swipe right on any task to mark it complete. Swipe left to edit details like the category or time estimate."
 
 **Data Backup Help:**
@@ -520,7 +527,8 @@ This Content Strategy Guide provides the foundation for creating consistent, hel
 
 ## 11. Phase 1.1 Addendum — Instances & Series microcopy
 
-Added 2026-07-03 with the instances & series feature (see `dev/phase1.1.md`).
+Added 2026-07-03 with the instances & series feature (see
+`dev/2026-07-03_grouped-tasks/phase1.1.md`).
 All strings follow the §2 tone rules; they are listed here so the guide stays
 the single source of user-visible copy.
 
