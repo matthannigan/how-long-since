@@ -21,14 +21,14 @@ parallel). Don't start a step until its prerequisites are green.
 
 | Doc | What it governs |
 |-----|-----------------|
-| [`AGENTS.md`](../AGENTS.md) | Data models, overdue thresholds, category colors, content tone |
-| [`docs/requirements.md`](../docs/requirements.md) | EARS functional requirements (Req 1–10) |
-| [`docs/architecture/tech.md`](../docs/architecture/tech.md) | Locked stack + commands |
-| [`docs/architecture/design.md`](../docs/architecture/design.md) | Data layer, code patterns, snippets |
-| [`docs/architecture/structure.md`](../docs/architecture/structure.md) | Folder/file layout |
-| [`docs/style-guide.md`](../docs/style-guide.md) | "Soft Daylight" tokens, typography, components |
-| [`docs/content-strategy-guide.md`](../docs/content-strategy-guide.md) | Every user-visible string, tone, errors |
-| [`docs/app-pages-prompts.md`](../docs/app-pages-prompts.md) | Page-by-page UI composition |
+| [`AGENTS.md`](../../AGENTS.md) | Data models, overdue thresholds, category colors, content tone |
+| [`docs/requirements.md`](docs/requirements.md) | EARS functional requirements (Req 1–10) |
+| [`docs/architecture/tech.md`](docs/architecture/tech.md) | Locked stack + commands |
+| [`docs/architecture/design.md`](docs/architecture/design.md) | Data layer, code patterns, snippets |
+| [`docs/architecture/structure.md`](docs/architecture/structure.md) | Folder/file layout |
+| [`docs/style-guide.md`](docs/style-guide.md) | "Soft Daylight" tokens, typography, components |
+| [`docs/content-strategy-guide.md`](docs/content-strategy-guide.md) | Every user-visible string, tone, errors |
+| [`docs/app-pages-prompts.md`](docs/app-pages-prompts.md) | Page-by-page UI composition |
 
 ---
 
